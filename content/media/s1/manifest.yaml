@@ -1,43 +1,54 @@
 # Иллюстрации сезона 1. status: missing | draft | approved
-# Файлы кладутся рядом: content/media/s1/<id>.png (исходник) — pack.dart сжимает в AVIF/WebP.
+# Файлы: content/media/s1/<id>.png (или .jpg/.webp). tools/pack_media.sh нормализует размер.
 # Для каждого approved-файла обязана быть запись в content/sources/media.yaml.
+# Промпты — в prompts/<id>.md; seed записывать сюда после утверждения кадра.
 
 - id: art_s1e01_010
   kind: scene
   status: missing
-  brief: "1457, окраина Сыгнака после набега. Разорённая стоянка, пустой загон, вдали — уходящие всадники-ойраты. Рассвет, пыль. Без крупных лиц."
+  brief: 1457, окраина Сыгнака после набега. Разорённая стоянка, пустой загон, вдали — уходящие всадники-ойраты. Рассвет, пыль. Без крупных лиц.
   seed: null
-  prompt_ref: null
+  prompt_ref: prompts/art_s1e01_010.md
   approved_by: null
-
 - id: art_s1e01_020
   kind: scene
   status: missing
-  brief: "Совет в юрте. Два султана в чапанах XV века у очага, шанырак над ними, полумрак, отсветы огня. Никаких доспехов «в стиле фэнтези»."
+  brief: Совет в юрте. Два султана в чапанах XV века у очага, шанырак над ними, полумрак, отсветы огня. Никаких доспехов «в стиле фэнтези».
   seed: null
-  prompt_ref: null
+  prompt_ref: prompts/art_s1e01_020.md
   approved_by: null
-
 - id: art_s1e01_030
   kind: scene
   status: missing
-  brief: "1465, долина Шу весной. Кочевье ставит юрты у реки, зелёные предгорья, широкое небо. Ощущение прибытия, а не бегства."
+  brief: 1465, долина Шу весной. Кочевье ставит юрты у реки, зелёные предгорья, широкое небо. Ощущение прибытия, а не бегства.
   seed: null
-  prompt_ref: null
+  prompt_ref: prompts/art_s1e01_030.md
   approved_by: null
-
 - id: art_s1e01_040
   kind: scene
   status: missing
-  brief: "1468. Роды стягиваются к ставке: караваны и всадники подходят к лагерю с разных сторон, вечер, много огней. Масштаб, а не портрет."
+  brief: '1468. Роды стягиваются к ставке: караваны и всадники подходят к лагерю с разных сторон, вечер, много огней. Масштаб, а не портрет.'
   seed: null
-  prompt_ref: null
+  prompt_ref: prompts/art_s1e01_040.md
   approved_by: null
-
 - id: cover_s1e01
   kind: cover
   status: missing
-  brief: "Обложка серии 1:1. Один сильный образ: юрта на берегу Шу на фоне гор."
+  brief: 'Обложка серии 1:1. Один сильный образ: юрта на берегу Шу на фоне гор.'
   seed: null
-  prompt_ref: null
+  prompt_ref: prompts/cover_s1e01.md
+  approved_by: null
+- id: cover_season1
+  kind: banner
+  status: missing
+  brief: Баннер сезона 2:1 для главного экрана. Всадник на гребне на рассвете, степь, караван вдали.
+  seed: null
+  prompt_ref: prompts/cover_season1.md
+  approved_by: null
+- id: app_icon
+  kind: icon
+  status: missing
+  brief: Иконка приложения 1024×1024. Шанырак золотом на глубоком бирюзовом, плоско, без текста.
+  seed: null
+  prompt_ref: prompts/app_icon.md
   approved_by: null

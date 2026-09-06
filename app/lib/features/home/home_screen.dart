@@ -127,12 +127,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
 
             // ---- серии
+            _Banner(url: _s.content.mediaUrl('s1e01', 'cover_season1')),
             _SectionTitle(t(_l, kk: '1-маусым · Қазақ хандығы', ru: 'Сезон 1 · Казахское ханство')),
             for (final e in catalog) _EpisodeTile(
               entry: e, locale: _l,
               result: _s.store.result(e.id),
               inProgress: _s.store.storySnapshot(e.id) != null,
               busy: _busyEpisode == e.id,
+              coverUrl: _s.content.mediaUrl(e.id, 'cover_${e.id}'),
               onTap: () => _open(e),
             ),
           ],
@@ -140,6 +142,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+/// Баннер сезона. Нет файла — ничего не показываем, место не резервируем.
+class _Banner extends StatelessWidget {
+  const _Banner({required this.url});
+  final String url;
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(url, fit: BoxFit.cover, height: 150, width: double.infinity,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              loadingBuilder: (_, child, p) => p == null ? child : const SizedBox.shrink()),
+        ),
+      );
 }
 
 class _SectionTitle extends StatelessWidget {
@@ -173,8 +191,8 @@ class _TopicBar extends StatelessWidget {
 }
 
 class _EpisodeTile extends StatelessWidget {
-  const _EpisodeTile({required this.entry, required this.locale, required this.result, required this.inProgress, required this.busy, required this.onTap});
-  final CatalogEntry entry; final String locale; final dynamic result; final bool inProgress; final bool busy; final VoidCallback onTap;
+  const _EpisodeTile({required this.entry, required this.locale, required this.result, required this.inProgress, required this.busy, required this.coverUrl, required this.onTap});
+  final CatalogEntry entry; final String locale; final dynamic result; final bool inProgress; final bool busy; final String coverUrl; final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -189,7 +207,11 @@ class _EpisodeTile extends StatelessWidget {
     return Card.outlined(
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-        leading: CircleAvatar(backgroundColor: cs.surfaceContainerHighest, child: Text(entry.id.replaceFirst(RegExp(r'^s\d+e0?'), ''))),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(width: 48, height: 48, child: Image.network(coverUrl, fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => CircleAvatar(backgroundColor: cs.surfaceContainerHighest, child: Text(entry.id.replaceFirst(RegExp(r'^s\d+e0?'), ''))))),
+        ),
         title: Text(entry.title.of(locale)),
         subtitle: Text([entry.era, t(locale, kk: '${entry.scenes} сахна · ${entry.questions} сұрақ', ru: '${entry.scenes} сцены · ${entry.questions} вопросов')].whereType<String>().join(' · ')),
         trailing: busy ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)) : Text(status, style: TextStyle(color: cs.primary, fontWeight: FontWeight.w600)),

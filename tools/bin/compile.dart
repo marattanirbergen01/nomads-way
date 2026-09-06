@@ -80,6 +80,8 @@ void main(List<String> args) {
   if (!check) {
     const enc = JsonEncoder.withIndent('  ');
     Directory(out).createSync(recursive: true);
+    final copied = _copyMedia(content, out);
+    if (copied > 0) stdout.writeln('медиа: скопировано $copied файлов → $out/media/');
     File(p.join(out, 'catalog.json')).writeAsStringSync(enc.convert(catalog));
     File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
   }
@@ -269,6 +271,23 @@ void _print(String id, Map report) {
   stdout.writeln('$id  сцен ${report['scenes']}  битов ${report['beats']}  выборов ${report['choices']}  '
       'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context)  '
       'фактов ${report['facts_covered']}  виза: ${report['approved_by'] ?? '—'}');
+}
+
+/// content/media/<season>/out/*.jpg → build/media/<season>/. Сырые PNG не копируются — только результат pack_media.sh.
+int _copyMedia(String content, String out) {
+  var n = 0;
+  final mediaRoot = Directory(p.join(content, 'media'));
+  if (!mediaRoot.existsSync()) return 0;
+  for (final season in mediaRoot.listSync().whereType<Directory>()) {
+    final src = Directory(p.join(season.path, 'out'));
+    if (!src.existsSync()) continue;
+    final dst = Directory(p.join(out, 'media', p.basename(season.path)))..createSync(recursive: true);
+    for (final f in src.listSync().whereType<File>().where((f) => f.path.endsWith('.jpg'))) {
+      f.copySync(p.join(dst.path, p.basename(f.path)));
+      n++;
+    }
+  }
+  return n;
 }
 
 /// Плоский список тем с фактами — для экрана готовности. Только узлы с must_know.

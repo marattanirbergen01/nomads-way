@@ -17,3 +17,7 @@ content/media/**/raw/
 # secrets
 .env
 *.local
+# исходники иллюстраций (тяжёлые) — коммитим только out/*.jpg
+content/media/**/*.png
+# презентации-питчи лежат вне репозитория
+nomads way/

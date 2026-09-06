@@ -32,6 +32,10 @@ class ContentRepository {
             for (final q in jsonDecode(s) as List) Question.fromJson(q),
       ];
 
+  /// Адрес картинки: build/media/`<season>`/`<id>`.jpg. Сезон выводится из id серии (s1e01 → s1).
+  String mediaUrl(String episodeId, String artId) => '$baseUrl/media/${_season(episodeId)}/$artId.jpg';
+  static String _season(String episodeId) => RegExp(r'^(s\d+)').firstMatch(episodeId)?.group(1) ?? 's1';
+
   Future<dynamic> _get(String path) async {
     try {
       final r = await _client.get(Uri.parse('$baseUrl/$path')).timeout(const Duration(seconds: 8));

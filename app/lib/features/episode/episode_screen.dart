@@ -113,8 +113,9 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
     final e = _event;
     if (e is BeatEvent) {
       final b = e.beat;
-      if (b is Say) return _SceneView(scene: e.scene, say: b, episode: widget.episode, locale: _l, onTap: _advance);
-      if (b is Choice) return _ChoiceView(scene: e.scene, choice: b, locale: _l, onChoose: _choose);
+      final art = _s.content.mediaUrl(_id, e.scene.art);
+      if (b is Say) return _SceneView(scene: e.scene, say: b, episode: widget.episode, locale: _l, artUrl: art, onTap: _advance);
+      if (b is Choice) return _ChoiceView(scene: e.scene, choice: b, locale: _l, artUrl: art, onChoose: _choose);
     }
     return const Center(child: CircularProgressIndicator());
   }
@@ -122,8 +123,8 @@ class _EpisodeScreenState extends State<EpisodeScreen> {
 
 // ---------------------------------------------------------------- сюжет: своя визуальная система
 class _SceneView extends StatelessWidget {
-  const _SceneView({required this.scene, required this.say, required this.episode, required this.locale, required this.onTap});
-  final Scene scene; final Say say; final Episode episode; final String locale; final VoidCallback onTap;
+  const _SceneView({required this.scene, required this.say, required this.episode, required this.locale, required this.artUrl, required this.onTap});
+  final Scene scene; final Say say; final Episode episode; final String locale; final String artUrl; final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -133,7 +134,7 @@ class _SceneView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Column(children: [
-        Expanded(child: _ArtPlaceholder(id: scene.art)),
+        Expanded(child: _ArtPlaceholder(id: scene.art, url: artUrl)),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
@@ -156,11 +157,11 @@ class _SceneView extends StatelessWidget {
 }
 
 class _ChoiceView extends StatelessWidget {
-  const _ChoiceView({required this.scene, required this.choice, required this.locale, required this.onChoose});
-  final Scene scene; final Choice choice; final String locale; final void Function(Option) onChoose;
+  const _ChoiceView({required this.scene, required this.choice, required this.locale, required this.artUrl, required this.onChoose});
+  final Scene scene; final Choice choice; final String locale; final String artUrl; final void Function(Option) onChoose;
   @override
   Widget build(BuildContext context) => Column(children: [
-        Expanded(child: _ArtPlaceholder(id: scene.art)),
+        Expanded(child: _ArtPlaceholder(id: scene.art, url: artUrl)),
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -179,15 +180,23 @@ class _ChoiceView extends StatelessWidget {
       ]);
 }
 
+/// Иллюстрация сцены с CDN: build/media/`<season>`/`<id>`.jpg. Нет файла — серая заглушка с id,
+/// чтобы сценарист видел, какой кадр ещё не сделан.
 class _ArtPlaceholder extends StatelessWidget {
-  const _ArtPlaceholder({required this.id});
+  const _ArtPlaceholder({required this.id, required this.url});
   final String id;
+  final String url;
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Container(
+    final fallback = Container(
       color: cs.surfaceContainerHighest, alignment: Alignment.center,
       child: Text(id, style: TextStyle(color: cs.onSurfaceVariant, fontFamily: 'monospace')),
+    );
+    return Image.network(
+      url, fit: BoxFit.cover, width: double.infinity, gaplessPlayback: true,
+      errorBuilder: (_, __, ___) => fallback,
+      loadingBuilder: (_, child, progress) => progress == null ? child : fallback,
     );
   }
 }
