@@ -1,0 +1,276 @@
+// content/ → build/. Единственный мост между зоной контента и приложением.
+// Правила валидации — docs/CONTENT_FORMAT.md. Меняя их здесь, меняй и там.
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart';
+
+final errors = <String>[];
+final warnings = <String>[];
+var enMissing = 0;
+void err(String m) => errors.add(m);
+void warn(String m) => warnings.add(m);
+
+void main(List<String> args) {
+  final check = args.contains('--check');
+  final strict = args.contains('--strict');
+  final root = _repoRoot();
+  final content = p.join(root, 'content');
+  final out = p.join(root, 'build');
+
+  // ---- источники и факты
+  final sources = <String>{
+    for (final s in _yaml(p.join(content, 'sources/registry.yaml')) as List) s['id'] as String,
+  };
+  final facts = <String, Map>{};
+  final factTopic = <String, String>{};
+  void walk(Map node) {
+    for (final f in (node['must_know'] as List? ?? [])) {
+      facts[f['id']] = f;
+      factTopic[f['id']] = node['id'];
+      if (!sources.contains(f['source'])) err('fact ${f['id']}: неизвестный источник ${f['source']}');
+    }
+    for (final c in (node['children'] as List? ?? [])) walk(c);
+  }
+  for (final n in _yaml(p.join(content, 'curriculum/ent_history.yaml')) as List) walk(n);
+
+  // ---- серии
+  final episodesDir = Directory(p.join(content, 'episodes'));
+  final episodeFiles = episodesDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where((f) => f.path.endsWith('.yaml'))
+      .toList()
+    ..sort((a, b) => a.path.compareTo(b.path));
+
+  var compiled = 0;
+  for (final file in episodeFiles) {
+    final ep = _yaml(file.path) as Map;
+    final id = ep['episode'] as String;
+    final season = p.basename(p.dirname(file.path));
+    final qFile = File(p.join(content, 'questions', season, '${id.substring(2)}.yaml')); // s1e01 → e01.yaml
+    if (!qFile.existsSync()) { err('$id: нет файла вопросов ${qFile.path}'); continue; }
+    final questions = (_yaml(qFile.path) as List).cast<Map>();
+    final media = <String>{
+      for (final m in _yaml(p.join(content, 'media', season, 'manifest.yaml')) as List) m['id'] as String,
+    };
+
+    final report = _validateEpisode(ep, questions, facts, sources, media, strict);
+    if (check) { _print(id, report); continue; }
+    if (errors.isEmpty) {
+      _write(out, id, ep, questions, factTopic, report);
+      compiled++;
+    }
+    _print(id, report);
+  }
+
+  stdout.writeln('');
+  if (enMissing > 0) stdout.writeln('  △ без перевода en: $enMissing строк (пока допустимо)');
+  for (final w in warnings) stdout.writeln('  △ $w');
+  for (final e in errors) stdout.writeln('  ✗ $e');
+  if (errors.isNotEmpty) { stdout.writeln('\n${errors.length} ошибок. Ничего не записано.'); exit(1); }
+  if (strict && warnings.isNotEmpty) { stdout.writeln('\n--strict: ${warnings.length} предупреждений считаются ошибками.'); exit(1); }
+  stdout.writeln(check ? '\nПроверка пройдена.' : '\nСобрано серий: $compiled → $out');
+}
+
+// ---------------------------------------------------------------- валидация
+Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, Map> facts,
+    Set<String> sources, Set<String> media, bool strict) {
+  final id = ep['episode'] as String;
+  final scenes = (ep['scenes'] as List).cast<Map>();
+  final sceneIds = {for (final s in scenes) s['id'] as String};
+  final chars = {for (final c in (ep['characters'] as List)) c['id'] as String};
+  final qById = {for (final q in questions) q['id'] as String: q};
+  final reachable = <String>{scenes.first['id']};
+  final usedQ = <String>{};
+  final covered = <String>{};
+  var beats = 0, choices = 0;
+
+  for (final s in scenes) {
+    final sid = s['id'] as String;
+    for (final f in (s['covers'] as List? ?? [])) {
+      if (!facts.containsKey(f)) err('$id/$sid: covers неизвестный факт $f');
+    }
+    covered.addAll((s['covers'] as List? ?? []).cast<String>());
+    if (!media.contains(s['art'])) err('$id/$sid: art ${s['art']} нет в media/manifest.yaml');
+
+    for (final b in (s['beats'] as List).cast<Map>()) {
+      beats++;
+      if (b.containsKey('say')) {
+        final say = b['say'] as Map;
+        if (!chars.contains(say['who'])) err('$id/$sid: неизвестный персонаж ${say['who']}');
+        _needLangs(say, '$id/$sid say');
+      } else if (b.containsKey('choice')) {
+        choices++;
+        final ch = b['choice'] as Map;
+        _needLangs(ch['prompt'] as Map, '$id/$sid choice.prompt');
+        for (final o in (ch['options'] as List).cast<Map>()) {
+          _needLangs(o, '$id/$sid option ${o['id']}');
+          final g = o['goto'] as String?;
+          if (g == null) { err('$id/$sid option ${o['id']}: нет goto'); continue; }
+          if (g != 'end' && !sceneIds.contains(g)) err('$id/$sid: goto $g не существует');
+          reachable.add(g);
+        }
+      } else {
+        err('$id/$sid: beat не say и не choice');
+      }
+    }
+    // вопросы этой сцены: факт должен прозвучать здесь или раньше
+    for (final qid in (s['quiz'] as List? ?? []).cast<String>()) {
+      final q = qById[qid];
+      if (q == null) { err('$id/$sid: quiz ссылается на несуществующий $qid'); continue; }
+      usedQ.add(qid);
+      if (!covered.contains(q['fact'])) err('$qid: факт ${q['fact']} не прозвучал в $sid или раньше');
+      if (q['format'] == 'context' && q['context'] != sid) warn('$qid: context=${q['context']}, но задаётся после $sid');
+    }
+  }
+  // последовательный переход между сценами без choice допустим — сцена без choice ведёт к следующей
+  for (var i = 0; i < scenes.length - 1; i++) {
+    final hasChoice = (scenes[i]['beats'] as List).any((b) => (b as Map).containsKey('choice'));
+    if (!hasChoice) reachable.add(scenes[i + 1]['id']);
+  }
+  for (final sid in sceneIds) if (!reachable.contains(sid)) err('$id: сцена $sid недостижима');
+
+  // вопросы
+  final perFact = <String, int>{};
+  for (final q in questions) {
+    final qid = q['id'] as String;
+    if (!usedQ.contains(qid)) warn('$qid не используется ни одной сценой');
+    if (!facts.containsKey(q['fact'])) err('$qid: неизвестный факт ${q['fact']}');
+    perFact[q['fact']] = (perFact[q['fact']] ?? 0) + 1;
+    if (!{'single', 'context'}.contains(q['format'])) err('$qid: format должен быть single|context');
+    if (q['format'] == 'context' && q['context'] == null) err('$qid: format context требует поле context');
+    final opts = (q['options'] as List).cast<Map>();
+    if (opts.length != 4) err('$qid: вариантов ${opts.length}, нужно 4');
+    if (opts.where((o) => o['correct'] == true).length != 1) err('$qid: должен быть ровно один correct');
+    if (!sources.contains((q['source'] as String).split('#').first)) err('$qid: неизвестный источник ${q['source']}');
+    if ((q['distractor_note'] as String?)?.isEmpty ?? true) err('$qid: нет distractor_note');
+    _needLangs(q['stem'] as Map, '$qid stem');
+    _needLangs(q['explain'] as Map, '$qid explain');
+    for (final o in opts) _needLangs(o, '$qid option ${o['id']}');
+    final d = q['difficulty'];
+    if (d is! int || d < 1 || d > 3) err('$qid: difficulty 1..3');
+  }
+  for (final f in covered) {
+    final n = perFact[f] ?? 0;
+    if (n == 0) warn('факт $f прозвучал, но не проверяется ни одним вопросом');
+    else if (n < 3) warn('факт $f: $n вопрос(а), цель — 3 разной формулировки');
+  }
+  return {
+    'scenes': scenes.length, 'beats': beats, 'choices': choices,
+    'questions': questions.length,
+    'single': questions.where((q) => q['format'] == 'single').length,
+    'context': questions.where((q) => q['format'] == 'context').length,
+    'facts_covered': covered.length,
+    'approved_by': ep['approved_by'],
+  };
+}
+
+void _needLangs(Map m, String where) {
+  for (final l in const ['kk', 'ru']) {
+    if ((m[l] as String?)?.trim().isEmpty ?? true) err('$where: нет $l');
+  }
+  if ((m['en'] as String?)?.trim().isEmpty ?? true) enMissing++;
+}
+
+// ---------------------------------------------------------------- вывод
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report) {
+  final dir = Directory(p.join(out, id))..createSync(recursive: true);
+  final enc = const JsonEncoder.withIndent('  ');
+
+  Map<String, String> t(Map? m) => {
+        for (final l in const ['kk', 'ru', 'en'])
+          if (m?[l] != null) l: m![l] as String,
+      };
+
+  final episode = {
+    'id': id,
+    'version': 1,
+    'title': t(ep['title']),
+    'topics': ep['topics'],
+    'era': ep['era'],
+    'characters': {
+      for (final c in (ep['characters'] as List).cast<Map>())
+        c['id']: {'name': t(c['name']), 'fiction': c['fiction'] == true},
+    },
+    'scenes': [
+      for (final s in (ep['scenes'] as List).cast<Map>())
+        {
+          'id': s['id'],
+          'art': s['art'],
+          'covers': s['covers'] ?? [],
+          'beats': [
+            for (final b in (s['beats'] as List).cast<Map>())
+              if (b.containsKey('say'))
+                {'type': 'say', 'who': b['say']['who'], 'text': t(b['say'])}
+              else
+                {
+                  'type': 'choice',
+                  'prompt': t(b['choice']['prompt']),
+                  'options': [
+                    for (final o in (b['choice']['options'] as List).cast<Map>())
+                      {'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto']},
+                  ],
+                },
+          ],
+          'quiz': s['quiz'] ?? [],
+        },
+    ],
+    'finalTest': {'single': ep['final_test']?['single'] ?? 10, 'context': ep['final_test']?['context'] ?? 10},
+  };
+
+  final qs = [
+    for (final q in questions)
+      {
+        'id': q['id'],
+        'fact': q['fact'],
+        'topic': factTopic[q['fact']],
+        'format': q['format'],
+        'context': q['context'],
+        'difficulty': q['difficulty'],
+        'stem': t(q['stem']),
+        'options': [
+          for (final o in (q['options'] as List).cast<Map>())
+            {'id': o['id'], 'text': t(o), 'correct': o['correct'] == true},
+        ],
+        'explain': t(q['explain']),
+        'source': q['source'],
+      },
+  ];
+
+  final manifest = {
+    'episode': id,
+    'version': 1,
+    'builtAt': DateTime.now().toUtc().toIso8601String(),
+    'files': ['episode.json', 'questions.json'],
+    'media': [for (final s in (ep['scenes'] as List).cast<Map>()) s['art']],
+    'stats': report,
+  };
+
+  File(p.join(dir.path, 'episode.json')).writeAsStringSync(enc.convert(episode));
+  File(p.join(dir.path, 'questions.json')).writeAsStringSync(enc.convert(qs));
+  File(p.join(dir.path, 'manifest.json')).writeAsStringSync(enc.convert(manifest));
+}
+
+void _print(String id, Map report) {
+  stdout.writeln('$id  сцен ${report['scenes']}  битов ${report['beats']}  выборов ${report['choices']}  '
+      'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context)  '
+      'фактов ${report['facts_covered']}  виза: ${report['approved_by'] ?? '—'}');
+}
+
+// ---------------------------------------------------------------- utils
+dynamic _yaml(String path) => _plain(loadYaml(File(path).readAsStringSync()));
+dynamic _plain(dynamic n) {
+  if (n is YamlMap) return {for (final e in n.entries) e.key.toString(): _plain(e.value)};
+  if (n is YamlList) return [for (final e in n) _plain(e)];
+  return n;
+}
+String _repoRoot() {
+  var d = Directory.current;
+  while (!File(p.join(d.path, 'CLAUDE.md')).existsSync() || !Directory(p.join(d.path, 'content')).existsSync()) {
+    if (d.parent.path == d.path) throw StateError('Не найден корень репозитория (CLAUDE.md + content/)');
+    d = d.parent;
+  }
+  return d.path;
+}

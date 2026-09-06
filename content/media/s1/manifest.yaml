@@ -1,0 +1,43 @@
+# Иллюстрации сезона 1. status: missing | draft | approved
+# Файлы кладутся рядом: content/media/s1/<id>.png (исходник) — pack.dart сжимает в AVIF/WebP.
+# Для каждого approved-файла обязана быть запись в content/sources/media.yaml.
+
+- id: art_s1e01_010
+  kind: scene
+  status: missing
+  brief: "1457, окраина Сыгнака после набега. Разорённая стоянка, пустой загон, вдали — уходящие всадники-ойраты. Рассвет, пыль. Без крупных лиц."
+  seed: null
+  prompt_ref: null
+  approved_by: null
+
+- id: art_s1e01_020
+  kind: scene
+  status: missing
+  brief: "Совет в юрте. Два султана в чапанах XV века у очага, шанырак над ними, полумрак, отсветы огня. Никаких доспехов «в стиле фэнтези»."
+  seed: null
+  prompt_ref: null
+  approved_by: null
+
+- id: art_s1e01_030
+  kind: scene
+  status: missing
+  brief: "1465, долина Шу весной. Кочевье ставит юрты у реки, зелёные предгорья, широкое небо. Ощущение прибытия, а не бегства."
+  seed: null
+  prompt_ref: null
+  approved_by: null
+
+- id: art_s1e01_040
+  kind: scene
+  status: missing
+  brief: "1468. Роды стягиваются к ставке: караваны и всадники подходят к лагерю с разных сторон, вечер, много огней. Масштаб, а не портрет."
+  seed: null
+  prompt_ref: null
+  approved_by: null
+
+- id: cover_s1e01
+  kind: cover
+  status: missing
+  brief: "Обложка серии 1:1. Один сильный образ: юрта на берегу Шу на фоне гор."
+  seed: null
+  prompt_ref: null
+  approved_by: null

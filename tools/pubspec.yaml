@@ -1,0 +1,8 @@
+name: nomads_tools
+description: Компилятор и валидатор контента Nomad's Way (content/ → build/).
+publish_to: none
+environment:
+  sdk: ^3.5.0
+dependencies:
+  yaml: ^3.1.2
+  path: ^1.9.0
