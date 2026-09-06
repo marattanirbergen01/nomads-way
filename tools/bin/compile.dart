@@ -33,7 +33,8 @@ void main(List<String> args) {
     }
     for (final c in (node['children'] as List? ?? [])) walk(c);
   }
-  for (final n in _yaml(p.join(content, 'curriculum/ent_history.yaml')) as List) walk(n);
+  final curriculum = (_yaml(p.join(content, 'curriculum/ent_history.yaml')) as List).cast<Map>();
+  for (final n in curriculum) walk(n);
 
   // ---- серии
   final episodesDir = Directory(p.join(content, 'episodes'));
@@ -45,6 +46,7 @@ void main(List<String> args) {
     ..sort((a, b) => a.path.compareTo(b.path));
 
   var compiled = 0;
+  final catalog = <Map<String, Object?>>[];
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
     final id = ep['episode'] as String;
@@ -61,6 +63,10 @@ void main(List<String> args) {
     if (errors.isEmpty) {
       _write(out, id, ep, questions, factTopic, report);
       compiled++;
+      catalog.add({
+        'id': id, 'title': ep['title'], 'topics': ep['topics'], 'era': ep['era'], 'version': 1,
+        'scenes': report['scenes'], 'questions': report['questions'], 'approved': ep['approved_by'] != null,
+      });
     }
     _print(id, report);
   }
@@ -71,6 +77,12 @@ void main(List<String> args) {
   for (final e in errors) stdout.writeln('  ✗ $e');
   if (errors.isNotEmpty) { stdout.writeln('\n${errors.length} ошибок. Ничего не записано.'); exit(1); }
   if (strict && warnings.isNotEmpty) { stdout.writeln('\n--strict: ${warnings.length} предупреждений считаются ошибками.'); exit(1); }
+  if (!check) {
+    const enc = JsonEncoder.withIndent('  ');
+    Directory(out).createSync(recursive: true);
+    File(p.join(out, 'catalog.json')).writeAsStringSync(enc.convert(catalog));
+    File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
+  }
   stdout.writeln(check ? '\nПроверка пройдена.' : '\nСобрано серий: $compiled → $out');
 }
 
@@ -257,6 +269,23 @@ void _print(String id, Map report) {
   stdout.writeln('$id  сцен ${report['scenes']}  битов ${report['beats']}  выборов ${report['choices']}  '
       'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context)  '
       'фактов ${report['facts_covered']}  виза: ${report['approved_by'] ?? '—'}');
+}
+
+/// Плоский список тем с фактами — для экрана готовности. Только узлы с must_know.
+List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
+  final out = <Map<String, Object?>>[];
+  void walk(Map n, String? parent) {
+    final facts = (n['must_know'] as List? ?? []).cast<Map>();
+    if (facts.isNotEmpty) {
+      out.add({
+        'id': n['id'], 'parent': parent, 'title': n['title'], 'status': n['status'],
+        'facts': [for (final f in facts) {'id': f['id'], 'kk': f['kk'], 'ru': f['ru']}],
+      });
+    }
+    for (final c in (n['children'] as List? ?? []).cast<Map>()) walk(c, n['id'] as String);
+  }
+  for (final r in roots) walk(r, null);
+  return out;
 }
 
 // ---------------------------------------------------------------- utils

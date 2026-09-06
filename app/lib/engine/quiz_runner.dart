@@ -70,4 +70,8 @@ class Attempt {
   final bool correct;
   final int ms;
   final DateTime at;
+
+  Map<String, dynamic> toJson() => {'q': questionId, 'f': fact, 'ok': correct, 'ms': ms, 'at': at.toIso8601String()};
+  factory Attempt.fromJson(Map<String, dynamic> j) =>
+      Attempt(questionId: j['q'], fact: j['f'], correct: j['ok'] == true, ms: j['ms'], at: DateTime.parse(j['at']));
 }

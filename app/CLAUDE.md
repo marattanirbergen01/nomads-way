@@ -12,7 +12,7 @@ Flutter-клиент. Медиаплеер с машиной состояний,
   - `quiz_runner.dart` — выдаёт вопросы, перемешивает варианты, считает балл
   - `scheduler.dart` — интервальное повторение (упрощённый SM-2)
   - `mastery.dart` — % готовности по темам
-- `lib/data/` — модели (из `build/*/episode.json`, `questions.json`), локальное хранилище, загрузка бандлов
+- `lib/data/` — модели (из `build/*/*.json`), `local/progress_repository.dart` (shared_preferences; единственная точка записи прогресса), `remote/` загрузка бандлов с кэшем
 - `lib/features/` — экраны. Экран не содержит логики движка.
 - Порядок сборки движков: story → quiz → scheduler → mastery. Каждый показывается людям отдельно.
 
