@@ -23,3 +23,4 @@ content/media/*/*.jpg
 content/media/*/*.jpeg
 # презентации-питчи лежат вне репозитория
 nomads way/
+design/nomads-way-screens.html
