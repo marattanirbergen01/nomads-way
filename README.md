@@ -14,6 +14,14 @@
 
 ## Запуск в разработке
 
+Одной командой (собирает контент, поднимает CDN и приложение, открывает Chrome):
+
+```bash
+sh scripts/dev.sh
+```
+
+Вручную:
+
 ```bash
 # 1. собрать контент → build/
 cd tools && dart pub get && dart run bin/compile.dart
