@@ -13,8 +13,10 @@ class Services {
   final scheduler = const Scheduler();
   final mastery = const Mastery();
 
-  /// В разработке — tools/serve.py. В проде — адрес CDN из конфигурации.
-  static const defaultCdn = 'http://localhost:8787';
+  /// Адрес CDN задаётся при сборке: --dart-define=CDN_URL=... (абсолютный или относительный, например /cdn).
+  /// По умолчанию — tools/serve.py для разработки.
+  static const _cdnDefine = String.fromEnvironment('CDN_URL', defaultValue: 'http://localhost:8787');
+  static String get defaultCdn => Uri.base.resolve(_cdnDefine).toString().replaceFirst(RegExp(r'/$'), '');
 
   static Future<Services> boot() async {
     final store = await ProgressRepository.open();

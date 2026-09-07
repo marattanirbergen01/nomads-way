@@ -70,3 +70,263 @@
   seed: null
   prompt_ref: prompts/app_icon.md
   approved_by: null
+
+# --- редакция 2: новые сцены -------------------------------------------
+- id: art_s1e01_012
+  kind: scene
+  status: missing
+  brief: 'Ханские сборщики в разорённом ауле. Двое-трое верховых в дорогих чапанах перед пешими людьми, пустой загон, женщина уводит последнюю лошадь. Напряжение без драки.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_012.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_022
+  kind: scene
+  status: missing
+  brief: 'Сборы кочевья. Разобранные юрты, вьюки на верблюдах, толпа слушает султана, вдали — родовое кладбище с куласами. Утро, движение, решимость.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_022.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_025
+  kind: scene
+  status: missing
+  brief: 'Переход зимой. Длинная вереница кочевья по заснеженной степи, низкое солнце, пар от дыхания животных. Усталость и упорство, лиц не видно.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_025.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_032
+  kind: scene
+  status: missing
+  brief: 'Первый вечер в долине Шу: юрты уже стоят, дымы очагов, женщины у казана, табун у реки, горы в закатном свете. Обжитой лагерь, а не привал.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_032.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_035
+  kind: scene
+  status: missing
+  brief: 'Приём посланца Есен-Буги. Всадники с бунчуком у юрты султанов, обмен приветствиями, свиток в руках, вдали предгорья Могулистана. Дипломатия, не битва.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_035.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_038
+  kind: scene
+  status: missing
+  brief: '1468, выступление войска Абулхайра. Колонна всадников уходит на восток в пыли, знамёна, тяжёлое небо. Вид со стороны, без крупных лиц.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_038.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_042
+  kind: scene
+  status: missing
+  brief: 'Осень, новые роды приходят в Жетысу. Караваны и стада подходят к разросшейся ставке с нескольких сторон, много юрт, дымы. Ощущение растущего народа.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_042.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: art_s1e01_045
+  kind: scene
+  status: missing
+  brief: 'Послесловие: старик и юноша на холме над долиной в сумерках, внизу огни большого лагеря. Тихий, итоговый кадр.'
+  seed: null
+  prompt_ref: prompts/art_s1e01_045.md
+  approved_by: null
+  file: null
+  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+- id: map_s1e01_route
+  kind: map
+  status: missing
+  brief: 'Карта пути откочёвки: от Сыгнака и низовий Сырдарьи на юго-восток в Западное Жетысу (долины Шу и Козыбасы). Подписи kk/ru, пунктир маршрута, владения Абулхайра и Могулистан разными заливками.'
+  seed: null
+  prompt_ref: prompts/map_s1e01_route.md
+  approved_by: null
+  file: null
+  note: 'НЕ генерировать ИИ: география и подписи должны быть точными. Рисуется вручную (вектор) по исторической карте, ИИ — только фон-текстура.'
+
+# --- аватары игрока (3 варианта внешности) -----------------------------
+
+# --- аватары игрока: 3 внешности × 5 эмоций ----------------------------
+- id: avatar_01_zhylqyshy_calm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — спокойствие.'
+  seed: null
+  prompt_ref: prompts/avatar_01_zhylqyshy.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_01_zhylqyshy_joy
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — радость.'
+  seed: null
+  prompt_ref: prompts/avatar_01_zhylqyshy.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_01_zhylqyshy_alarm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — тревога.'
+  seed: null
+  prompt_ref: prompts/avatar_01_zhylqyshy.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_01_zhylqyshy_resolve
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — решимость.'
+  seed: null
+  prompt_ref: prompts/avatar_01_zhylqyshy.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_01_zhylqyshy_sorrow
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — печаль.'
+  seed: null
+  prompt_ref: prompts/avatar_01_zhylqyshy.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_02_mergen_calm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Мерген, охотник», ~17 лет — спокойствие.'
+  seed: null
+  prompt_ref: prompts/avatar_02_mergen.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_02_mergen_joy
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Мерген, охотник», ~17 лет — радость.'
+  seed: null
+  prompt_ref: prompts/avatar_02_mergen.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_02_mergen_alarm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Мерген, охотник», ~17 лет — тревога.'
+  seed: null
+  prompt_ref: prompts/avatar_02_mergen.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_02_mergen_resolve
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Мерген, охотник», ~17 лет — решимость.'
+  seed: null
+  prompt_ref: prompts/avatar_02_mergen.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_02_mergen_sorrow
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Мерген, охотник», ~17 лет — печаль.'
+  seed: null
+  prompt_ref: prompts/avatar_02_mergen.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_03_ustaqyz_calm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — спокойствие.'
+  seed: null
+  prompt_ref: prompts/avatar_03_ustaqyz.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_03_ustaqyz_joy
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — радость.'
+  seed: null
+  prompt_ref: prompts/avatar_03_ustaqyz.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_03_ustaqyz_alarm
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — тревога.'
+  seed: null
+  prompt_ref: prompts/avatar_03_ustaqyz.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_03_ustaqyz_resolve
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — решимость.'
+  seed: null
+  prompt_ref: prompts/avatar_03_ustaqyz.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+- id: avatar_03_ustaqyz_sorrow
+  kind: avatar
+  status: missing
+  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — печаль.'
+  seed: null
+  prompt_ref: prompts/avatar_03_ustaqyz.md
+  approved_by: null
+  file: null
+  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+
+# --- канонические портреты исторических лиц ----------------------------
+- id: char_kerei
+  kind: character
+  status: missing
+  brief: 'Канонический портрет: Керей-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
+  seed: null
+  prompt_ref: prompts/char_kerei.md
+  approved_by: null
+  file: null
+  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+- id: char_zhanibek
+  kind: character
+  status: missing
+  brief: 'Канонический портрет: Жанибек-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
+  seed: null
+  prompt_ref: prompts/char_zhanibek.md
+  approved_by: null
+  file: null
+  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+- id: char_abilqaiyr
+  kind: character
+  status: missing
+  brief: 'Канонический портрет: Абулхайр-хан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
+  seed: null
+  prompt_ref: prompts/char_abilqaiyr.md
+  approved_by: null
+  file: null
+  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+- id: char_esen_buga
+  kind: character
+  status: missing
+  brief: 'Канонический портрет: Есен-Буга. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
+  seed: null
+  prompt_ref: prompts/char_esen_buga.md
+  approved_by: null
+  file: null
+  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
