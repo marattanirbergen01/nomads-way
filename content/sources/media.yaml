@@ -1,4 +1,51 @@
 # Происхождение каждого медиафайла. Нет записи — файл не идёт в сборку.
 # license: own-generation | cc-by | cc-by-sa | public-domain | licensed
-# Пока пусто: иллюстрации ещё не сделаны. См. content/media/s1/manifest.yaml (статусы).
-[]
+
+- id: art_s1e01_010
+  file: content/media/s1/art_s1e01_010.png
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_010.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null
+- id: art_s1e01_020
+  file: content/media/s1/art_s1e01_020.jpg
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_020.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null
+- id: art_s1e01_030
+  file: content/media/s1/art_s1e01_030.png
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_030.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null
+- id: art_s1e01_040
+  file: content/media/s1/art_s1e01_040.png
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_040.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null
+- id: cover_s1e01
+  file: content/media/s1/cover_s1e01.jpg
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/cover_s1e01.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null
+- id: cover_season1
+  file: content/media/s1/cover_season1.png
+  license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/cover_season1.md
+  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  author: Marat Tanirbergen
+  date: '2026-09-07'
+  hist_review: null

@@ -18,6 +18,8 @@ content/media/**/raw/
 .env
 *.local
 # исходники иллюстраций (тяжёлые) — коммитим только out/*.jpg
-content/media/**/*.png
+content/media/*/*.png
+content/media/*/*.jpg
+content/media/*/*.jpeg
 # презентации-питчи лежат вне репозитория
 nomads way/
