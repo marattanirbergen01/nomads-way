@@ -12,17 +12,23 @@ episode: s1e01
 title: {kk, ru, en}
 topics: [kz.4.1]                # темы, которые серия покрывает
 characters:
-  - {id, name: {kk, ru}, fiction: bool, note}
+  - {id, name: {kk, ru}, fiction: bool, note, avatar: bool?, default_name: {kk, ru}?}
+# avatar: true — персонаж-аватар игрока; в его репликах и prompt допустим плейсхолдер {player},
+# клиент подставляет имя из профиля (default_name — пока имя не задано). Имя не склонять.
 scenes:
   - id: sc010
     art: art_s1e01_010          # id картинки в content/media/<season>/manifest.yaml
     covers: [f.4.1.a, ...]      # факты, которые прозвучали в этой сцене
+    title: {kk, ru, en}          # необязательно: название сцены для шапки плеера
+    layer: history | personal    # необязательно: personal — пустой covers и без quiz, history — covers ≥ 1
+    pan: 0..100                  # необязательно: горизонтальное панорамирование кадра (50 = центр)
+    avatar: left | right         # необязательно: сторона фигуры аватара (по умолчанию left)
     beats:
       - say: {who, kk, ru, en}
       - choice:
           prompt: {kk, ru, en}
           options:
-            - {id, kk, ru, en, set: {var: +n}, goto: sc020}
+            - {id, kk, ru, en, set: {var: +n}, goto: sc020, art: art_id?}   # art у ОБЕИХ опций → развилка двумя кадрами
     quiz: [q_s1e01_001, ...]    # вопросы, задаваемые после сцены
 final_test:                     # итоговый мини-тест серии, формат ЕНТ
   single: 10

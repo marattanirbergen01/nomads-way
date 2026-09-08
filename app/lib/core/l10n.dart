@@ -7,5 +7,8 @@ class L10n {
       L10n({for (final e in j.entries) e.key: e.value as String});
 
   String of(String locale) => _m[locale] ?? _m['kk'] ?? _m.values.firstOrNull ?? '';
+  /// Реплика с подставленным именем игрока. Имя не склоняется — контент написан так,
+  /// что оно стоит только в именительном падеже.
+  String ofPlayer(String locale, String player) => of(locale).replaceAll('{player}', player);
   bool has(String locale) => _m.containsKey(locale);
 }

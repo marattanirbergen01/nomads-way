@@ -20,3 +20,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   # assets/ — только интерфейс. Контент приходит бандлами (см. app/CLAUDE.md).
+  fonts:
+    - family: Golos
+      fonts:
+        - asset: assets/fonts/GolosText.ttf

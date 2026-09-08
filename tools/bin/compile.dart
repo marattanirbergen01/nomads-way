@@ -103,6 +103,21 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
 
   for (final s in scenes) {
     final sid = s['id'] as String;
+    final layer = s['layer'] as String?;
+    if (layer != null && !{'history', 'personal'}.contains(layer)) {
+      err('$id/$sid: layer должен быть history|personal');
+    }
+    if (layer == 'personal') {
+      if ((s['covers'] as List? ?? []).isNotEmpty) err('$id/$sid: personal-сцена не несёт covers');
+      if ((s['quiz'] as List? ?? []).isNotEmpty) err('$id/$sid: personal-сцена не несёт quiz');
+    }
+    if (layer == 'history' && (s['covers'] as List? ?? []).isEmpty) {
+      err('$id/$sid: history-сцена обязана нести хотя бы один факт в covers');
+    }
+    final pan = s['pan'];
+    if (pan != null && (pan is! int || pan < 0 || pan > 100)) err('$id/$sid: pan 0..100');
+    final side = s['avatar'];
+    if (side != null && !{'left', 'right'}.contains(side)) err('$id/$sid: avatar left|right');
     for (final f in (s['covers'] as List? ?? [])) {
       if (!facts.containsKey(f)) err('$id/$sid: covers неизвестный факт $f');
     }
@@ -121,6 +136,9 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
         _needLangs(ch['prompt'] as Map, '$id/$sid choice.prompt');
         for (final o in (ch['options'] as List).cast<Map>()) {
           _needLangs(o, '$id/$sid option ${o['id']}');
+          if (o['art'] != null && !media.contains(o['art'])) {
+            err('$id/$sid option ${o['id']}: art ${o['art']} нет в media/manifest.yaml');
+          }
           final g = o['goto'] as String?;
           if (g == null) { err('$id/$sid option ${o['id']}: нет goto'); continue; }
           if (g != 'end' && !sceneIds.contains(g)) err('$id/$sid: goto $g не существует');
@@ -206,13 +224,22 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     'era': ep['era'],
     'characters': {
       for (final c in (ep['characters'] as List).cast<Map>())
-        c['id']: {'name': t(c['name']), 'fiction': c['fiction'] == true},
+        c['id']: {
+          'name': t(c['name']),
+          'fiction': c['fiction'] == true,
+          if (c['avatar'] == true) 'avatar': true,
+          if (c['default_name'] != null) 'defaultName': t(c['default_name']),
+        },
     },
     'scenes': [
       for (final s in (ep['scenes'] as List).cast<Map>())
         {
           'id': s['id'],
           'art': s['art'],
+          if (s['title'] != null) 'title': t(s['title']),
+          if (s['layer'] != null) 'layer': s['layer'],
+          if (s['pan'] != null) 'pan': s['pan'],
+          if (s['avatar'] != null) 'avatarSide': s['avatar'],
           'covers': s['covers'] ?? [],
           'beats': [
             for (final b in (s['beats'] as List).cast<Map>())
@@ -224,7 +251,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                   'prompt': t(b['choice']['prompt']),
                   'options': [
                     for (final o in (b['choice']['options'] as List).cast<Map>())
-                      {'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto']},
+                      {'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto'], if (o['art'] != null) 'art': o['art']},
                   ],
                 },
           ],
@@ -258,7 +285,15 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     'version': 1,
     'builtAt': DateTime.now().toUtc().toIso8601String(),
     'files': ['episode.json', 'questions.json'],
-    'media': [for (final s in (ep['scenes'] as List).cast<Map>()) s['art']],
+    'media': [
+      for (final s in (ep['scenes'] as List).cast<Map>()) ...[
+        s['art'],
+        for (final b in (s['beats'] as List).cast<Map>())
+          if (b['choice'] != null)
+            for (final o in (b['choice']['options'] as List).cast<Map>())
+              if (o['art'] != null) o['art'],
+      ],
+    ],
     'stats': report,
   };
 
@@ -290,17 +325,17 @@ int _copyMedia(String content, String out) {
   return n;
 }
 
-/// Плоский список тем с фактами — для экрана готовности. Только узлы с must_know.
+/// Плоский список узлов программы: периоды (без родителя) и темы с фактами.
+/// Клиент строит из него экран «Жол» и «Дайындық», не разбирая YAML.
 List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
   final out = <Map<String, Object?>>[];
   void walk(Map n, String? parent) {
     final facts = (n['must_know'] as List? ?? []).cast<Map>();
-    if (facts.isNotEmpty) {
-      out.add({
-        'id': n['id'], 'parent': parent, 'title': n['title'], 'status': n['status'],
-        'facts': [for (final f in facts) {'id': f['id'], 'kk': f['kk'], 'ru': f['ru']}],
-      });
-    }
+    out.add({
+      'id': n['id'], 'parent': parent, 'title': n['title'], 'status': n['status'],
+      if (n['era'] != null) 'era': n['era'],
+      'facts': [for (final f in facts) {'id': f['id'], 'kk': f['kk'], 'ru': f['ru']}],
+    });
     for (final c in (n['children'] as List? ?? []).cast<Map>()) walk(c, n['id'] as String);
   }
   for (final r in roots) walk(r, null);
