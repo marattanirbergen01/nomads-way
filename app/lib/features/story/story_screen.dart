@@ -385,7 +385,7 @@ class _SayView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB(20, avatar ? 0 : 0, 20, 0),
                 child: Transform.translate(
-                  offset: Offset(0, avatar ? 0 : -23),
+                  offset: Offset(0, avatar ? 0 : -18),
                   child: Row(children: [
                     if (!avatar) AvatarCircle(size: 46, look: look),
                     if (!avatar) const SizedBox(width: 10),
@@ -398,7 +398,7 @@ class _SayView extends StatelessWidget {
                 ),
               ),
             Padding(
-              padding: EdgeInsets.fromLTRB(22, isNarrator ? 0 : (avatar ? 14 : -6), 22, 0),
+              padding: EdgeInsets.fromLTRB(22, isNarrator ? 0 : (avatar ? 14 : 0), 22, 0),
               child: Align(alignment: Alignment.centerLeft, child: Text(
                 say.text.ofPlayer(l, st_._player),
                 style: st(19, w: 500, height: 1.45).copyWith(fontStyle: isNarrator ? FontStyle.italic : FontStyle.normal, shadows: _sh),
