@@ -57,11 +57,12 @@ class _PathTabState extends State<PathTab> {
     final s = _s.s; final l = _s.l;
     final periods = topics.periods;
     // серия, которую продолжаем — самая свежая по мета
-    final conts = [for (final e in catalog) _s.store.continueMeta(e.id)].whereType<ContinueMeta>().toList()..sort((a, b) => b.at.compareTo(a.at));
+    final live = catalog.where((e) => !e.planned).toList();
+    final conts = [for (final e in live) _s.store.continueMeta(e.id)].whereType<ContinueMeta>().toList()..sort((a, b) => b.at.compareTo(a.at));
     final cont = conts.firstOrNull;
     final contEntry = cont == null ? null : catalog.where((e) => e.id == cont.ep).firstOrNull;
     final season = periods.firstOrNull;
-    final done = catalog.where((e) => _s.store.result(e.id) != null).length;
+    final done = live.where((e) => _s.store.result(e.id) != null).length;
 
     return ListView(padding: EdgeInsets.zero, children: [
       // ---- небо: баннер сезона
@@ -75,7 +76,7 @@ class _PathTabState extends State<PathTab> {
           const SizedBox(height: 7),
           Text(season?.title.of(l) ?? '', style: st(30, w: 700, height: 1.08)),
           const SizedBox(height: 7),
-          Text('${catalog.length} ${s('series.n')} · $done-і ${s('passed.1')}', style: st(13, color: const Color(0xFFE8D9BD))),
+          Text('${live.length} ${s('series.n')} · $done-і ${s('passed.1')}', style: st(13, color: const Color(0xFFE8D9BD))),
         ])),
       ])),
       const HorizonLine(),
@@ -125,7 +126,8 @@ class _PeriodRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = services.s; final l = services.l;
     final active = topics.periodActive(period.id);
-    final eps = catalog.where((e) => e.inPeriod(period.id)).toList();
+    final eps = catalog.where((e) => e.inPeriod(period.id) && !e.planned).toList();
+    final all = catalog.where((e) => e.inPeriod(period.id)).length;
     final done = eps.where((e) => services.store.result(e.id) != null).length;
     final passes = eps.fold(0, (n, e) => n + services.store.completions(e.id));
     final allDone = eps.isNotEmpty && done == eps.length;
@@ -141,14 +143,14 @@ class _PeriodRow extends StatelessWidget {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Expanded(child: Text(period.title.of(l), style: st(15, w: 600))),
-              if (active) Text('$done / ${eps.length}', style: st(13, w: 600, color: C.gold)),
+              if (active) Text('$done / ${all == 0 ? eps.length : all}', style: st(13, w: 600, color: C.gold)),
             ]),
             const SizedBox(height: 4),
             Text(active
-                ? [period.era, '${eps.length} ${s('series.n')} · $done-і ${s('passed.1')}', if (passes > 0) '$passes ${s('times')}'].whereType<String>().join(' · ')
+                ? [period.era, '${all == 0 ? eps.length : all} ${s('series.n')} · $done-і ${s('passed.1')}', if (passes > 0) '$passes ${s('times')}'].whereType<String>().join(' · ')
                 : [period.era, s('soon')].whereType<String>().join(' · '),
                 style: st(12.5, color: C.inkSoft)),
-            if (active) ...[const SizedBox(height: 6), Bar(eps.isEmpty ? 0 : done / eps.length)],
+            if (active) ...[const SizedBox(height: 6), Bar(all == 0 ? 0 : done / all)],
           ])),
           if (active) ...[const SizedBox(width: 8), const Chevron()],
         ]),

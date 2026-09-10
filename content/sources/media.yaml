@@ -2,50 +2,114 @@
 # license: own-generation | cc-by | cc-by-sa | public-domain | licensed
 
 - id: art_s1e01_010
-  file: content/media/s1/art_s1e01_010.png
+  file: content/media/s1/scenes/art_s1e01_010.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_010.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_010.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
   hist_review: null
 - id: art_s1e01_020
-  file: content/media/s1/art_s1e01_020.jpg
+  file: content/media/s1/scenes/art_s1e01_020.jpg
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_020.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_020.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
   hist_review: null
 - id: art_s1e01_030
-  file: content/media/s1/art_s1e01_030.png
+  file: content/media/s1/scenes/art_s1e01_030.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_030.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_030.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
   hist_review: null
 - id: art_s1e01_040
-  file: content/media/s1/art_s1e01_040.png
+  file: content/media/s1/scenes/art_s1e01_040.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/art_s1e01_040.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_040.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
   hist_review: null
 - id: cover_s1e01
-  file: content/media/s1/cover_s1e01.jpg
+  file: content/media/s1/backgrounds/cover_s1e01.jpg
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/cover_s1e01.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/backgrounds/cover_s1e01.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
   hist_review: null
 - id: cover_season1
-  file: content/media/s1/cover_season1.png
+  file: content/media/s1/backgrounds/cover_season1.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/cover_season1.md
+  origin: ИИ-генерация по промпту content/media/s1/prompts/backgrounds/cover_season1.md
   tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
   author: Marat Tanirbergen
   date: '2026-09-07'
+  hist_review: null
+- id: avatar_01_zhylqyshy_calm
+  file: content/media/s1/avatars/avatar_01_zhylqyshy_calm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md, кадр seed 2106914426; головной убор, ворот и полы чапана доработаны в Gemini'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)'
+  author: Marat Tanirbergen
+  date: '2026-09-09'
+  hist_review: null
+- id: avatar_01_zhylqyshy_joy
+  file: content/media/s1/avatars/avatar_01_zhylqyshy_joy.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png (в нём головной убор доработан в Gemini), strength 1.0, seed 2106914426'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-09'
+  hist_review: null
+- id: avatar_01_zhylqyshy_alarm
+  file: content/media/s1/avatars/avatar_01_zhylqyshy_alarm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
+  hist_review: null
+- id: avatar_01_zhylqyshy_sorrow
+  file: content/media/s1/avatars/avatar_01_zhylqyshy_sorrow.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
+  hist_review: null
+- id: avatar_02_aqyn_calm
+  file: content/media/s1/avatars/avatar_02_aqyn_calm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; txt2img, seed 3142706118, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
+  hist_review: null
+- id: avatar_02_aqyn_joy
+  file: content/media/s1/avatars/avatar_02_aqyn_joy.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
+  hist_review: null
+- id: avatar_02_aqyn_alarm
+  file: content/media/s1/avatars/avatar_02_aqyn_alarm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
+  hist_review: null
+- id: avatar_02_aqyn_sorrow
+  file: content/media/s1/avatars/avatar_02_aqyn_sorrow.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-10'
   hist_review: null

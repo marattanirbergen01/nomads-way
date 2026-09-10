@@ -8,9 +8,9 @@
   status: draft
   brief: 1457, окраина Сыгнака после набега. Разорённая стоянка, пустой загон, вдали — уходящие всадники-ойраты. Рассвет, пыль. Без крупных лиц.
   seed: null
-  prompt_ref: prompts/art_s1e01_010.md
+  prompt_ref: prompts/scenes/art_s1e01_010.md
   approved_by: null
-  file: art_s1e01_010.png
+  file: scenes/art_s1e01_010.png
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
 - id: art_s1e01_020
@@ -18,9 +18,9 @@
   status: draft
   brief: Совет в юрте. Два султана в чапанах XV века у очага, шанырак над ними, полумрак, отсветы огня. Никаких доспехов «в стиле фэнтези».
   seed: null
-  prompt_ref: prompts/art_s1e01_020.md
+  prompt_ref: prompts/scenes/art_s1e01_020.md
   approved_by: null
-  file: art_s1e01_020.jpg
+  file: scenes/art_s1e01_020.jpg
   generated: '2026-09-07'
   note: 1376×768
 - id: art_s1e01_030
@@ -28,9 +28,9 @@
   status: draft
   brief: 1465, долина Шу весной. Кочевье ставит юрты у реки, зелёные предгорья, широкое небо. Ощущение прибытия, а не бегства.
   seed: null
-  prompt_ref: prompts/art_s1e01_030.md
+  prompt_ref: prompts/scenes/art_s1e01_030.md
   approved_by: null
-  file: art_s1e01_030.png
+  file: scenes/art_s1e01_030.png
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
 - id: art_s1e01_040
@@ -38,9 +38,9 @@
   status: draft
   brief: '1468. Роды стягиваются к ставке: караваны и всадники подходят к лагерю с разных сторон, вечер, много огней. Масштаб, а не портрет.'
   seed: null
-  prompt_ref: prompts/art_s1e01_040.md
+  prompt_ref: prompts/scenes/art_s1e01_040.md
   approved_by: null
-  file: art_s1e01_040.png
+  file: scenes/art_s1e01_040.png
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
 - id: cover_s1e01
@@ -48,9 +48,9 @@
   status: draft
   brief: 'Обложка серии 1:1. Один сильный образ: юрта на берегу Шу на фоне гор.'
   seed: null
-  prompt_ref: prompts/cover_s1e01.md
+  prompt_ref: prompts/backgrounds/cover_s1e01.md
   approved_by: null
-  file: cover_s1e01.jpg
+  file: backgrounds/cover_s1e01.jpg
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
 - id: cover_season1
@@ -58,9 +58,9 @@
   status: draft
   brief: Баннер сезона 2:1 для главного экрана. Всадник на гребне на рассвете, степь, караван вдали.
   seed: null
-  prompt_ref: prompts/cover_season1.md
+  prompt_ref: prompts/backgrounds/cover_season1.md
   approved_by: null
-  file: cover_season1.png
+  file: backgrounds/cover_season1.png
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
 - id: app_icon
@@ -68,7 +68,7 @@
   status: missing
   brief: Иконка приложения 1024×1024. Шанырак золотом на глубоком бирюзовом, плоско, без текста.
   seed: null
-  prompt_ref: prompts/app_icon.md
+  prompt_ref: prompts/app/app_icon.md
   approved_by: null
 
 # --- редакция 2: новые сцены -------------------------------------------
@@ -77,7 +77,7 @@
   status: missing
   brief: 'Ханские сборщики в разорённом ауле. Двое-трое верховых в дорогих чапанах перед пешими людьми, пустой загон, женщина уводит последнюю лошадь. Напряжение без драки.'
   seed: null
-  prompt_ref: prompts/art_s1e01_012.md
+  prompt_ref: prompts/scenes/art_s1e01_012.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -86,7 +86,7 @@
   status: missing
   brief: 'Сборы кочевья. Разобранные юрты, вьюки на верблюдах, толпа слушает султана, вдали — родовое кладбище с куласами. Утро, движение, решимость.'
   seed: null
-  prompt_ref: prompts/art_s1e01_022.md
+  prompt_ref: prompts/scenes/art_s1e01_022.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -95,7 +95,7 @@
   status: missing
   brief: 'Переход зимой. Длинная вереница кочевья по заснеженной степи, низкое солнце, пар от дыхания животных. Усталость и упорство, лиц не видно.'
   seed: null
-  prompt_ref: prompts/art_s1e01_025.md
+  prompt_ref: prompts/scenes/art_s1e01_025.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -104,7 +104,7 @@
   status: missing
   brief: 'Первый вечер в долине Шу: юрты уже стоят, дымы очагов, женщины у казана, табун у реки, горы в закатном свете. Обжитой лагерь, а не привал.'
   seed: null
-  prompt_ref: prompts/art_s1e01_032.md
+  prompt_ref: prompts/scenes/art_s1e01_032.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -113,7 +113,7 @@
   status: missing
   brief: 'Приём посланца Есен-Буги. Всадники с бунчуком у юрты султанов, обмен приветствиями, свиток в руках, вдали предгорья Могулистана. Дипломатия, не битва.'
   seed: null
-  prompt_ref: prompts/art_s1e01_035.md
+  prompt_ref: prompts/scenes/art_s1e01_035.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -122,7 +122,7 @@
   status: missing
   brief: '1468, выступление войска Абулхайра. Колонна всадников уходит на восток в пыли, знамёна, тяжёлое небо. Вид со стороны, без крупных лиц.'
   seed: null
-  prompt_ref: prompts/art_s1e01_038.md
+  prompt_ref: prompts/scenes/art_s1e01_038.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -131,7 +131,7 @@
   status: missing
   brief: 'Осень, новые роды приходят в Жетысу. Караваны и стада подходят к разросшейся ставке с нескольких сторон, много юрт, дымы. Ощущение растущего народа.'
   seed: null
-  prompt_ref: prompts/art_s1e01_042.md
+  prompt_ref: prompts/scenes/art_s1e01_042.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -140,7 +140,7 @@
   status: missing
   brief: 'Послесловие: старик и юноша на холме над долиной в сумерках, внизу огни большого лагеря. Тихий, итоговый кадр.'
   seed: null
-  prompt_ref: prompts/art_s1e01_045.md
+  prompt_ref: prompts/scenes/art_s1e01_045.md
   approved_by: null
   file: null
   note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
@@ -149,7 +149,7 @@
   status: missing
   brief: 'Карта пути откочёвки: от Сыгнака и низовий Сырдарьи на юго-восток в Западное Жетысу (долины Шу и Козыбасы). Подписи kk/ru, пунктир маршрута, владения Абулхайра и Могулистан разными заливками.'
   seed: null
-  prompt_ref: prompts/map_s1e01_route.md
+  prompt_ref: prompts/maps/map_s1e01_route.md
   approved_by: null
   file: null
   note: 'НЕ генерировать ИИ: география и подписи должны быть точными. Рисуется вручную (вектор) по исторической карте, ИИ — только фон-текстура.'
@@ -159,100 +159,90 @@
 # --- аватары игрока: 3 внешности × 5 эмоций ----------------------------
 - id: avatar_01_zhylqyshy_calm
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Жылқышы, табунщик», ~17 лет — спокойствие.'
-  seed: null
-  prompt_ref: prompts/avatar_01_zhylqyshy.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  seed: 2106914426
+  prompt_ref: prompts/avatars/avatar_01_zhylqyshy.md
+  approved_by: Marat
+  file: avatars/avatar_01_zhylqyshy_calm.png
+  generated: '2026-09-09'
+  note: 'Эталон аватара 01. Seed справочный: он даёт базовый кадр Draw Things, но не этот файл — головной убор, ворот и полы чапана доработаны в Gemini. Остальные четыре эмоции делаются только через img2img от этого файла, strength 0.30.'
 - id: avatar_01_zhylqyshy_joy
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Жылқышы, табунщик», ~17 лет — радость.'
-  seed: null
-  prompt_ref: prompts/avatar_01_zhylqyshy.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  seed: 2106914426
+  prompt_ref: prompts/avatars/avatar_01_zhylqyshy.md
+  approved_by: Marat
+  file: avatars/avatar_01_zhylqyshy_joy.png
+  generated: '2026-09-09'
+  note: 'img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed тот же. Похожесть держит совпадение seed, а не малая сила денойза — диапазон 0.25–0.45 из промпт-файла на этой модели не работает.'
 - id: avatar_01_zhylqyshy_alarm
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Жылқышы, табунщик», ~17 лет — тревога.'
-  seed: null
-  prompt_ref: prompts/avatar_01_zhylqyshy.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_01_zhylqyshy_resolve
-  kind: avatar
-  status: missing
-  brief: 'Аватар «Жылқышы, табунщик», ~17 лет — решимость.'
-  seed: null
-  prompt_ref: prompts/avatar_01_zhylqyshy.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  seed: 2106914426
+  prompt_ref: prompts/avatars/avatar_01_zhylqyshy.md
+  approved_by: Marat
+  file: avatars/avatar_01_zhylqyshy_alarm.png
+  generated: '2026-09-09'
+  note: 'img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed тот же, steps 4. Перегенерён 2026-09-10 с усиленной формулировкой тревоги — открытый рот и белки над радужкой; по силе совпадает с аватаром 02.'
 - id: avatar_01_zhylqyshy_sorrow
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Жылқышы, табунщик», ~17 лет — печаль.'
-  seed: null
-  prompt_ref: prompts/avatar_01_zhylqyshy.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_02_mergen_calm
+  seed: 2106914426
+  prompt_ref: prompts/avatars/avatar_01_zhylqyshy.md
+  approved_by: Marat
+  file: avatars/avatar_01_zhylqyshy_sorrow.png
+  generated: '2026-09-10'
+  note: 'img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed тот же, steps 4. Самая различимая из четырёх эмоций: наклон головы читается и в круге 512.'
+- id: avatar_02_aqyn_calm
   kind: avatar
-  status: missing
-  brief: 'Аватар «Мерген, охотник», ~17 лет — спокойствие.'
-  seed: null
-  prompt_ref: prompts/avatar_02_mergen.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_02_mergen_joy
+  status: approved
+  brief: 'Аватар «Ақын, юный акын», ~17 лет — спокойствие.'
+  seed: 3142706118
+  prompt_ref: prompts/avatars/avatar_02_aqyn.md
+  approved_by: Marat
+  file: avatars/avatar_02_aqyn_calm.png
+  generated: '2026-09-10'
+  note: 'Эталон аватара 02. txt2img, steps 4. Қалпақ отрисован приблизительно: верх плоский, загнутый край шире, чем на референсе — принято сознательно.'
+- id: avatar_02_aqyn_joy
   kind: avatar
-  status: missing
-  brief: 'Аватар «Мерген, охотник», ~17 лет — радость.'
-  seed: null
-  prompt_ref: prompts/avatar_02_mergen.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_02_mergen_alarm
+  status: approved
+  brief: 'Аватар «Ақын, юный акын», ~17 лет — радость.'
+  seed: 3142706118
+  prompt_ref: prompts/avatars/avatar_02_aqyn.md
+  approved_by: Marat
+  file: avatars/avatar_02_aqyn_joy.png
+  generated: '2026-09-10'
+  note: 'img2img от avatar_02_aqyn_calm.png, strength 1.0, seed тот же, steps 4. Расхождение с эталоном 4.03 из 255 — вдвое плотнее, чем у аватара 01, потому что эталон здесь неправленый.'
+- id: avatar_02_aqyn_alarm
   kind: avatar
-  status: missing
-  brief: 'Аватар «Мерген, охотник», ~17 лет — тревога.'
-  seed: null
-  prompt_ref: prompts/avatar_02_mergen.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_02_mergen_resolve
+  status: approved
+  brief: 'Аватар «Ақын, юный акын», ~17 лет — тревога.'
+  seed: 3142706118
+  prompt_ref: prompts/avatars/avatar_02_aqyn.md
+  approved_by: Marat
+  file: avatars/avatar_02_aqyn_alarm.png
+  generated: '2026-09-10'
+  note: 'img2img от avatar_02_aqyn_calm.png, strength 1.0, seed тот же, steps 4. Формулировка тревоги усилена: белки над радужкой и открытый рот вместо ярлыка wide with alarm. Брови домиком модель не рисует — работу тянет рот.'
+- id: avatar_02_aqyn_sorrow
   kind: avatar
-  status: missing
-  brief: 'Аватар «Мерген, охотник», ~17 лет — решимость.'
-  seed: null
-  prompt_ref: prompts/avatar_02_mergen.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_02_mergen_sorrow
-  kind: avatar
-  status: missing
-  brief: 'Аватар «Мерген, охотник», ~17 лет — печаль.'
-  seed: null
-  prompt_ref: prompts/avatar_02_mergen.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  status: approved
+  brief: 'Аватар «Ақын, юный акын», ~17 лет — печаль.'
+  seed: 3142706118
+  prompt_ref: prompts/avatars/avatar_02_aqyn.md
+  approved_by: Marat
+  file: avatars/avatar_02_aqyn_sorrow.png
+  generated: '2026-09-10'
+  note: 'img2img от avatar_02_aqyn_calm.png, strength 1.0, seed тот же, steps 4. Печаль сдержаннее, чем у аватара 01: работают веки и взгляд, наклона головы нет.'
 - id: avatar_03_ustaqyz_calm
   kind: avatar
   status: missing
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — спокойствие.'
   seed: null
-  prompt_ref: prompts/avatar_03_ustaqyz.md
+  prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
   approved_by: null
   file: null
   note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
@@ -261,7 +251,7 @@
   status: missing
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — радость.'
   seed: null
-  prompt_ref: prompts/avatar_03_ustaqyz.md
+  prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
   approved_by: null
   file: null
   note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
@@ -270,16 +260,7 @@
   status: missing
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — тревога.'
   seed: null
-  prompt_ref: prompts/avatar_03_ustaqyz.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
-- id: avatar_03_ustaqyz_resolve
-  kind: avatar
-  status: missing
-  brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — решимость.'
-  seed: null
-  prompt_ref: prompts/avatar_03_ustaqyz.md
+  prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
   approved_by: null
   file: null
   note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
@@ -288,7 +269,7 @@
   status: missing
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — печаль.'
   seed: null
-  prompt_ref: prompts/avatar_03_ustaqyz.md
+  prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
   approved_by: null
   file: null
   note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
@@ -299,7 +280,7 @@
   status: missing
   brief: 'Канонический портрет: Керей-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
   seed: null
-  prompt_ref: prompts/char_kerei.md
+  prompt_ref: prompts/characters/char_kerei.md
   approved_by: null
   file: null
   note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
@@ -308,7 +289,7 @@
   status: missing
   brief: 'Канонический портрет: Жанибек-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
   seed: null
-  prompt_ref: prompts/char_zhanibek.md
+  prompt_ref: prompts/characters/char_zhanibek.md
   approved_by: null
   file: null
   note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
@@ -317,7 +298,7 @@
   status: missing
   brief: 'Канонический портрет: Абулхайр-хан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
   seed: null
-  prompt_ref: prompts/char_abilqaiyr.md
+  prompt_ref: prompts/characters/char_abilqaiyr.md
   approved_by: null
   file: null
   note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
@@ -326,7 +307,7 @@
   status: missing
   brief: 'Канонический портрет: Есен-Буга. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
   seed: null
-  prompt_ref: prompts/char_esen_buga.md
+  prompt_ref: prompts/characters/char_esen_buga.md
   approved_by: null
   file: null
   note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'

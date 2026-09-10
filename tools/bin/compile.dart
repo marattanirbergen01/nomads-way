@@ -64,8 +64,10 @@ void main(List<String> args) {
       _write(out, id, ep, questions, factTopic, report);
       compiled++;
       catalog.add({
-        'id': id, 'title': ep['title'], 'topics': ep['topics'], 'era': ep['era'], 'version': 1,
-        'scenes': report['scenes'], 'questions': report['questions'], 'approved': ep['approved_by'] != null,
+        'id': id, 'number': _numberOf(id), 'season': season,
+        'title': ep['title'], 'topics': ep['topics'], 'era': ep['era'], 'version': 1,
+        'scenes': report['scenes'], 'questions': report['questions'],
+        'approved': ep['approved_by'] != null, 'planned': false,
       });
     }
     _print(id, report);
@@ -78,6 +80,20 @@ void main(List<String> args) {
   if (errors.isNotEmpty) { stdout.writeln('\n${errors.length} ошибок. Ничего не записано.'); exit(1); }
   if (strict && warnings.isNotEmpty) { stdout.writeln('\n--strict: ${warnings.length} предупреждений считаются ошибками.'); exit(1); }
   if (!check) {
+    // Объявленный план: серии из planned_series, для которых ещё нет YAML.
+    final written = {for (final c in catalog) c['id']};
+    for (final node in curriculum) {
+      for (final ps in (node['planned_series'] as List? ?? []).cast<Map>()) {
+        final pid = ps['id'] as String;
+        if (written.contains(pid)) continue;
+        catalog.add({
+          'id': pid, 'number': ps['number'] ?? _numberOf(pid), 'season': 's${_seasonOf(pid)}',
+          'title': ps['title'], 'topics': [node['id']], 'era': ps['era'], 'version': 0,
+          'scenes': 0, 'questions': 0, 'approved': false, 'planned': true,
+        });
+      }
+    }
+    catalog.sort((a, b) => ((a['number'] ?? 0) as int).compareTo((b['number'] ?? 0) as int));
     const enc = JsonEncoder.withIndent('  ');
     Directory(out).createSync(recursive: true);
     final copied = _copyMedia(content, out);
@@ -324,6 +340,9 @@ int _copyMedia(String content, String out) {
   }
   return n;
 }
+
+int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group(1) ?? '') ?? 0;
+int _seasonOf(String id) => int.tryParse(RegExp(r'^s(\d+)').firstMatch(id)?.group(1) ?? '') ?? 1;
 
 /// Плоский список узлов программы: периоды (без родителя) и темы с фактами.
 /// Клиент строит из него экран «Жол» и «Дайындық», не разбирая YAML.

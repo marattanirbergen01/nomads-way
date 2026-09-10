@@ -24,8 +24,8 @@ class _PeriodScreenState extends State<PeriodScreen> {
   @override
   Widget build(BuildContext context) {
     final s = _s.s; final l = _s.l;
-    final eps = widget.catalog.where((e) => e.inPeriod(widget.period.id)).toList();
-    final done = eps.where((e) => _s.store.result(e.id) != null).length;
+    final eps = widget.catalog.where((e) => e.inPeriod(widget.period.id)).toList()..sort((a, b) => a.number.compareTo(b.number));
+    final done = eps.where((e) => !e.planned && _s.store.result(e.id) != null).length;
     return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
       SizedBox(height: 200, child: Stack(fit: StackFit.expand, children: [
         NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), alignment: const Alignment(0, -.4), fallback: Container(color: C.skyTop)),
@@ -42,7 +42,7 @@ class _PeriodScreenState extends State<PeriodScreen> {
       ])),
       const HorizonLine(),
       Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        for (var i = 0; i < eps.length; i++) ...[_EpisodeCard(index: i + 1, e: eps[i], services: _s, onTap: () => widget.openEpisode(eps[i].id)), const SizedBox(height: 10)],
+        for (final e in eps) ...[_EpisodeCard(index: e.number, e: e, services: _s, onTap: e.planned ? null : () => widget.openEpisode(e.id)), const SizedBox(height: 10)],
         const SizedBox(height: 4),
         GroundCard(outlined: true, child: Row(children: [
           const Icon(Icons.list_alt_rounded, color: C.gold), const SizedBox(width: 14),
@@ -58,10 +58,22 @@ class _PeriodScreenState extends State<PeriodScreen> {
 
 class _EpisodeCard extends StatelessWidget {
   const _EpisodeCard({required this.index, required this.e, required this.services, required this.onTap});
-  final int index; final CatalogEntry e; final Services services; final VoidCallback onTap;
+  final int index; final CatalogEntry e; final Services services; final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     final s = services.s; final l = services.l;
+    if (e.planned) {
+      return GroundCard(outlined: true, dim: true, padding: const EdgeInsets.all(12), child: Row(children: [
+        Container(width: 72, height: 72, decoration: BoxDecoration(color: C.card, borderRadius: BorderRadius.circular(10)),
+            child: const Icon(Icons.lock_outline_rounded, color: C.locked, size: 22)),
+        const SizedBox(width: 14),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('$index · ${e.title.of(l)}', style: st(17, w: 600)),
+          const SizedBox(height: 5),
+          Text([e.era, s('soon')].whereType<String>().join(' · '), style: st(12.5, color: C.inkSoft)),
+        ])),
+      ]));
+    }
     final res = services.store.result(e.id);
     final cont = services.store.continueMeta(e.id);
     final n = services.store.completions(e.id);

@@ -39,7 +39,7 @@ class _TrainTabState extends State<TrainTab> {
 
   Widget _content(List<CatalogEntry> catalog, List<Topic> topics) {
     final s = _s.s; final l = _s.l;
-    final ids = catalog.map((e) => e.id).toList();
+    final ids = catalog.where((e) => !e.planned).map((e) => e.id).toList();
     final bank = _s.content.cachedQuestions(ids);
     final due = _s.scheduler.due(_s.store.srs(), DateTime.now()).where(bank.map((q) => q.id).toSet().contains).length;
     final mocks = _s.store.tests().where((t) => t.kind == 'mock').toList();
@@ -101,7 +101,7 @@ class _TrainTabState extends State<TrainTab> {
         for (final p in topics.periods.where((p) => topics.periodActive(p.id))) ...[
           Builder(builder: (_) {
             final facts = topics.periodFacts(p.id).toList();
-            final eps = catalog.where((e) => e.inPeriod(p.id)).length;
+            final eps = catalog.where((e) => e.inPeriod(p.id) && !e.planned).length;
             final qn = bank.where((q) => q.topic != null && (q.topic == p.id || q.topic!.startsWith('${p.id}.'))).length;
             final v = _s.mastery.topic(facts, attempts);
             return GroundCard(padding: const EdgeInsets.all(12), child: Row(children: [

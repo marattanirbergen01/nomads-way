@@ -24,7 +24,12 @@ extension TopicsX on List<Topic> {
   List<Topic> under(String periodId) => where((t) => t.parent == periodId).toList();
   /// Все факты периода — из его тем.
   Iterable<String> periodFacts(String periodId) => under(periodId).expand((t) => t.factIds);
-  bool periodActive(String periodId) => under(periodId).any((t) => !t.planned);
+  /// Период открыт, если сам не помечен planned и в нём есть хоть одна живая тема.
+  bool periodActive(String periodId) {
+    final p = where((t) => t.id == periodId).firstOrNull;
+    if (p == null || p.planned) return false;
+    return under(periodId).any((t) => !t.planned);
+  }
 }
 
 class Fact {
@@ -34,7 +39,7 @@ class Fact {
 }
 
 class CatalogEntry {
-  CatalogEntry({required this.id, required this.title, required this.era, required this.scenes, required this.questions, required this.approved, required this.topics});
+  CatalogEntry({required this.id, required this.title, required this.era, required this.scenes, required this.questions, required this.approved, required this.topics, this.number = 0, this.planned = false});
   final String id;
   final L10n title;
   final String? era;
@@ -42,11 +47,15 @@ class CatalogEntry {
   final int questions;
   final bool approved;
   final List<String> topics;
+  final int number;
+  /// Серия объявлена в плане, но ещё не написана — карточка закрыта.
+  final bool planned;
   /// Серия принадлежит периоду, если её тема лежит под ним (kz.4.1 → kz.4) или равна ему.
   bool inPeriod(String periodId) => topics.any((t) => t == periodId || t.startsWith('$periodId.'));
   factory CatalogEntry.fromJson(Map<String, dynamic> j) => CatalogEntry(
         id: j['id'], title: L10n.fromJson(j['title']), era: j['era'],
         scenes: j['scenes'], questions: j['questions'], approved: j['approved'] == true,
         topics: (j['topics'] as List? ?? []).cast<String>(),
+        number: (j['number'] as num?)?.toInt() ?? 0, planned: j['planned'] == true,
       );
 }

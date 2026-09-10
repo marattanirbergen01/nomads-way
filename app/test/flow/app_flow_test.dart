@@ -38,9 +38,17 @@ void main() {
     await tester.pumpWidget(NomadsWayApp(services: s));
     await _settle(tester);
 
-    // ---- Жол
+    // ---- Жол: действующий период и три закрытых
     expect(find.text('Қазақ хандығы'), findsWidgets);
     expect(find.text('Бағдарлама кезеңдері'), findsOneWidget);
+    expect(find.text('Ресей империясы құрамындағы Қазақстан'), findsOneWidget);
+    expect(find.text('XX ғасырдағы Қазақстан'), findsOneWidget);
+    expect(find.text('Тәуелсіз Қазақстан'), findsOneWidget);
+    expect(find.textContaining('жақында'), findsNWidgets(3), reason: 'закрытые периоды помечены');
+    // закрытый период не открывается
+    await tester.tap(find.text('Тәуелсіз Қазақстан'));
+    await _settle(tester, 3);
+    expect(find.text('Бағдарлама кезеңдері'), findsOneWidget, reason: 'остались на Жол');
 
     // ---- прыгаем по вкладкам туда-сюда
     for (final tab in ['Жаттығу', 'Дайындық', 'Профиль', 'Жол', 'Дайындық', 'Жаттығу', 'Жол']) {
@@ -49,10 +57,19 @@ void main() {
     }
     expect(find.text('Бағдарлама кезеңдері'), findsOneWidget);
 
-    // ---- период
-    await tester.tap(find.text('0 / 1'));
+    // ---- период: одна живая серия и три закрытых
+    await tester.tap(find.text('0 / 4'));
     await _settle(tester);
     expect(find.text('Кезең тесті'), findsOneWidget);
+    expect(find.textContaining('Шу бойында'), findsWidgets);
+    expect(find.text('2 · Бұрындық хан'), findsOneWidget);
+    expect(find.text('3 · Қасым хан'), findsOneWidget);
+    expect(find.text('4 · Хақназар хан'), findsOneWidget);
+    expect(find.byIcon(Icons.lock_outline_rounded), findsNWidgets(3), reason: 'замки на закрытых сериях');
+    // закрытая серия не запускается
+    await tester.tap(find.text('3 · Қасым хан'));
+    await _settle(tester, 3);
+    expect(find.text('Кезең тесті'), findsOneWidget, reason: 'остались на периоде');
 
     // ---- серия
     await tester.tap(find.textContaining('Шу бойында').first);
@@ -106,6 +123,7 @@ void main() {
     // ---- вернулись на период, «продолжить» появилось
     expect(find.text('Кезең тесті'), findsOneWidget);
     expect(find.textContaining('жалғастыру'), findsWidgets);
+    expect(find.byIcon(Icons.lock_outline_rounded), findsNWidgets(3));
     expect(tester.takeException(), isNull);
   });
 }
