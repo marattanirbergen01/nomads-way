@@ -23,8 +23,8 @@ sh scripts/dev.sh
 Вручную:
 
 ```bash
-# 1. собрать контент → build/
-cd tools && dart pub get && dart run bin/compile.dart
+# 1. собрать контент и упаковать серии → build/
+cd tools && dart pub get && dart run bin/compile.dart && dart run bin/pack.dart
 
 # 2. раздать build/ как CDN (отдельный терминал)
 python3 tools/serve.py            # http://localhost:8787

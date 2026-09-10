@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:nomads_way/core/locale_controller.dart';
 import 'package:nomads_way/core/services.dart';
+import 'package:nomads_way/data/local/episode_store.dart';
 import 'package:nomads_way/data/local/progress_repository.dart';
 import 'package:nomads_way/data/remote/content_repository.dart';
 import 'package:nomads_way/main.dart';
@@ -13,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Сквозной прогон: вкладки → период → серия → сцена → выбор → вопрос.
 /// Контент берётся из build/ (собранного компилятором), сеть подменена.
-Future<Services> _boot() async {
+Future<Services> _boot(Directory tmp) async {
   SharedPreferences.setMockInitialValues({});
   final store = await ProgressRepository.open();
   final client = MockClient((req) async {
@@ -21,7 +22,12 @@ Future<Services> _boot() async {
     if (!f.existsSync()) return http.Response('nf', 404);
     return http.Response.bytes(f.readAsBytesSync(), 200, headers: {'content-type': 'application/json; charset=utf-8'});
   });
-  return Services(locale: LocaleController(), store: store, content: ContentRepository(baseUrl: 'http://cdn', store: store, client: client));
+  // папку под скачанные серии подменяем: тест не должен зависеть от плагина
+  final episodes = EpisodeStore(client: client, baseDir: () async => tmp);
+  return Services(
+    locale: LocaleController(), store: store,
+    content: ContentRepository(baseUrl: 'http://cdn', store: store, client: client, episodes: episodes),
+  );
 }
 
 Future<void> _settle(WidgetTester t, [int frames = 6]) async {
@@ -34,7 +40,9 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    final s = await _boot();
+    final tmp = Directory.systemTemp.createTempSync('nw_flow_');
+    addTearDown(() => tmp.deleteSync(recursive: true));
+    final s = await _boot(tmp);
     await tester.pumpWidget(NomadsWayApp(services: s));
     await _settle(tester);
 
@@ -71,9 +79,18 @@ void main() {
     await _settle(tester, 3);
     expect(find.text('Кезең тесті'), findsOneWidget, reason: 'остались на периоде');
 
-    // ---- серия
+    // ---- заставка серии, затем сюжет (в тесте установка недоступна → поток)
     await tester.tap(find.textContaining('Шу бойында').first);
-    await _settle(tester, 8);
+    await _settle(tester, 6);
+    expect(find.text("NOMAD'S WAY"), findsOneWidget, reason: 'заставка серии');
+    expect(find.text('1 · Шу бойында'), findsOneWidget);
+    expect(find.textContaining('Жүктеу'), findsOneWidget, reason: 'серия ещё не скачана');
+    await tester.tap(find.textContaining('Жүктеу'));
+    await _settle(tester, 12);
+    expect(find.text('Бастау'), findsOneWidget, reason: 'скачалась — можно играть');
+    expect(find.text('Жүктелген · интернет қажет емес'), findsOneWidget);
+    await tester.tap(find.text('Бастау'));
+    await _settle(tester, 12);
     expect(find.text('1457 жыл. Сығанақ түбі.'), findsOneWidget, reason: 'первая реплика сцены');
 
     // ---- первая реплика дочитана (таймер истёк за время загрузки) — тап листает
@@ -118,7 +135,7 @@ void main() {
     await _settle(tester, 3);
     expect(find.text('Мәзір'), findsOneWidget);
     await tester.tap(find.text('Сақтап шығу'));
-    await _settle(tester, 4);
+    await _settle(tester, 5);
 
     // ---- вернулись на период, «продолжить» появилось
     expect(find.text('Кезең тесті'), findsOneWidget);

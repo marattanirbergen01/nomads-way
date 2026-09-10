@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'core/services.dart';
 import 'core/theme.dart';
 import 'features/shell/app_shell.dart';
+import 'widgets/art.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tuneImageCache();
   final services = await Services.boot();
   runApp(NomadsWayApp(services: services));
 }

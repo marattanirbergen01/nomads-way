@@ -5,7 +5,7 @@ import '../../data/local/progress_repository.dart';
 import '../../data/models/curriculum.dart';
 import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
-import '../story/story_screen.dart';
+import 'episode_intro_screen.dart';
 import 'period_screen.dart';
 
 /// Жол: баннер сезона, «Жалғастыру», периоды программы.
@@ -30,16 +30,11 @@ class _PathTabState extends State<PathTab> {
   void dispose() { _s.changes.removeListener(_onChange); _s.locale.removeListener(_onChange); super.dispose(); }
   void _onChange() { if (mounted) setState(() {}); }
 
-  Future<void> openEpisode(String id) async {
-    setState(() => _busy = id);
-    try {
-      final (ep, qs) = await _s.content.episode(id);
-      if (!mounted) return;
-      await Navigator.of(context).push(MaterialPageRoute(builder: (_) => StoryScreen(episode: ep, questions: qs, services: _s)));
-      _s.touch();
-    } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
-    } finally { if (mounted) setState(() => _busy = null); }
+  Future<void> openEntry(CatalogEntry e) async {
+    setState(() => _busy = e.id);
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => EpisodeIntroScreen(entry: e, services: _s)));
+    if (mounted) setState(() => _busy = null);
+    _s.touch();
   }
 
   @override
@@ -67,7 +62,7 @@ class _PathTabState extends State<PathTab> {
     return ListView(padding: EdgeInsets.zero, children: [
       // ---- небо: баннер сезона
       SizedBox(height: 332, child: Stack(fit: StackFit.expand, children: [
-        NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), alignment: const Alignment(0, -.16), fallback: Container(color: C.skyTop)),
+        NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), fallback: Container(color: C.skyTop)),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x6B141010), Color(0x00141010), Color(0x00221A14), Color(0xE0221A14)], stops: [0, .34, .52, 1]))),
         Positioned(left: 20, top: MediaQuery.of(context).padding.top + 16, child: Text("NOMAD'S WAY", style: st(21, w: 800, spacing: 3.4))),
@@ -86,7 +81,7 @@ class _PathTabState extends State<PathTab> {
           if (cont != null && contEntry != null) ...[
             GroundCard(
               padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
-              onTap: () => openEpisode(contEntry.id),
+              onTap: () => openEntry(contEntry),
               child: Row(children: [
                 ClipRRect(borderRadius: BorderRadius.circular(10), child: NetArt(url: _s.content.mediaUrl(contEntry.id, 'cover_${contEntry.id}'), width: 64, height: 64)),
                 const SizedBox(width: 14),
@@ -109,7 +104,7 @@ class _PathTabState extends State<PathTab> {
           for (final p in periods) _PeriodRow(
             period: p, topics: topics, catalog: catalog, services: _s,
             onTap: topics.periodActive(p.id) ? () async {
-              await Navigator.of(context).push(MaterialPageRoute(builder: (_) => PeriodScreen(period: p, topics: topics, catalog: catalog, services: _s, openEpisode: openEpisode)));
+              await Navigator.of(context).push(MaterialPageRoute(builder: (_) => PeriodScreen(period: p, topics: topics, catalog: catalog, services: _s, openEntry: openEntry)));
               _s.touch();
             } : null,
           ),

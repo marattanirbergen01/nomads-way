@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/services.dart';
 import '../../core/theme.dart';
+import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,6 +13,48 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Services get _s => widget.services;
+  Map<String, int> _down = const {};
+
+  @override
+  void initState() { super.initState(); _reload(); }
+  Future<void> _reload() async {
+    final d = await _s.episodes.installed();
+    if (mounted) setState(() => _down = d);
+  }
+
+  Future<void> _showDownloads() async {
+    final s = _s.s;
+    await showModalBottomSheet(
+      context: context, backgroundColor: const Color(0xF21A140F),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setSheet) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 34),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(s('downloaded'), style: st(17, w: 600)),
+          const SizedBox(height: 14),
+          if (_down.isEmpty) Text(s('nothing.down'), style: st(14, color: C.inkSoft))
+          else for (final e in _down.entries) Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(children: [
+              Expanded(child: Text(e.key, style: st(15))),
+              Text('${(e.value / 1024 / 1024).toStringAsFixed(1)} МБ', style: st(13, color: C.inkSoft)),
+              const SizedBox(width: 12),
+              TextButton(
+                onPressed: () async {
+                  await _s.episodes.remove(e.key);
+                  await _s.store.clearStory(e.key);
+                  await _reload();
+                  _s.touch();
+                  setSheet(() {});
+                },
+                child: Text(s('delete'), style: st(13, w: 600, color: C.ember)),
+              ),
+            ]),
+          ),
+        ]),
+      )),
+    );
+  }
 
   Future<void> _edit(String title, String current, Future<void> Function(String) save, {TextInputType? type}) async {
     final c = TextEditingController(text: current);
@@ -39,7 +82,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final s = _s.s; final st_ = _s.store;
-    final mb = (st_.cacheBytes() / 1024 / 1024);
+    final downBytes = _down.values.fold(0, (a, b) => a + b);
+    final mb = (downBytes + st_.cacheBytes()) / 1024 / 1024;
     return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
       Container(
         height: 132 + MediaQuery.of(context).padding.top,
@@ -71,9 +115,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(s('notifications'), style: st(15)), Text(s('notif.sub'), style: st(12.5, color: C.inkSoft))])),
           Switch(value: st_.notifications, activeThumbColor: C.ground, activeTrackColor: C.gold, onChanged: (v) async { await st_.setNotifications(v); setState(() {}); }),
         ])),
-        Container(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4), decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: C.lineSoft))), child: Row(children: [
-          Expanded(child: Text(s('downloads'), style: st(15))), Text('${mb.toStringAsFixed(mb < 1 ? 2 : 0)} МБ', style: st(13, color: C.inkSoft)),
-        ])),
+        InkWell(onTap: _s.episodes.supported ? _showDownloads : null, child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: C.lineSoft))),
+          child: Row(children: [
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(s('downloads'), style: st(15)),
+              if (_down.isNotEmpty) Text('${_down.length} ${s('series.n')}', style: st(12.5, color: C.inkSoft)),
+            ])),
+            Text('${mb.toStringAsFixed(mb < 1 ? 2 : 0)} МБ', style: st(13, color: C.inkSoft)),
+            if (_s.episodes.supported) ...[const SizedBox(width: 6), const Chevron()],
+          ]),
+        )),
         Container(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4), decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: C.lineSoft))), child: Row(children: [
           Expanded(child: Text(s('about'), style: st(15))), Text('0.1.0', style: st(13, color: C.inkSoft)),
         ])),

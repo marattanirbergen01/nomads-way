@@ -8,7 +8,7 @@ export PATH="$HOME/development/flutter/bin:$PATH"
 HOST=localhost; [ "$1" = "lan" ] && HOST=0.0.0.0
 IP=$(ipconfig getifaddr en0 2>/dev/null || echo localhost)
 
-(cd tools && dart run bin/compile.dart >/dev/null && echo "контент собран → build/")
+(cd tools && dart run bin/compile.dart >/dev/null && dart run bin/pack.dart >/dev/null && echo "контент собран и упакован → build/")
 python3 tools/serve.py 8787 >/dev/null 2>&1 &
 CDN=$!
 trap 'kill $CDN 2>/dev/null' EXIT

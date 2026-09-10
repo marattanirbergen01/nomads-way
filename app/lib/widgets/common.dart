@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
+import 'art.dart';
 
 /// Небо шапки: светлый градиент с солнцем у горизонта.
 class SkyHeader extends StatelessWidget {
@@ -99,17 +102,14 @@ class Dot extends StatelessWidget {
       );
 }
 
-/// Картинка с CDN с тихой заглушкой.
+/// Картинка контента. Обёртка над [Art]: декодирует под место на экране.
 class NetArt extends StatelessWidget {
-  const NetArt({super.key, required this.url, this.fit = BoxFit.cover, this.alignment = Alignment.center, this.fallback, this.width, this.height});
-  final String url; final BoxFit fit; final Alignment alignment; final Widget? fallback; final double? width; final double? height;
+  const NetArt({super.key, required this.url, this.file, this.fit = BoxFit.cover, this.pan, this.fallback, this.width, this.height, this.logicalWidth});
+  final String url; final File? file; final BoxFit fit; final int? pan;
+  final Widget? fallback; final double? width; final double? height; final double? logicalWidth;
   @override
-  Widget build(BuildContext context) {
-    final fb = fallback ?? Container(color: C.cardHigh, width: width, height: height);
-    return Image.network(
-      url, fit: fit, alignment: alignment, width: width, height: height, gaplessPlayback: true,
-      errorBuilder: (_, __, ___) => fb,
-      loadingBuilder: (_, child, p) => p == null ? child : fb,
-    );
-  }
+  Widget build(BuildContext context) => Art(
+        url: url, file: file, fit: fit, pan: pan, width: width, height: height,
+        fallback: fallback, logicalWidth: logicalWidth ?? width,
+      );
 }

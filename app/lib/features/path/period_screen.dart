@@ -6,9 +6,9 @@ import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 
 class PeriodScreen extends StatefulWidget {
-  const PeriodScreen({super.key, required this.period, required this.topics, required this.catalog, required this.services, required this.openEpisode});
+  const PeriodScreen({super.key, required this.period, required this.topics, required this.catalog, required this.services, required this.openEntry});
   final Topic period; final List<Topic> topics; final List<CatalogEntry> catalog; final Services services;
-  final Future<void> Function(String id) openEpisode;
+  final Future<void> Function(CatalogEntry e) openEntry;
   @override
   State<PeriodScreen> createState() => _PeriodScreenState();
 }
@@ -28,7 +28,7 @@ class _PeriodScreenState extends State<PeriodScreen> {
     final done = eps.where((e) => !e.planned && _s.store.result(e.id) != null).length;
     return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
       SizedBox(height: 200, child: Stack(fit: StackFit.expand, children: [
-        NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), alignment: const Alignment(0, -.4), fallback: Container(color: C.skyTop)),
+        NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), fallback: Container(color: C.skyTop)),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x73141010), Color(0x00141010), Color(0xE6221A14)], stops: [0, .4, 1]))),
         Positioned(left: 4, top: MediaQuery.of(context).padding.top, child: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_new_rounded, color: C.ink))),
@@ -42,7 +42,7 @@ class _PeriodScreenState extends State<PeriodScreen> {
       ])),
       const HorizonLine(),
       Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        for (final e in eps) ...[_EpisodeCard(index: e.number, e: e, services: _s, onTap: e.planned ? null : () => widget.openEpisode(e.id)), const SizedBox(height: 10)],
+        for (final e in eps) ...[_EpisodeCard(index: e.number, e: e, services: _s, onTap: e.planned ? null : () => widget.openEntry(e)), const SizedBox(height: 10)],
         const SizedBox(height: 4),
         GroundCard(outlined: true, child: Row(children: [
           const Icon(Icons.list_alt_rounded, color: C.gold), const SizedBox(width: 14),
@@ -78,7 +78,7 @@ class _EpisodeCard extends StatelessWidget {
     final cont = services.store.continueMeta(e.id);
     final n = services.store.completions(e.id);
     return GroundCard(onTap: onTap, padding: const EdgeInsets.all(12), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      ClipRRect(borderRadius: BorderRadius.circular(10), child: NetArt(url: services.content.mediaUrl(e.id, 'cover_${e.id}'), width: 72, height: 72)),
+      ClipRRect(borderRadius: BorderRadius.circular(10), child: NetArt(url: services.content.mediaUrl(e.id, 'cover_${e.id}'), file: services.content.mediaFile(e.id, 'cover_${e.id}'), width: 72, height: 72)),
       const SizedBox(width: 14),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('$index · ${e.title.of(l)}', style: st(17, w: 600)),

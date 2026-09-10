@@ -68,14 +68,19 @@ class StoryRunner {
         'goto': _pendingGoto, 'awaiting': _awaitingChoice, 'ended': _ended, 'vars': vars,
       };
 
+  /// Восстановление терпимо к изменившемуся сценарию: если сцены больше нет
+  /// или бит вне диапазона, начинаем серию заново вместо падения.
   factory StoryRunner.restore(Episode ep, Map<String, dynamic> s) {
+    final idx = ep.indexOf(s['scene'] as String? ?? '');
+    if (idx < 0) return StoryRunner(ep);
     final r = StoryRunner(ep, vars: (s['vars'] as Map).cast<String, int>());
-    r._sceneIdx = ep.indexOf(s['scene']);
-    r._beatIdx = s['beat'];
-    r._quizEmitted = s['quiz'];
-    r._pendingGoto = s['goto'];
-    r._awaitingChoice = s['awaiting'];
-    r._ended = s['ended'];
+    r._sceneIdx = idx;
+    r._beatIdx = (s['beat'] as int? ?? 0).clamp(0, ep.scenes[idx].beats.length);
+    r._quizEmitted = s['quiz'] == true;
+    final goto = s['goto'] as String?;
+    r._pendingGoto = (goto == null || goto == 'end' || ep.indexOf(goto) >= 0) ? goto : null;
+    r._awaitingChoice = s['awaiting'] == true;
+    r._ended = s['ended'] == true;
     return r;
   }
 }

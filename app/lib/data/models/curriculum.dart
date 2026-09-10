@@ -38,8 +38,22 @@ class Fact {
   final L10n text;
 }
 
+class Bundle {
+  const Bundle({required this.url, required this.bytes, required this.sha256, required this.contentHash, required this.files});
+  final String url; final int bytes; final String sha256; final String contentHash; final int files;
+  double get mb => bytes / 1024 / 1024;
+  /// Только для тестов: собрать изменённую копию описания бандла.
+  Map<String, dynamic> toJsonForTest() =>
+      {'url': url, 'bytes': bytes, 'sha256': sha256, 'contentHash': contentHash, 'files': files};
+
+  factory Bundle.fromJson(Map<String, dynamic> j) => Bundle(
+        url: j['url'], bytes: (j['bytes'] as num).toInt(), sha256: j['sha256'],
+        contentHash: j['contentHash'], files: (j['files'] as num).toInt(),
+      );
+}
+
 class CatalogEntry {
-  CatalogEntry({required this.id, required this.title, required this.era, required this.scenes, required this.questions, required this.approved, required this.topics, this.number = 0, this.planned = false});
+  CatalogEntry({required this.id, required this.title, required this.era, required this.scenes, required this.questions, required this.approved, required this.topics, this.number = 0, this.planned = false, this.bundle});
   final String id;
   final L10n title;
   final String? era;
@@ -50,6 +64,8 @@ class CatalogEntry {
   final int number;
   /// Серия объявлена в плане, но ещё не написана — карточка закрыта.
   final bool planned;
+  /// Готовый к скачиванию бандл; null у запланированных серий.
+  final Bundle? bundle;
   /// Серия принадлежит периоду, если её тема лежит под ним (kz.4.1 → kz.4) или равна ему.
   bool inPeriod(String periodId) => topics.any((t) => t == periodId || t.startsWith('$periodId.'));
   factory CatalogEntry.fromJson(Map<String, dynamic> j) => CatalogEntry(
@@ -57,5 +73,6 @@ class CatalogEntry {
         scenes: j['scenes'], questions: j['questions'], approved: j['approved'] == true,
         topics: (j['topics'] as List? ?? []).cast<String>(),
         number: (j['number'] as num?)?.toInt() ?? 0, planned: j['planned'] == true,
+        bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
       );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../data/local/episode_store.dart';
 import '../data/local/progress_repository.dart';
 import '../data/remote/content_repository.dart';
 import '../engine/awards.dart';
@@ -13,6 +14,7 @@ class Services {
   final LocaleController locale;
   final ProgressRepository store;
   final ContentRepository content;
+  EpisodeStore get episodes => content.episodes;
   final scheduler = const Scheduler();
   final mastery = const Mastery();
   final awards = const AwardsEngine();

@@ -11,9 +11,17 @@ class ProgressRepository {
 
   static Future<ProgressRepository> open() async => ProgressRepository(await SharedPreferences.getInstance());
 
-  // ---- сюжет: снимок StoryRunner для возобновления
-  Map<String, dynamic>? storySnapshot(String ep) => _json('story:$ep');
-  Future<void> saveStory(String ep, Map<String, dynamic> snap) => _p.setString('story:$ep', jsonEncode(snap));
+  // ---- сюжет: снимок StoryRunner для возобновления.
+  // Снимок хранит отпечаток контента: если сценарий изменился, старая позиция
+  // указывает на сцену, которой больше нет, поэтому такой снимок отбрасывается.
+  Map<String, dynamic>? storySnapshot(String ep, {String? contentHash}) {
+    final j = _json('story:$ep');
+    if (j == null) return null;
+    if (contentHash != null && j['hash'] != null && j['hash'] != contentHash) return null;
+    return j;
+  }
+  Future<void> saveStory(String ep, Map<String, dynamic> snap, {String? contentHash}) =>
+      _p.setString('story:$ep', jsonEncode({...snap, if (contentHash != null) 'hash': contentHash}));
   Future<void> clearStory(String ep) => _p.remove('story:$ep');
 
   // ---- результат серии

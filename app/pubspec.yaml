@@ -11,6 +11,16 @@ dependencies:
     sdk: flutter
   http: ^1.2.0
   shared_preferences: ^2.3.0
+  path_provider: ^2.1.4
+  archive: ^3.6.1
+  crypto: ^3.0.5
+  path: ^1.9.0
+
+# path_provider_foundation 2.6+ тянет objective_c, а тот собирает нативные ассеты
+# и требует полного Xcode — без него ломается даже `flutter test` на macOS.
+# Держим предыдущую линию: она делает то же самое и собирается без Xcode.
+dependency_overrides:
+  path_provider_foundation: '>=2.4.0 <2.6.0'
 
 dev_dependencies:
   flutter_test:

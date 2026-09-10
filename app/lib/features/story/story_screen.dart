@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../core/services.dart';
@@ -9,6 +10,7 @@ import '../../engine/awards.dart';
 import '../../engine/quiz_runner.dart';
 import '../../engine/scheduler.dart';
 import '../../engine/story_runner.dart';
+import '../../widgets/art.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/ornament.dart';
 import '../quiz/quiz_widgets.dart';
@@ -18,10 +20,12 @@ import 'scene_menu.dart';
 /// Плеер серии: сцена → выбор → «выбор сделан» → вопросы → разбор → … → итоговый тест.
 /// «Назад» листает сюжет по одной реплике; перемотка заблокирована, пока не дочитан текст.
 class StoryScreen extends StatefulWidget {
-  const StoryScreen({super.key, required this.episode, required this.questions, required this.services});
+  const StoryScreen({super.key, required this.episode, required this.questions, required this.services, this.contentHash});
   final Episode episode;
   final List<Question> questions;
   final Services services;
+  /// Отпечаток содержимого серии: снимок позиции годен только для той же версии.
+  final String? contentHash;
   @override
   State<StoryScreen> createState() => _StoryScreenState();
 }
@@ -48,7 +52,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    final snap = _s.store.storySnapshot(_id);
+    final snap = _s.store.storySnapshot(_id, contentHash: widget.contentHash);
     _story = snap != null ? StoryRunner.restore(widget.episode, snap) : StoryRunner(widget.episode);
     _lock.addStatusListener((_) => setState(() {}));
     _advance(pushHistory: true);
@@ -62,7 +66,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     if (_story.awaitingChoice) return;
     final snap = _story.snapshot();
     if (!_story.ended) {
-      _s.store.saveStory(_id, snap);
+      _s.store.saveStory(_id, snap, contentHash: widget.contentHash);
       _s.store.saveContinueMeta(_id, widget.episode.indexOf(_story.scene.id), widget.episode.scenes.length);
     }
     final e = _story.next();
@@ -84,6 +88,29 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
           single: widget.episode.finalTest.single, context: widget.episode.finalTest.context));
     }
     setState(() { _event = e; _chosen = null; });
+    // Обращаться к размеру экрана можно только после первого кадра:
+    // _advance вызывается и из initState.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _prefetchNeighbours());
+  }
+
+  /// Держим в памяти кадр текущей сцены и следующей; остальные выгружаем.
+  void _prefetchNeighbours() {
+    if (!mounted) return;
+    final scenes = widget.episode.scenes;
+    final i = widget.episode.indexOf(_story.scene.id);
+    if (i < 0) return;
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final w = MediaQuery.sizeOf(context).width;
+    ImageProvider? provider(int k) {
+      if (k < 0 || k >= scenes.length) return null;
+      final art = scenes[k].art;
+      return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: w, dpr: dpr);
+    }
+    final next = provider(i + 1);
+    if (next != null) precacheImage(next, context, onError: (_, __) {});
+    for (final k in [i - 2, i + 2]) {
+      provider(k)?.evict();
+    }
   }
 
   void _startLock(String text) {
@@ -264,15 +291,10 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
 
 // ---------------------------------------------------------------- общие части сюжета
 class _Art extends StatelessWidget {
-  const _Art({required this.url, required this.pan});
-  final String url; final int pan;
+  const _Art({required this.url, required this.pan, this.file});
+  final String url; final int pan; final File? file;
   @override
-  Widget build(BuildContext context) => Image.network(
-        url, fit: BoxFit.cover, width: double.infinity, height: double.infinity, gaplessPlayback: true,
-        alignment: Alignment((pan / 50) - 1, 0),
-        errorBuilder: (_, __, ___) => Container(color: C.cardHigh),
-        loadingBuilder: (_, child, p) => p == null ? child : Container(color: C.cardHigh),
-      );
+  Widget build(BuildContext context) => Art(url: url, file: file, pan: pan, fit: BoxFit.cover, width: double.infinity, height: double.infinity, logicalWidth: MediaQuery.sizeOf(context).width);
 }
 
 class _TopBar extends StatelessWidget {
@@ -368,7 +390,7 @@ class _SayView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: st_._tapForward,
       child: Stack(fit: StackFit.expand, children: [
-        _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), pan: scene.pan),
+        _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), file: st_._s.content.mediaFile(st_._id, scene.art), pan: scene.pan),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x40221A14)], stops: [0, .24, .5, .75]))),
         if (avatar)
@@ -434,7 +456,7 @@ class _ChoiceView extends StatelessWidget {
       Widget half(Option o, {required bool first}) => Expanded(child: GestureDetector(
             onTap: () => st_._choose(o),
             child: Stack(fit: StackFit.expand, children: [
-              _Art(url: st_._s.content.mediaUrl(st_._id, o.art!), pan: 50),
+              _Art(url: st_._s.content.mediaUrl(st_._id, o.art!), file: st_._s.content.mediaFile(st_._id, o.art!), pan: 50),
               DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
                   colors: [first ? const Color(0x9E141010) : const Color(0xD9221A14), const Color(0x00141010), const Color(0x00141010), const Color(0xEB221A14)], stops: const [0, .34, .58, 1]))),
               Positioned(left: 20, right: 20, bottom: first ? 16 : 22 + MediaQuery.of(context).padding.bottom,
@@ -453,7 +475,7 @@ class _ChoiceView extends StatelessWidget {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), pan: scene.pan),
+      _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), file: st_._s.content.mediaFile(st_._id, scene.art), pan: scene.pan),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x66221A14)], stops: [0, .24, .5, .8]))),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(
@@ -491,7 +513,7 @@ class _ChoiceMadeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = st_._l; final s = st_._s.s;
     return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.art), pan: option.art == null ? max(scene.pan, 62) : 62),
+      _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.art), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.art), pan: option.art == null ? max(scene.pan, 62) : 62),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x80141010), Color(0x0D141010), Color(0x00141010), Color(0x40221A14), Color(0x80221A14)], stops: [0, .26, .46, .66, 1]))),
       Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look)),
