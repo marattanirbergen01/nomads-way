@@ -25,6 +25,20 @@ class ContentRepository {
   Future<List<Topic>> curriculum() async =>
       [for (final t in await _get('curriculum.json') as List) Topic.fromJson(t)];
 
+  CommonInfo? _common;
+  /// Аватары и общий бандл. Кэшируется на сессию; пока не загружено — пусто.
+  CommonInfo? get commonSync => _common;
+  Future<CommonInfo> common() async {
+    await episodes.warm('common');
+    final c = CommonInfo.fromJson((await _get('common.json') as Map).cast<String, dynamic>());
+    _common = c;
+    return c;
+  }
+
+  /// Кадр аватара: файл из общего пакета, если он установлен; иначе адрес на CDN.
+  String avatarUrl(AvatarLook a, String name) => '$baseUrl/media/${a.season}/avatars/$name';
+  File? avatarFile(AvatarLook a, String name) => episodes.fileSync('common', 'media/${a.season}/avatars/$name');
+
   /// Установленная серия читается с диска; иначе из сети (и в браузере всегда из сети).
   Future<(Episode, List<Question>)> episode(String id) async {
     await episodes.warm(id);

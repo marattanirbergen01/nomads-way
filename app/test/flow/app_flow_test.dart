@@ -89,6 +89,9 @@ void main() {
     await _settle(tester, 12);
     expect(find.text('Бастау'), findsOneWidget, reason: 'скачалась — можно играть');
     expect(find.text('Жүктелген · интернет қажет емес'), findsOneWidget);
+    // вместе с серией встал общий пакет: аватары лежат на диске
+    expect(await s.episodes.file('common', 'media/s1/avatars/avatar_01_zhylqyshy_calm_bust.png'), isNotNull, reason: 'общий пакет с аватарами');
+    expect(s.content.commonSync?.avatars.length, 3, reason: 'три внешности из common.json');
     await tester.tap(find.text('Бастау'));
     await _settle(tester, 12);
     expect(find.text('1457 жыл. Сығанақ түбі.'), findsOneWidget, reason: 'первая реплика сцены');

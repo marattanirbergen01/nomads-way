@@ -50,7 +50,10 @@ class Services {
     final store = await ProgressRepository.open();
     final locale = LocaleController()..set(store.locale);
     locale.addListener(() => store.setLocale(locale.code));
-    return Services(locale: locale, store: store, content: ContentRepository(baseUrl: defaultCdn, store: store));
+    final s = Services(locale: locale, store: store, content: ContentRepository(baseUrl: defaultCdn, store: store));
+    // аватары нужны везде — тянем описание сразу, но старт не ждём
+    s.content.common().then((_) => s.touch()).catchError((_) {});
+    return s;
   }
 }
 

@@ -76,3 +76,28 @@ class CatalogEntry {
         bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
       );
 }
+
+
+/// Внешность аватара из build/common.json.
+class AvatarLook {
+  const AvatarLook({required this.look, required this.id, required this.season, required this.emotions});
+  final int look; final String id; final String season; final List<String> emotions;
+  String bust(String emo) => '${id}_${emotions.contains(emo) ? emo : 'calm'}_bust.png';
+  String face(String emo) => '${id}_${emotions.contains(emo) ? emo : 'calm'}.jpg';
+  factory AvatarLook.fromJson(Map<String, dynamic> j) => AvatarLook(
+        look: (j['look'] as num).toInt(), id: j['id'], season: j['season'],
+        emotions: (j['emotions'] as List).cast<String>(),
+      );
+}
+
+/// Общий для всех серий контент: аватары и общий бандл.
+class CommonInfo {
+  const CommonInfo({required this.avatars, this.bundle});
+  final List<AvatarLook> avatars;
+  final Bundle? bundle;
+  AvatarLook? byLook(int n) => avatars.where((a) => a.look == n).firstOrNull;
+  factory CommonInfo.fromJson(Map<String, dynamic> j) => CommonInfo(
+        avatars: [for (final a in (j['avatars'] as List? ?? [])) AvatarLook.fromJson(a)],
+        bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
+      );
+}

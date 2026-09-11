@@ -24,7 +24,7 @@ scenes:
     pan: 0..100                  # необязательно: горизонтальное панорамирование кадра (50 = центр)
     avatar: left | right         # необязательно: сторона фигуры аватара (по умолчанию left)
     beats:
-      - say: {who, kk, ru, en}
+      - say: {who, kk, ru, en, emo?}   # emo: calm | joy | alarm | sorrow — состояние аватара в этой реплике
       - choice:
           prompt: {kk, ru, en}
           options:

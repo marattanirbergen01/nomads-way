@@ -62,7 +62,7 @@ class _ProfileTabState extends State<ProfileTab> {
             icon: const Icon(Icons.settings_outlined, color: C.onSky, size: 23))),
           Column(children: [
             const SizedBox(height: 4),
-            AvatarCircle(size: 96, look: look),
+            AvatarCircle(size: 96, look: look, services: _s),
             const SizedBox(height: 12),
             InkWell(onTap: _editName, borderRadius: BorderRadius.circular(8), child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), child: Row(mainAxisSize: MainAxisSize.min, children: [
               Text(name, style: st(24, w: 700, color: C.onSky)), const SizedBox(width: 8),
@@ -78,7 +78,7 @@ class _ProfileTabState extends State<ProfileTab> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               for (var i = 1; i <= 3; i++) Padding(padding: const EdgeInsets.symmetric(horizontal: 7), child: GestureDetector(
                 onTap: () async { await _s.store.setLook(i); _s.touch(); },
-                child: Opacity(opacity: look == i ? 1 : .5, child: AvatarCircle(size: 44, look: i, ring: look == i)),
+                child: Opacity(opacity: look == i ? 1 : .5, child: AvatarCircle(size: 44, look: i, ring: look == i, services: _s)),
               )),
             ]),
           ]),

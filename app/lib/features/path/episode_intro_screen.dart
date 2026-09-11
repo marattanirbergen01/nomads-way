@@ -19,6 +19,7 @@ class EpisodeIntroScreen extends StatefulWidget {
 
 class _EpisodeIntroScreenState extends State<EpisodeIntroScreen> {
   InstallState _state = InstallState.unsupported;
+  InstallState _common = InstallState.unsupported;
   double? _progress;
   String? _error;
   bool _busy = false;
@@ -32,13 +33,26 @@ class _EpisodeIntroScreenState extends State<EpisodeIntroScreen> {
   Future<void> _check() async {
     final st = await _s.episodes.state(_e);
     await _s.episodes.warm(_e.id);
-    if (mounted) setState(() => _state = st);
+    final c = _s.content.commonSync ?? await _s.content.common().catchError((_) => const CommonInfo(avatars: []));
+    final cs = await _s.episodes.stateOf('common', c.bundle);
+    if (mounted) setState(() { _state = st; _common = cs; });
   }
+
+  bool get _needCommon => _common == InstallState.absent || _common == InstallState.outdated;
 
   Future<void> _download() async {
     setState(() { _busy = true; _error = null; _progress = 0; });
     try {
-      await _s.episodes.install(_e, _s.content.baseUrl, onProgress: (v) { if (mounted) setState(() => _progress = v); });
+      final c = _s.content.commonSync;
+      final cb = _needCommon ? c?.bundle : null;
+      final total = (_e.bundle?.bytes ?? 0) + (cb?.bytes ?? 0);
+      var done = 0;
+      void report(double v, int bytes) { if (mounted) setState(() => _progress = total == 0 ? v : ((done + v * bytes) / total).clamp(0, 1)); }
+      if (cb != null) {
+        await _s.episodes.installBundle('common', cb, _s.content.baseUrl, onProgress: (v) => report(v, cb.bytes));
+        done += cb.bytes;
+      }
+      await _s.episodes.install(_e, _s.content.baseUrl, onProgress: (v) => report(v, _e.bundle?.bytes ?? 0));
       // серия обновилась — старая позиция могла указывать на исчезнувшую сцену
       if (_state == InstallState.outdated) await _s.store.clearStory(_e.id);
       await _check();
@@ -67,7 +81,8 @@ class _EpisodeIntroScreenState extends State<EpisodeIntroScreen> {
     final s = _s.s; final l = _s.l;
     final b = _e.bundle;
     final cont = _s.store.continueMeta(_e.id);
-    final needsDownload = _state == InstallState.absent || _state == InstallState.outdated;
+    final needsDownload = _state == InstallState.absent || _state == InstallState.outdated || (_needCommon && _state != InstallState.unsupported);
+    final commonMb = _needCommon ? (_s.content.commonSync?.bundle?.mb ?? 0) : 0.0;
 
     return Scaffold(
       backgroundColor: C.ground,
@@ -98,7 +113,7 @@ class _EpisodeIntroScreenState extends State<EpisodeIntroScreen> {
               Text('${s('downloading')} ${(_progress! * 100).round()}%', style: st(13, color: C.inkSoft)),
             ] else if (needsDownload && b != null) ...[
               SizedBox(width: double.infinity, child: GoldButton(
-                label: '${_state == InstallState.outdated ? s('update') : s('download')} · ${b.mb.toStringAsFixed(1)} МБ',
+                label: '${_state == InstallState.outdated || _common == InstallState.outdated ? s('update') : s('download')} · ${(b.mb + commonMb).toStringAsFixed(1)} МБ',
                 height: 52, onTap: _busy ? null : _download)),
               const SizedBox(height: 10),
               Text(_state == InstallState.outdated ? s('updated.hint') : s('offline.hint'),

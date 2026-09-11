@@ -78,12 +78,15 @@ class EpisodeStore {
     }
   }
 
-  Future<InstallState> state(CatalogEntry e) async {
-    if (e.bundle == null) return InstallState.unsupported;
-    final have = await installedHash(e.id);
+  Future<InstallState> state(CatalogEntry e) => stateOf(e.id, e.bundle);
+
+  /// Состояние любого пакета по id: серии и общего пакета `common`.
+  Future<InstallState> stateOf(String id, Bundle? b) async {
+    if (b == null) return InstallState.unsupported;
+    final have = await installedHash(id);
     if (!supported) return InstallState.unsupported;
     if (have == null) return InstallState.absent;
-    return have == e.bundle!.contentHash ? InstallState.ready : InstallState.outdated;
+    return have == b.contentHash ? InstallState.ready : InstallState.outdated;
   }
 
   /// Файл из установленной серии, или null.
@@ -108,8 +111,11 @@ class EpisodeStore {
   }
 
   /// Скачивает и распаковывает серию. [onProgress] — 0..1, приходит по мере загрузки.
-  Future<void> install(CatalogEntry e, String baseUrl, {void Function(double)? onProgress}) async {
-    final b = e.bundle;
+  Future<void> install(CatalogEntry e, String baseUrl, {void Function(double)? onProgress}) =>
+      installBundle(e.id, e.bundle, baseUrl, onProgress: onProgress);
+
+  /// То же для любого пакета по id: серии и общий пакет `common` (аватары, баннер).
+  Future<void> installBundle(String id, Bundle? b, String baseUrl, {void Function(double)? onProgress}) async {
     if (!supported || b == null) throw StateError('установка недоступна');
 
     final req = http.Request('GET', Uri.parse('$baseUrl/${b.url}'));
@@ -127,7 +133,7 @@ class EpisodeStore {
     if (got != b.sha256) throw Exception('битый архив: отпечаток не совпал');
 
     // распаковываем в свежую папку, чтобы старые кадры не остались
-    final dir = await _epDir(e.id);
+    final dir = await _epDir(id);
     if (dir == null) throw StateError('нет доступа к файловой системе');
     if (dir.existsSync()) dir.deleteSync(recursive: true);
     dir.createSync(recursive: true);
@@ -136,11 +142,11 @@ class EpisodeStore {
       final out = File(p.join(dir.path, f.name))..createSync(recursive: true);
       out.writeAsBytesSync(f.content as List<int>);
     }
-    (await _stamp(e.id))!.writeAsStringSync(jsonEncode({
+    (await _stamp(id))!.writeAsStringSync(jsonEncode({
       'contentHash': b.contentHash, 'sha256': b.sha256, 'bytes': b.bytes,
       'at': DateTime.now().toIso8601String(),
     }));
-    _known[e.id] = dir;
+    _known[id] = dir;
     onProgress?.call(1);
   }
 

@@ -1,34 +1,56 @@
 import 'package:flutter/material.dart';
+import '../core/services.dart';
+import 'art.dart';
 
-/// Портрет в кружке. Три внешности различаются оттенком чапана; черт лица нет — это заглушка.
+/// Портрет в кружке: настоящий кадр из общего пакета; пока его нет — силуэт.
 class AvatarCircle extends StatelessWidget {
-  const AvatarCircle({super.key, required this.size, this.look = 1, this.ring = true});
+  const AvatarCircle({super.key, required this.size, this.look = 1, this.ring = true, this.services, this.emo = 'calm'});
   final double size;
   final int look;
   final bool ring;
+  final Services? services;
+  final String emo;
   @override
-  Widget build(BuildContext context) => Container(
-        width: size, height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: const Color(0xFF43352A),
-          border: ring ? Border.all(color: const Color(0xFFD9A441), width: size > 60 ? 3 : 2) : null,
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: CustomPaint(painter: _HeadPainter(look)),
-      );
+  Widget build(BuildContext context) {
+    final a = services?.content.commonSync?.byLook(look);
+    return Container(
+      width: size, height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: const Color(0xFF43352A),
+        border: ring ? Border.all(color: const Color(0xFFD9A441), width: size > 60 ? 3 : 2) : null,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: a == null
+          ? CustomPaint(painter: _HeadPainter(look))
+          : Art(
+              url: services!.content.avatarUrl(a, a.face(emo)), file: services!.content.avatarFile(a, a.face(emo)),
+              fit: BoxFit.cover, width: size, height: size, logicalWidth: size,
+              fallback: CustomPaint(painter: _HeadPainter(look), size: Size(size, size)),
+            ),
+    );
+  }
 }
 
-/// Фигура по пояс. Низ уходит под текстовую панель.
+/// Фигура по пояс поверх сцены. Настоящий кадр с прозрачным фоном; пока его нет — силуэт.
 class AvatarBust extends StatelessWidget {
-  const AvatarBust({super.key, this.look = 1, this.mirror = false});
+  const AvatarBust({super.key, this.look = 1, this.mirror = false, this.services, this.emo = 'calm'});
   final int look;
   final bool mirror;
+  final Services? services;
+  final String emo;
   @override
-  Widget build(BuildContext context) => Transform.flip(
-        flipX: mirror,
-        child: CustomPaint(painter: _BustPainter(look)),
-      );
+  Widget build(BuildContext context) {
+    final a = services?.content.commonSync?.byLook(look);
+    final child = a == null
+        ? CustomPaint(painter: _BustPainter(look))
+        : Art(
+            url: services!.content.avatarUrl(a, a.bust(emo)), file: services!.content.avatarFile(a, a.bust(emo)),
+            fit: BoxFit.contain, logicalWidth: 300,
+            fallback: CustomPaint(painter: _BustPainter(look)),
+          );
+    return Transform.flip(flipX: mirror, child: Align(alignment: Alignment.topCenter, child: child));
+  }
 }
 
 Color _chapan(int look) => switch (look) { 2 => const Color(0xFF5B4A3B), 3 => const Color(0xFF4E4A63), _ => const Color(0xFF4E5F4E) };

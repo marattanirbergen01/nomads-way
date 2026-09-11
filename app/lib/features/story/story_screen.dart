@@ -396,7 +396,7 @@ class _SayView extends StatelessWidget {
         if (avatar)
           Positioned(
             left: scene.avatarRight ? null : -18, right: scene.avatarRight ? -18 : null, top: 300, width: 267, height: 400,
-            child: AvatarBust(look: look, mirror: scene.avatarRight),
+            child: AvatarBust(look: look, mirror: scene.avatarRight, services: st_._s, emo: say.emo ?? 'calm'),
           ),
         Positioned(left: 0, right: 0, bottom: 0, child: Container(
           decoration: _panelDeco(),
@@ -409,7 +409,7 @@ class _SayView extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(0, avatar ? 0 : -18),
                   child: Row(children: [
-                    if (!avatar) AvatarCircle(size: 46, look: look),
+                    if (!avatar) AvatarCircle(size: 46, look: look, services: st_._s),
                     if (!avatar) const SizedBox(width: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -516,7 +516,7 @@ class _ChoiceMadeView extends StatelessWidget {
       _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.art), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.art), pan: option.art == null ? max(scene.pan, 62) : 62),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x80141010), Color(0x0D141010), Color(0x00141010), Color(0x40221A14), Color(0x80221A14)], stops: [0, .26, .46, .66, 1]))),
-      Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look)),
+      Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look, services: st_._s)),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(
         decoration: _panelDeco(),
         padding: EdgeInsets.fromLTRB(24, 26, 24, 34 + MediaQuery.of(context).padding.bottom),

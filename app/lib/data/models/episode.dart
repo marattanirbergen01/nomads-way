@@ -67,16 +67,18 @@ class Scene {
 
 sealed class Beat {
   factory Beat.fromJson(Map<String, dynamic> j) => switch (j['type']) {
-        'say' => Say(who: j['who'], text: L10n.fromJson(j['text'])),
+        'say' => Say(who: j['who'], text: L10n.fromJson(j['text']), emo: j['emo']),
         'choice' => Choice(prompt: L10n.fromJson(j['prompt']), options: [for (final o in j['options']) Option.fromJson(o)]),
         _ => throw FormatException('unknown beat type ${j['type']}'),
       };
 }
 
 class Say implements Beat {
-  Say({required this.who, required this.text});
+  Say({required this.who, required this.text, this.emo});
   final String who;
   final L10n text;
+  /// calm | joy | alarm | sorrow — состояние аватара в этой реплике; null = calm.
+  final String? emo;
 }
 
 class Choice implements Beat {

@@ -43,38 +43,55 @@ void main(List<String> args) {
       if (f.existsSync()) { files['media/$m.jpg'] = f; } else { missing++; }
     }
 
-    // отпечаток содержимого: имена + байты, в стабильном порядке
-    final names = files.keys.toList()..sort();
-    final buf = <int>[];
-    for (final n in names) {
-      buf.addAll(utf8.encode(n));
-      buf.addAll(files[n]!.readAsBytesSync());
-    }
-    final hash = sha256.convert(buf).toString().substring(0, 16);
-
-    final zipPath = p.join(outDir.path, '$id.zip');
-    final enc = ZipFileEncoder()..create(zipPath);
-    for (final n in names) {
-      enc.addArchiveFile(ArchiveFile(n, files[n]!.lengthSync(), files[n]!.readAsBytesSync()));
-    }
-    enc.close();
-
-    final zip = File(zipPath);
-    final bytes = zip.lengthSync();
-    entry['bundle'] = {
-      'url': 'bundles/$id.zip',
-      'bytes': bytes,
-      'sha256': sha256.convert(zip.readAsBytesSync()).toString(),
-      'contentHash': hash,
-      'files': names.length,
-    };
+    final b = _writeBundle(outDir, id, files);
+    entry['bundle'] = b;
     packed++;
-    stdout.writeln('$id  ${names.length} файлов  ${(bytes / 1024 / 1024).toStringAsFixed(1)} МБ  отпечаток $hash'
+    stdout.writeln('$id  ${files.length} файлов  ${((b['bytes'] as int) / 1024 / 1024).toStringAsFixed(1)} МБ  отпечаток ${b['contentHash']}'
         '${missing > 0 ? '  (нет $missing кадров)' : ''}');
   }
 
   catalogFile.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(catalog));
-  stdout.writeln('\nбандлов: $packed → ${outDir.path}');
+
+  // ---- общий пакет: аватары и баннер сезона — нужны в каждой серии, качаются один раз
+  final commonFile = File(p.join(build.path, 'common.json'));
+  if (commonFile.existsSync()) {
+    final common = jsonDecode(commonFile.readAsStringSync()) as Map<String, dynamic>;
+    final files = <String, File>{};
+    for (final a in (common['avatars'] as List).cast<Map<String, dynamic>>()) {
+      final season = a['season'] as String;
+      for (final emo in (a['emotions'] as List).cast<String>()) {
+        for (final name in ['${a['id']}_${emo}_bust.png', '${a['id']}_$emo.jpg']) {
+          files['media/$season/avatars/$name'] = File(p.join(build.path, 'media', season, 'avatars', name));
+        }
+      }
+    }
+    final banner = File(p.join(build.path, 'media', 's1', 'cover_season1.jpg'));
+    if (banner.existsSync()) files['media/s1/cover_season1.jpg'] = banner;
+    if (files.isNotEmpty) {
+      final entry = _writeBundle(outDir, 'common', files);
+      common['bundle'] = entry;
+      commonFile.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(common));
+      stdout.writeln('common  ${files.length} файлов  ${((entry['bytes'] as int) / 1024 / 1024).toStringAsFixed(1)} МБ  отпечаток ${entry['contentHash']}');
+    }
+  }
+  stdout.writeln('\nбандлов: $packed + common → ${outDir.path}');
+}
+
+/// Пишет zip из файлов и возвращает описание бандла для каталога.
+Map<String, Object?> _writeBundle(Directory outDir, String id, Map<String, File> files) {
+  final names = files.keys.toList()..sort();
+  final buf = <int>[];
+  for (final n in names) { buf.addAll(utf8.encode(n)); buf.addAll(files[n]!.readAsBytesSync()); }
+  final hash = sha256.convert(buf).toString().substring(0, 16);
+  final zipPath = p.join(outDir.path, '$id.zip');
+  final enc = ZipFileEncoder()..create(zipPath);
+  for (final n in names) { enc.addArchiveFile(ArchiveFile(n, files[n]!.lengthSync(), files[n]!.readAsBytesSync())); }
+  enc.close();
+  final zip = File(zipPath);
+  return {
+    'url': 'bundles/$id.zip', 'bytes': zip.lengthSync(),
+    'sha256': sha256.convert(zip.readAsBytesSync()).toString(), 'contentHash': hash, 'files': names.length,
+  };
 }
 
 String _repoRoot() {

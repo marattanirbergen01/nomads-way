@@ -99,6 +99,7 @@ void main(List<String> args) {
     final copied = _copyMedia(content, out);
     if (copied > 0) stdout.writeln('медиа: скопировано $copied файлов → $out/media/');
     File(p.join(out, 'catalog.json')).writeAsStringSync(enc.convert(catalog));
+    File(p.join(out, 'common.json')).writeAsStringSync(enc.convert(_common(content, out)));
     File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
   }
   stdout.writeln(check ? '\nПроверка пройдена.' : '\nСобрано серий: $compiled → $out');
@@ -145,6 +146,8 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
       if (b.containsKey('say')) {
         final say = b['say'] as Map;
         if (!chars.contains(say['who'])) err('$id/$sid: неизвестный персонаж ${say['who']}');
+        final emo = say['emo'] as String?;
+        if (emo != null && !_emotions.contains(emo)) err('$id/$sid: emo должен быть одним из ${_emotions.join('|')}');
         _needLangs(say, '$id/$sid say');
       } else if (b.containsKey('choice')) {
         choices++;
@@ -260,7 +263,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
           'beats': [
             for (final b in (s['beats'] as List).cast<Map>())
               if (b.containsKey('say'))
-                {'type': 'say', 'who': b['say']['who'], 'text': t(b['say'])}
+                {'type': 'say', 'who': b['say']['who'], 'text': t(b['say']), if (b['say']['emo'] != null) 'emo': b['say']['emo']}
               else
                 {
                   'type': 'choice',
@@ -333,12 +336,47 @@ int _copyMedia(String content, String out) {
     final src = Directory(p.join(season.path, 'out'));
     if (!src.existsSync()) continue;
     final dst = Directory(p.join(out, 'media', p.basename(season.path)))..createSync(recursive: true);
-    for (final f in src.listSync().whereType<File>().where((f) => f.path.endsWith('.jpg'))) {
-      f.copySync(p.join(dst.path, p.basename(f.path)));
+    for (final f in src.listSync(recursive: true).whereType<File>()) {
+      if (!f.path.endsWith('.jpg') && !f.path.endsWith('.png')) continue;
+      final rel = p.relative(f.path, from: src.path);
+      File(p.join(dst.path, rel)).parent.createSync(recursive: true);
+      f.copySync(p.join(dst.path, rel));
       n++;
     }
   }
   return n;
+}
+
+const _emotions = ['calm', 'joy', 'alarm', 'sorrow'];
+
+/// Общий для всех серий контент: аватары игрока (три внешности × эмоции).
+/// Собирается из media/<season>/manifest.yaml: kind avatar, status approved,
+/// id вида avatar_NN_slug_emotion. В сборку попадают только те, для кого есть файлы в out/.
+Map<String, Object?> _common(String content, String out) {
+  final looks = <String, Map<String, Object?>>{};
+  final mediaRoot = Directory(p.join(content, 'media'));
+  if (mediaRoot.existsSync()) {
+    for (final season in mediaRoot.listSync().whereType<Directory>()) {
+      final mf = File(p.join(season.path, 'manifest.yaml'));
+      if (!mf.existsSync()) continue;
+      final sid = p.basename(season.path);
+      for (final m in (_yaml(mf.path) as List).cast<Map>()) {
+        if (m['kind'] != 'avatar' || m['status'] != 'approved') continue;
+        final match = RegExp(r'^(avatar_(\d+)_[a-z]+)_([a-z]+)$').firstMatch(m['id'] as String);
+        if (match == null) continue;
+        final base = match.group(1)!, emo = match.group(3)!;
+        if (!_emotions.contains(emo)) continue;
+        final bust = File(p.join(out, 'media', sid, 'avatars', '${base}_${emo}_bust.png'));
+        final face = File(p.join(out, 'media', sid, 'avatars', '${base}_$emo.jpg'));
+        if (!bust.existsSync() || !face.existsSync()) { warn('аватар ${m['id']}: нет файлов в out/avatars — пропущен'); continue; }
+        final look = looks.putIfAbsent(base, () => {'look': int.parse(match.group(2)!), 'id': base, 'season': sid, 'emotions': <String>[]});
+        (look['emotions'] as List<String>).add(emo);
+      }
+    }
+  }
+  final list = looks.values.toList()..sort((a, b) => (a['look'] as int).compareTo(b['look'] as int));
+  for (final l in list) { (l['emotions'] as List<String>).sort((a, b) => _emotions.indexOf(a).compareTo(_emotions.indexOf(b))); }
+  return {'version': 1, 'avatars': list};
 }
 
 int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group(1) ?? '') ?? 0;
