@@ -25,7 +25,7 @@ class AvatarCircle extends StatelessWidget {
           ? CustomPaint(painter: _HeadPainter(look))
           : Art(
               url: services!.content.avatarUrl(a, a.face(emo)), file: services!.content.avatarFile(a, a.face(emo)),
-              fit: BoxFit.cover, width: size, height: size, logicalWidth: size,
+              fit: BoxFit.cover, alignment: a.circleAlignment(), width: size, height: size, logicalWidth: size,
               fallback: CustomPaint(painter: _HeadPainter(look), size: Size(size, size)),
             ),
     );

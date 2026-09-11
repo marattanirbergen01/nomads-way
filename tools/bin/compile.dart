@@ -2,6 +2,7 @@
 // Правила валидации — docs/CONTENT_FORMAT.md. Меняя их здесь, меняй и там.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
@@ -103,6 +104,9 @@ void main(List<String> args) {
     File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
   }
   stdout.writeln(check ? '\nПроверка пройдена.' : '\nСобрано серий: $compiled → $out');
+  if (!check && Directory(p.join(out, 'bundles')).existsSync()) {
+    stdout.writeln('catalog.json пересобран без бандлов — теперь: dart run bin/pack.dart');
+  }
 }
 
 // ---------------------------------------------------------------- валидация
@@ -369,7 +373,18 @@ Map<String, Object?> _common(String content, String out) {
         final bust = File(p.join(out, 'media', sid, 'avatars', '${base}_${emo}_bust.png'));
         final face = File(p.join(out, 'media', sid, 'avatars', '${base}_$emo.jpg'));
         if (!bust.existsSync() || !face.existsSync()) { warn('аватар ${m['id']}: нет файлов в out/avatars — пропущен'); continue; }
-        final look = looks.putIfAbsent(base, () => {'look': int.parse(match.group(2)!), 'id': base, 'season': sid, 'emotions': <String>[]});
+        final look = looks.putIfAbsent(base, () {
+          // где лицо: из manifest (face_y) или по альфе эталонного кадра calm
+          final calm = File(p.join(out, 'media', sid, 'avatars', '${base}_calm_bust.png'));
+          final probe = _faceProbe(calm.existsSync() ? calm : bust);
+          final manual = (m['face_y'] as num?)?.toDouble();
+          return {
+            'look': int.parse(match.group(2)!), 'id': base, 'season': sid, 'emotions': <String>[],
+            'aspect': probe?.aspect ?? 0.78,
+            'faceY': manual ?? probe?.faceY ?? 0.33,
+          };
+        });
+        if (m['face_y'] != null) look['faceY'] = (m['face_y'] as num).toDouble();
         (look['emotions'] as List<String>).add(emo);
       }
     }
@@ -377,6 +392,53 @@ Map<String, Object?> _common(String content, String out) {
   final list = looks.values.toList()..sort((a, b) => (a['look'] as int).compareTo(b['look'] as int));
   for (final l in list) { (l['emotions'] as List<String>).sort((a, b) => _emotions.indexOf(a).compareTo(_emotions.indexOf(b))); }
   return {'version': 1, 'avatars': list};
+}
+
+/// Оценка положения лица по альфе PNG: верх непрозрачной области — верх головного убора,
+/// первая строка шире 60% максимума — плечи. Глаза обычно на 0.6 пути от верха к плечам.
+({double faceY, double aspect})? _faceProbe(File png) {
+  try {
+    final data = png.readAsBytesSync();
+    if (data.length < 8 || data[0] != 0x89 || data[1] != 0x50) return null;
+    var pos = 8; int? w, h, ct; final idat = BytesBuilder();
+    while (pos + 8 <= data.length) {
+      final len = ByteData.sublistView(data, pos, pos + 4).getUint32(0);
+      final type = String.fromCharCodes(data.sublist(pos + 4, pos + 8));
+      final body = data.sublist(pos + 8, pos + 8 + len);
+      pos += 12 + len;
+      if (type == 'IHDR') { final bd = ByteData.sublistView(body); w = bd.getUint32(0); h = bd.getUint32(4); ct = body[9]; }
+      else if (type == 'IDAT') { idat.add(body); }
+      else if (type == 'IEND') { break; }
+    }
+    if (w == null || h == null || ct != 6) return null;
+    final raw = ZLibDecoder().convert(idat.toBytes());
+    const bpp = 4; final stride = w * bpp;
+    var prev = List<int>.filled(stride, 0); var i = 0;
+    final widths = <int>[];
+    for (var y = 0; y < h; y++) {
+      final f = raw[i++]; final line = raw.sublist(i, i + stride); i += stride;
+      for (var x = 0; x < stride; x++) {
+        final a = x >= bpp ? line[x - bpp] : 0, b = prev[x], c = x >= bpp ? prev[x - bpp] : 0;
+        line[x] = (line[x] + switch (f) {
+          1 => a, 2 => b, 3 => (a + b) ~/ 2,
+          4 => () { final pp = a + b - c; final pa = (pp - a).abs(), pb = (pp - b).abs(), pc = (pp - c).abs(); return pa <= pb && pa <= pc ? a : pb <= pc ? b : c; }(),
+          _ => 0,
+        }) & 255;
+      }
+      var n = 0;
+      for (var x = 3; x < stride; x += bpp) { if (line[x] > 40) n++; }
+      widths.add(n);
+      prev = line;
+    }
+    final top = widths.indexWhere((n) => n > 0);
+    if (top < 0) return null;
+    final mx = widths.reduce((a, b) => a > b ? a : b);
+    var shoulders = widths.indexWhere((n) => n > mx * 0.6);
+    if (shoulders <= top) shoulders = (top + h) ~/ 2;
+    return (faceY: (top + 0.6 * (shoulders - top)) / h, aspect: w / h);
+  } catch (_) {
+    return null;
+  }
 }
 
 int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group(1) ?? '') ?? 0;

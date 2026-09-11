@@ -10,7 +10,7 @@ import '../core/theme.dart';
 /// строго под размер на экране через cacheWidth и держим кэш в узде (см. main.dart).
 class Art extends StatelessWidget {
   const Art({
-    super.key, this.url, this.file, this.fit = BoxFit.cover, this.pan,
+    super.key, this.url, this.file, this.fit = BoxFit.cover, this.pan, this.alignment,
     this.width, this.height, this.fallback, this.logicalWidth,
   });
 
@@ -21,6 +21,8 @@ class Art extends StatelessWidget {
   final BoxFit fit;
   /// 0..100 — какую часть кадра показывать по горизонтали. null = центр.
   final int? pan;
+  /// Явное выравнивание; перекрывает pan.
+  final Alignment? alignment;
   final double? width, height;
   final Widget? fallback;
   /// Ширина места на экране в логических пикселях; по умолчанию — вся ширина.
@@ -34,7 +36,7 @@ class Art extends StatelessWidget {
     final candidate = [logicalWidth, width].firstWhere((v) => v != null && v.isFinite && v > 0, orElse: () => null);
     final lw = candidate ?? (screen.isFinite && screen > 0 ? screen : 400.0);
     final cacheWidth = (lw * dpr).round().clamp(64, 1440);
-    final align = pan == null ? Alignment.center : Alignment((pan! / 50) - 1, 0);
+    final align = alignment ?? (pan == null ? Alignment.center : Alignment((pan! / 50) - 1, 0));
     final fb = fallback ?? Container(color: C.cardHigh, width: width, height: height);
 
     if (file != null) {

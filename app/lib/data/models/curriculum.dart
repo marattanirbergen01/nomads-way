@@ -1,3 +1,5 @@
+import 'package:flutter/painting.dart' show Alignment;
+
 import '../../core/l10n.dart';
 
 /// Плоское дерево тем из build/curriculum.json — только узлы с фактами.
@@ -80,13 +82,32 @@ class CatalogEntry {
 
 /// Внешность аватара из build/common.json.
 class AvatarLook {
-  const AvatarLook({required this.look, required this.id, required this.season, required this.emotions});
+  const AvatarLook({required this.look, required this.id, required this.season, required this.emotions, this.faceY = 0.33, this.aspect = 0.78});
   final int look; final String id; final String season; final List<String> emotions;
+  /// Где лицо по вертикали, доля высоты кадра (0 — верх). Компилятор находит по альфе.
+  final double faceY;
+  /// Ширина / высота кадра.
+  final double aspect;
   String bust(String emo) => '${id}_${emotions.contains(emo) ? emo : 'calm'}_bust.png';
   String face(String emo) => '${id}_${emotions.contains(emo) ? emo : 'calm'}.jpg';
+
+  /// Выравнивание для квадратного кружка при BoxFit.cover: лицо садится на [target] высоты кружка.
+  /// 0.40 выбрано так, чтобы все три готовые внешности сошлись: у самой «высокой» из них
+  /// лицо даже при верхнем окне не опускается ниже 0.39.
+  /// Портрет уже, чем квадрат, поэтому обрезается по вертикали; окно двигаем так, чтобы лицо
+  /// у всех внешностей оказалось на одной высоте.
+  Alignment circleAlignment({double target = .40}) {
+    final vis = aspect >= 1 ? 1.0 : aspect;          // видимая доля высоты
+    if (vis >= 1) return Alignment.center;
+    final t = (faceY - target * vis).clamp(0.0, 1 - vis); // верх окна, доля высоты
+    return Alignment(0, (2 * t / (1 - vis) - 1).clamp(-1.0, 1.0));
+  }
+
   factory AvatarLook.fromJson(Map<String, dynamic> j) => AvatarLook(
         look: (j['look'] as num).toInt(), id: j['id'], season: j['season'],
         emotions: (j['emotions'] as List).cast<String>(),
+        faceY: (j['faceY'] as num?)?.toDouble() ?? 0.33,
+        aspect: (j['aspect'] as num?)?.toDouble() ?? 0.78,
       );
 }
 
