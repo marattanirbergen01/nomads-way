@@ -4,7 +4,7 @@ import 'art.dart';
 
 /// Портрет в кружке: настоящий кадр из общего пакета; пока его нет — силуэт.
 class AvatarCircle extends StatelessWidget {
-  const AvatarCircle({super.key, required this.size, this.look = 1, this.ring = true, this.services, this.emo = 'calm'});
+  const AvatarCircle({super.key, required this.size, this.look = 1, this.ring = false, this.services, this.emo = 'calm'});
   final double size;
   final int look;
   final bool ring;

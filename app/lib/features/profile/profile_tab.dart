@@ -78,7 +78,10 @@ class _ProfileTabState extends State<ProfileTab> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               for (var i = 1; i <= 3; i++) Padding(padding: const EdgeInsets.symmetric(horizontal: 7), child: GestureDetector(
                 onTap: () async { await _s.store.setLook(i); _s.touch(); },
-                child: Opacity(opacity: look == i ? 1 : .5, child: AvatarCircle(size: 44, look: i, ring: look == i, services: _s)),
+                child: AnimatedScale(
+                  scale: look == i ? 1 : .86, duration: const Duration(milliseconds: 180),
+                  child: Opacity(opacity: look == i ? 1 : .45, child: AvatarCircle(size: 48, look: i, services: _s)),
+                ),
               )),
             ]),
           ]),
