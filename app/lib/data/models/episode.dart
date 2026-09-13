@@ -40,7 +40,7 @@ class Character {
 class Scene {
   Scene({
     required this.id, required this.art, required this.covers, required this.beats, required this.quiz,
-    this.title, this.layer, this.pan = 50, this.avatarRight = false,
+    this.title, this.layer, this.pan = 50, this.avatarRight = false, this.artWhen = const [],
   });
   final String id;
   final String art;
@@ -51,6 +51,16 @@ class Scene {
   final String? layer;          // history | personal | null
   final int pan;                // 0..100 — горизонтальное панорамирование кадра
   final bool avatarRight;
+  /// Кадр по условию на переменные сюжета: первое совпавшее правило; иначе [art].
+  final List<ArtRule> artWhen;
+
+  /// Какой кадр показать при текущих переменных — так вечерняя сцена помнит, где поставили юрту.
+  String artFor(Map<String, int> vars) {
+    for (final r in artWhen) {
+      if (r.matches(vars)) return r.art;
+    }
+    return art;
+  }
 
   factory Scene.fromJson(Map<String, dynamic> j) => Scene(
         id: j['id'],
@@ -62,7 +72,29 @@ class Scene {
         layer: j['layer'],
         pan: (j['pan'] as num?)?.toInt() ?? 50,
         avatarRight: j['avatarSide'] == 'right',
+        artWhen: [for (final r in (j['artWhen'] as List? ?? [])) ArtRule.fromJson(r)],
       );
+}
+
+class ArtRule {
+  const ArtRule({required this.conds, required this.art});
+  final List<Cond> conds;
+  final String art;
+  bool matches(Map<String, int> vars) => conds.every((c) => c.test(vars[c.name] ?? 0));
+  factory ArtRule.fromJson(Map<String, dynamic> j) => ArtRule(
+        conds: [for (final c in (j['if'] as List? ?? [])) Cond(c['var'], c['op'], (c['value'] as num).toInt())],
+        art: j['art'],
+      );
+}
+
+/// Одно сравнение переменной сюжета с числом. Отсутствующая переменная равна 0.
+class Cond {
+  const Cond(this.name, this.op, this.value);
+  final String name; final String op; final int value;
+  bool test(int v) => switch (op) {
+        '==' => v == value, '!=' => v != value, '<' => v < value,
+        '<=' => v <= value, '>' => v > value, '>=' => v >= value, _ => false,
+      };
 }
 
 sealed class Beat {

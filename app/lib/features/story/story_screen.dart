@@ -103,7 +103,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     final w = MediaQuery.sizeOf(context).width;
     ImageProvider? provider(int k) {
       if (k < 0 || k >= scenes.length) return null;
-      final art = scenes[k].art;
+      final art = scenes[k].artFor(_story.vars);
       return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: w, dpr: dpr);
     }
     final next = provider(i + 1);
@@ -390,7 +390,7 @@ class _SayView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: st_._tapForward,
       child: Stack(fit: StackFit.expand, children: [
-        _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), file: st_._s.content.mediaFile(st_._id, scene.art), pan: scene.pan),
+        _Art(url: st_._s.content.mediaUrl(st_._id, scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, scene.artFor(st_._story.vars)), pan: scene.pan),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x40221A14)], stops: [0, .24, .5, .75]))),
         if (avatar)
@@ -475,7 +475,7 @@ class _ChoiceView extends StatelessWidget {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, scene.art), file: st_._s.content.mediaFile(st_._id, scene.art), pan: scene.pan),
+      _Art(url: st_._s.content.mediaUrl(st_._id, scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, scene.artFor(st_._story.vars)), pan: scene.pan),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x66221A14)], stops: [0, .24, .5, .8]))),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(
@@ -513,7 +513,7 @@ class _ChoiceMadeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = st_._l; final s = st_._s.s;
     return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.art), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.art), pan: option.art == null ? max(scene.pan, 62) : 62),
+      _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.artFor(st_._story.vars)), pan: option.art == null ? max(scene.pan, 62) : 62),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x80141010), Color(0x0D141010), Color(0x00141010), Color(0x40221A14), Color(0x80221A14)], stops: [0, .26, .46, .66, 1]))),
       Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look, services: st_._s)),

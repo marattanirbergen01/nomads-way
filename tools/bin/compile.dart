@@ -81,6 +81,18 @@ void main(List<String> args) {
   if (errors.isNotEmpty) { stdout.writeln('\n${errors.length} ошибок. Ничего не записано.'); exit(1); }
   if (strict && warnings.isNotEmpty) { stdout.writeln('\n--strict: ${warnings.length} предупреждений считаются ошибками.'); exit(1); }
   if (!check) {
+    // Описания бандлов из прошлого catalog.json сохраняем: pack.dart пересчитает их сам,
+    // а без этого свежая пересборка «теряла» бандлы и клиент считал, что серия не скачиваема.
+    final prevCatalog = File(p.join(out, 'catalog.json'));
+    if (prevCatalog.existsSync()) {
+      try {
+        final prev = {for (final e in (jsonDecode(prevCatalog.readAsStringSync()) as List).cast<Map>()) e['id']: e};
+        for (final c in catalog) {
+          final b = prev[c['id']]?['bundle'];
+          if (b != null) c['bundle'] = b;
+        }
+      } catch (_) {}
+    }
     // Объявленный план: серии из planned_series, для которых ещё нет YAML.
     final written = {for (final c in catalog) c['id']};
     for (final node in curriculum) {
@@ -100,12 +112,20 @@ void main(List<String> args) {
     final copied = _copyMedia(content, out);
     if (copied > 0) stdout.writeln('медиа: скопировано $copied файлов → $out/media/');
     File(p.join(out, 'catalog.json')).writeAsStringSync(enc.convert(catalog));
-    File(p.join(out, 'common.json')).writeAsStringSync(enc.convert(_common(content, out)));
+    final commonFile = File(p.join(out, 'common.json'));
+    final common = _common(content, out);
+    if (commonFile.existsSync()) {
+      try {
+        final prevBundle = (jsonDecode(commonFile.readAsStringSync()) as Map)['bundle'];
+        if (prevBundle != null) common['bundle'] = prevBundle;
+      } catch (_) {}
+    }
+    commonFile.writeAsStringSync(enc.convert(common));
     File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
   }
   stdout.writeln(check ? '\nПроверка пройдена.' : '\nСобрано серий: $compiled → $out');
   if (!check && Directory(p.join(out, 'bundles')).existsSync()) {
-    stdout.writeln('catalog.json пересобран без бандлов — теперь: dart run bin/pack.dart');
+    stdout.writeln('описания бандлов перенесены из прошлого каталога; после правок контента: dart run bin/pack.dart');
   }
 }
 
@@ -119,6 +139,13 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
   final qById = {for (final q in questions) q['id'] as String: q};
   final reachable = <String>{scenes.first['id']};
   final usedQ = <String>{};
+  final knownVars = <String>{
+    for (final s in scenes)
+      for (final b in (s['beats'] as List).cast<Map>())
+        if (b['choice'] != null)
+          for (final o in (b['choice']['options'] as List).cast<Map>())
+            ...((o['set'] as Map?)?.keys.cast<String>() ?? const <String>[]),
+  };
   final covered = <String>{};
   var beats = 0, choices = 0;
 
@@ -139,6 +166,12 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
     if (pan != null && (pan is! int || pan < 0 || pan > 100)) err('$id/$sid: pan 0..100');
     final side = s['avatar'];
     if (side != null && !{'left', 'right'}.contains(side)) err('$id/$sid: avatar left|right');
+    for (final r in (s['art_when'] as List? ?? []).cast<Map>()) {
+      if (!media.contains(r['art'])) err('$id/$sid art_when: art ${r['art']} нет в media/manifest.yaml');
+      final cond = _parseCond(r['if']?.toString() ?? '');
+      if (cond == null) err('$id/$sid art_when: не разобрал условие «${r['if']}» — формат: flag, !flag, var >= 2, a && b');
+      else for (final c in cond) { if (!knownVars.contains(c['var'])) warn('$id/$sid art_when: переменную ${c['var']} никто не устанавливает'); }
+    }
     for (final f in (s['covers'] as List? ?? [])) {
       if (!facts.containsKey(f)) err('$id/$sid: covers неизвестный факт $f');
     }
@@ -263,6 +296,11 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
           if (s['layer'] != null) 'layer': s['layer'],
           if (s['pan'] != null) 'pan': s['pan'],
           if (s['avatar'] != null) 'avatarSide': s['avatar'],
+          if (s['art_when'] != null)
+            'artWhen': [
+              for (final r in (s['art_when'] as List).cast<Map>())
+                {'if': _parseCond(r['if'].toString()), 'art': r['art']},
+            ],
           'covers': s['covers'] ?? [],
           'beats': [
             for (final b in (s['beats'] as List).cast<Map>())
@@ -311,6 +349,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     'media': [
       for (final s in (ep['scenes'] as List).cast<Map>()) ...[
         s['art'],
+        for (final r in (s['art_when'] as List? ?? []).cast<Map>()) r['art'],
         for (final b in (s['beats'] as List).cast<Map>())
           if (b['choice'] != null)
             for (final o in (b['choice']['options'] as List).cast<Map>())
@@ -439,6 +478,22 @@ Map<String, Object?> _common(String content, String out) {
   } catch (_) {
     return null;
   }
+}
+
+/// Условие для art_when: `flag` (> 0), `!flag` (== 0), `var >= 2`, части через `&&`.
+/// Возвращает список {var, op, value} (все должны выполниться) или null при ошибке.
+List<Map<String, Object>>? _parseCond(String src) {
+  final out = <Map<String, Object>>[];
+  for (final raw in src.split('&&')) {
+    final t = raw.trim();
+    if (t.isEmpty) return null;
+    final m = RegExp(r'^(!)?([A-Za-z_][A-Za-z0-9_]*)$').firstMatch(t);
+    if (m != null) { out.add({'var': m.group(2)!, 'op': m.group(1) == null ? '>' : '==', 'value': 0}); continue; }
+    final c = RegExp(r'^([A-Za-z_][A-Za-z0-9_]*)\s*(==|!=|<=|>=|<|>)\s*(-?\d+)$').firstMatch(t);
+    if (c == null) return null;
+    out.add({'var': c.group(1)!, 'op': c.group(2)!, 'value': int.parse(c.group(3)!)});
+  }
+  return out.isEmpty ? null : out;
 }
 
 int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group(1) ?? '') ?? 0;

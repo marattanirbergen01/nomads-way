@@ -23,6 +23,11 @@ scenes:
     layer: history | personal    # необязательно: personal — пустой covers и без quiz, history — covers ≥ 1
     pan: 0..100                  # необязательно: горизонтальное панорамирование кадра (50 = центр)
     avatar: left | right         # необязательно: сторона фигуры аватара (по умолчанию left)
+    art_when:                    # необязательно: кадр по условию на переменные сюжета; первое совпавшее, иначе art
+      - { if: "yurt_river", art: art_s1e01_045_river }
+      - { if: "loyalty >= 2 && caution == 0", art: art_s1e01_045_loyal }
+    # Условие: flag (> 0), !flag (== 0), var op число (== != < <= > >=), части через &&.
+    # Отсутствующая переменная равна 0. Переменные задаются в set у вариантов выбора.
     beats:
       - say: {who, kk, ru, en, emo?}   # emo: calm | joy | alarm | sorrow — состояние аватара в этой реплике
       - choice:

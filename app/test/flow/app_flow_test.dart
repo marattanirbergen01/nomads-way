@@ -114,25 +114,53 @@ void main() {
     await tester.pump(const Duration(milliseconds: 200));
     expect(find.text('1457 жыл. Сығанақ түбі.'), findsOneWidget, reason: 'назад на реплику');
 
-    // ---- листаем 5 реплик первой сцены до вопросов
-    for (var i = 0; i < 5; i++) {
-      await tester.pump(const Duration(seconds: 4));
-      await tester.tapAt(const Offset(195, 300));
-      await tester.pump(const Duration(milliseconds: 200));
+    // ---- едем по сюжету, что бы ни было на экране: реплика, развилка, вопрос, разбор.
+    // Сценарий ещё меняется, поэтому тест не знает порядок сцен — он просто ведёт игру.
+    var answered = 0, chosen = 0, said = 0;
+    for (var step = 0; step < 90 && (answered < 3 || chosen < 1); step++) {
+      if (find.text('Жалғастыру').evaluate().isNotEmpty && find.textContaining('дереккөз').evaluate().isEmpty
+          && find.byType(ListView).evaluate().isNotEmpty && find.text('A').evaluate().isEmpty
+          && find.text('Дұрыс').evaluate().isNotEmpty || find.text('Қате').evaluate().isNotEmpty) {
+        await tester.tap(find.text('Жалғастыру'));            // разбор → дальше
+        await _settle(tester, 2);
+      } else if (find.text('A').evaluate().isNotEmpty) {
+        await tester.tap(find.text('A'));                     // вопрос → любой ответ
+        answered++;
+        await _settle(tester, 2);
+      } else if (find.text('ТАҢДА').evaluate().isNotEmpty) {
+        final opts = find.byType(OutlinedButton);
+        if (opts.evaluate().isNotEmpty) {
+          await tester.pump(const Duration(seconds: 4));       // развилка ждёт таймер
+          await tester.tap(opts.first);
+        } else {
+          await tester.tapAt(const Offset(195, 200));          // развилка двумя кадрами — верхний
+        }
+        chosen++;
+        await _settle(tester, 3);
+        if (find.text('СЕНІҢ ТАҢДАУЫҢ').evaluate().isNotEmpty) {
+          await tester.tap(find.text('Жалғастыру'));          // «выбор сделан»
+          await _settle(tester, 3);
+        }
+      } else if (find.byIcon(Icons.menu_rounded).evaluate().isNotEmpty) {
+        await tester.pump(const Duration(seconds: 4));         // реплика: дочитали
+        await tester.tapAt(const Offset(195, 300));
+        said++;
+        await tester.pump(const Duration(milliseconds: 250));
+      } else {
+        await _settle(tester, 2);
+      }
     }
-    // после сцены — вопросы
-    expect(find.text('ТЕКСЕРУ'), findsOneWidget, reason: 'после сцены идёт проверка');
-
-    // ---- отвечаем на первый вопрос: любой вариант
-    await tester.tap(find.text('A'));
-    await _settle(tester, 2);
-    expect(find.text('Жалғастыру'), findsOneWidget, reason: 'экран разбора');
-    await tester.tap(find.text('Жалғастыру'));
-    await _settle(tester, 2);
+    expect(answered, greaterThanOrEqualTo(3), reason: 'ответили минимум на три вопроса');
+    expect(chosen, greaterThanOrEqualTo(1), reason: 'прошли хотя бы одну развилку');
+    expect(said, greaterThan(3), reason: 'листали реплики');
 
     // ---- меню трёх линий открывается и закрывается
-    // (после вопросов сцена sc012 — снова сюжет)
-    for (var i = 0; i < 3; i++) { await tester.tap(find.text('A')); await _settle(tester, 2); await tester.tap(find.text('Жалғастыру')); await _settle(tester, 2); }
+    // дойти до сюжетного экрана
+    for (var step = 0; step < 20 && find.byIcon(Icons.menu_rounded).evaluate().isEmpty; step++) {
+      if (find.text('A').evaluate().isNotEmpty) { await tester.tap(find.text('A')); await _settle(tester, 2); }
+      else if (find.text('Жалғастыру').evaluate().isNotEmpty) { await tester.tap(find.text('Жалғастыру').first); await _settle(tester, 2); }
+      else { await _settle(tester, 2); }
+    }
     expect(find.byIcon(Icons.menu_rounded), findsOneWidget);
     await tester.tap(find.byIcon(Icons.menu_rounded));
     await _settle(tester, 3);
