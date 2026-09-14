@@ -178,6 +178,7 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
     covered.addAll((s['covers'] as List? ?? []).cast<String>());
     if (!media.contains(s['art'])) err('$id/$sid: art ${s['art']} нет в media/manifest.yaml');
 
+    var hasCondSay = false;
     for (final b in (s['beats'] as List).cast<Map>()) {
       beats++;
       if (b.containsKey('say')) {
@@ -185,6 +186,12 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
         if (!chars.contains(say['who'])) err('$id/$sid: неизвестный персонаж ${say['who']}');
         final emo = say['emo'] as String?;
         if (emo != null && !_emotions.contains(emo)) err('$id/$sid: emo должен быть одним из ${_emotions.join('|')}');
+        if (say['when'] != null) {
+          final cond = _parseCond(say['when'].toString());
+          if (cond == null) err('$id/$sid say when: не разобрал условие «${say['when']}»');
+          else for (final c in cond) { if (!knownVars.contains(c['var'])) warn('$id/$sid say when: переменную ${c['var']} никто не устанавливает'); }
+          hasCondSay = true;
+        }
         _needLangs(say, '$id/$sid say');
       } else if (b.containsKey('choice')) {
         choices++;
@@ -203,6 +210,9 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
       } else {
         err('$id/$sid: beat не say и не choice');
       }
+    }
+    if (hasCondSay && (s['covers'] as List? ?? []).isNotEmpty) {
+      warn('$id/$sid: есть реплики с when — убедитесь, что факты из covers звучат в безусловных репликах');
     }
     // вопросы этой сцены: факт должен прозвучать здесь или раньше
     for (final qid in (s['quiz'] as List? ?? []).cast<String>()) {
@@ -305,7 +315,11 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
           'beats': [
             for (final b in (s['beats'] as List).cast<Map>())
               if (b.containsKey('say'))
-                {'type': 'say', 'who': b['say']['who'], 'text': t(b['say']), if (b['say']['emo'] != null) 'emo': b['say']['emo']}
+                {
+                  'type': 'say', 'who': b['say']['who'], 'text': t(b['say']),
+                  if (b['say']['emo'] != null) 'emo': b['say']['emo'],
+                  if (b['say']['when'] != null) 'when': _parseCond(b['say']['when'].toString()),
+                }
               else
                 {
                   'type': 'choice',

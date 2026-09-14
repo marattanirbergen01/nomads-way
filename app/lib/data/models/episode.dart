@@ -99,18 +99,24 @@ class Cond {
 
 sealed class Beat {
   factory Beat.fromJson(Map<String, dynamic> j) => switch (j['type']) {
-        'say' => Say(who: j['who'], text: L10n.fromJson(j['text']), emo: j['emo']),
+        'say' => Say(
+            who: j['who'], text: L10n.fromJson(j['text']), emo: j['emo'],
+            when: [for (final c in (j['when'] as List? ?? [])) Cond(c['var'], c['op'], (c['value'] as num).toInt())],
+          ),
         'choice' => Choice(prompt: L10n.fromJson(j['prompt']), options: [for (final o in j['options']) Option.fromJson(o)]),
         _ => throw FormatException('unknown beat type ${j['type']}'),
       };
 }
 
 class Say implements Beat {
-  Say({required this.who, required this.text, this.emo});
+  Say({required this.who, required this.text, this.emo, this.when = const []});
   final String who;
   final L10n text;
   /// calm | joy | alarm | sorrow — состояние аватара в этой реплике; null = calm.
   final String? emo;
+  /// Условие показа на переменные сюжета; пустое — реплика звучит всегда.
+  final List<Cond> when;
+  bool visible(Map<String, int> vars) => when.every((c) => c.test(vars[c.name] ?? 0));
 }
 
 class Choice implements Beat {

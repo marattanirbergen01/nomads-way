@@ -21,6 +21,7 @@ Episode _ep() => Episode.fromJson({
     });
 
 void main() {
+  condTests();
   test('биты → выбор → квиз сцены → переход по goto → конец', () {
     final r = StoryRunner(_ep());
     expect((r.next() as BeatEvent).beat, isA<Say>());
@@ -54,5 +55,40 @@ void main() {
     final r2 = StoryRunner.restore(_ep(), r.snapshot());
     expect(r2.vars['x'], 2);
     expect(r2.next(), isA<QuizBreak>());
+  });
+}
+
+Episode _condEp() => Episode.fromJson({
+      'id': 't', 'title': {'kk': 'T'},
+      'characters': {'n': {'name': {'kk': 'N'}, 'fiction': false}},
+      'finalTest': {'single': 10, 'context': 10},
+      'scenes': [
+        {'id': 'a', 'art': 'x', 'covers': [], 'quiz': [],
+         'beats': [
+           {'type': 'choice', 'prompt': {'kk': '?'}, 'options': [
+             {'id': 'r', 'text': {'kk': 'река'}, 'set': {'yurt_river': 1}, 'goto': 'b'},
+             {'id': 'h', 'text': {'kk': 'холм'}, 'set': {'yurt_hill': 1}, 'goto': 'b'},
+           ]},
+         ]},
+        {'id': 'b', 'art': 'x', 'covers': [], 'quiz': [], 'beats': [
+           {'type': 'say', 'who': 'n', 'text': {'kk': 'у реки'}, 'when': [{'var': 'yurt_river', 'op': '>', 'value': 0}]},
+           {'type': 'say', 'who': 'n', 'text': {'kk': 'на холме'}, 'when': [{'var': 'yurt_hill', 'op': '>', 'value': 0}]},
+           {'type': 'say', 'who': 'n', 'text': {'kk': 'всегда'}},
+         ]},
+      ],
+    });
+
+void condTests() {
+  test('реплика с when звучит только в своей ветке', () {
+    final r = StoryRunner(_condEp());
+    final ch = (r.next() as BeatEvent).beat as Choice;
+    r.choose(ch.options[1]);                                  // холм
+    final texts = <String>[];
+    for (var i = 0; i < 4; i++) {
+      final e = r.next();
+      if (e is BeatEvent && e.beat is Say) texts.add((e.beat as Say).text.of('kk'));
+      if (e is EpisodeEnd) break;
+    }
+    expect(texts, ['на холме', 'всегда']);
   });
 }

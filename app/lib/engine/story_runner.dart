@@ -27,8 +27,9 @@ class StoryRunner {
     if (_ended) return const EpisodeEnd();
     if (_awaitingChoice) throw StateError('Сначала choose()');
 
-    if (_beatIdx < scene.beats.length) {
+    while (_beatIdx < scene.beats.length) {
       final b = scene.beats[_beatIdx++];
+      if (b is Say && !b.visible(vars)) continue;   // реплика не для этой ветки
       if (b is Choice) _awaitingChoice = true;
       return BeatEvent(b, scene);
     }

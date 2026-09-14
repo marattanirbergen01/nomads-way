@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../core/l10n.dart';
 import '../../core/services.dart';
 import '../../core/theme.dart';
 import '../../data/local/progress_repository.dart';
@@ -33,8 +34,11 @@ class StoryScreen extends StatefulWidget {
 class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStateMixin {
   late StoryRunner _story;
   late final Map<String, Question> _bank = {for (final q in widget.questions) q.id: q};
-  final _history = <Map<String, dynamic>>[];          // снимки ДО каждого показанного такта
-  final _transcript = <(String, String)>[];           // (кто, текст) — для «Оқылған мәтін»
+  /// Прочитанные реплики этой сессии. «Артқа» листает их только для чтения:
+  /// выбор окончательный и назад не отменяется, развилки в этот список не попадают.
+  final _transcript = <_Line>[];
+  /// Указатель просмотра: null — живой такт, иначе индекс в [_transcript].
+  int? _browse;
   final _runAttempts = <Attempt>[];
 
   StoryEvent? _event;
@@ -55,15 +59,16 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     final snap = _s.store.storySnapshot(_id, contentHash: widget.contentHash);
     _story = snap != null ? StoryRunner.restore(widget.episode, snap) : StoryRunner(widget.episode);
     _lock.addStatusListener((_) => setState(() {}));
-    _advance(pushHistory: true);
+    _advance();
   }
 
   @override
   void dispose() { _lock.dispose(); super.dispose(); }
 
   // ---------------------------------------------------------------- сюжет
-  void _advance({bool pushHistory = true}) {
+  void _advance() {
     if (_story.awaitingChoice) return;
+    _browse = null;
     final snap = _story.snapshot();
     if (!_story.ended) {
       _s.store.saveStory(_id, snap, contentHash: widget.contentHash);
@@ -71,19 +76,16 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     }
     final e = _story.next();
     if (e is BeatEvent) {
-      if (pushHistory) _history.add(snap);
       final b = e.beat;
-      if (b is Say) _transcript.add((_speakerName(b.who), b.text.ofPlayer(_l, _player)));
+      if (b is Say) _transcript.add(_Line(scene: e.scene, who: b.who, text: b.text, emo: b.emo ?? 'calm'));
       _startLock(b is Say ? b.text.of(_l) : (b as Choice).prompt.of(_l));
     }
     if (e is QuizBreak) {
-      _history.clear();
       _quiz = QuizRunner([for (final id in e.questionIds) if (_bank[id] != null) _bank[id]!]);
       if (_quiz!.done) { _quiz = null; _advance(); return; }
     }
     if (e is EpisodeEnd && !_finalTest) {
       _finalTest = true;
-      _history.clear();
       _quiz = QuizRunner(QuizRunner.composeFinal(widget.questions,
           single: widget.episode.finalTest.single, context: widget.episode.finalTest.context));
     }
@@ -121,17 +123,21 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   }
 
   void _tapForward() {
+    if (_browse != null) {
+      // листаем прочитанное вперёд; дошли до живой реплики — выходим из просмотра
+      setState(() { _browse = _browse! + 1 >= _transcript.length - 1 ? null : _browse! + 1; });
+      return;
+    }
     if (_locked || _story.awaitingChoice) return;
     _advance();
   }
 
+  bool get _canBack => _quiz == null && _chosen == null && (_browse == null ? _transcript.length >= 2 : _browse! > 0);
+
+  /// Назад — только перечитать. Сюжет не откатывается, выбор не отменяется.
   void _back() {
-    if (_history.length < 2 || _quiz != null) return;
-    _history.removeLast();                       // снимок текущего такта
-    _story = StoryRunner.restore(widget.episode, _history.last);
-    if (_transcript.isNotEmpty) _transcript.removeLast();
-    _lock.stop();
-    _advance(pushHistory: false);
+    if (!_canBack) return;
+    setState(() { _browse = _browse == null ? _transcript.length - 2 : _browse! - 1; });
   }
 
   void _choose(Option o) {
@@ -201,7 +207,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       case MenuAction.saveExit: Navigator.of(context).pop();
       case MenuAction.restart:
         await _s.store.clearStory(_id); await _s.store.clearContinueMeta(_id);
-        setState(() { _story = StoryRunner(widget.episode); _history.clear(); _transcript.clear(); _quiz = null; _result = null; _finalTest = false; _chosen = null; });
+        setState(() { _story = StoryRunner(widget.episode); _transcript.clear(); _browse = null; _quiz = null; _result = null; _finalTest = false; _chosen = null; });
         _advance();
       case MenuAction.toggleLang: _s.locale.set(_l == 'kk' ? 'ru' : 'kk'); setState(() {});
       case MenuAction.toggleSound: await _s.store.setSound(!_s.store.sound); setState(() {});
@@ -221,9 +227,9 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
             itemCount: _transcript.length,
             separatorBuilder: (_, __) => const SizedBox(height: 14),
             itemBuilder: (_, i) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(_transcript[i].$1.toUpperCase(), style: st(11, w: 700, color: C.gold, spacing: 1)),
+              Text(_speakerName(_transcript[i].who).toUpperCase(), style: st(11, w: 700, color: C.gold, spacing: 1)),
               const SizedBox(height: 4),
-              Text(_transcript[i].$2, style: st(15, height: 1.45)),
+              Text(_transcript[i].text.ofPlayer(_l, _player), style: st(15, height: 1.45)),
             ]),
           ),
         ),
@@ -272,6 +278,10 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
         onAnswer: _answer)));
     }
     final e = _event;
+    if (_browse != null && _browse! < _transcript.length) {
+      final ln = _transcript[_browse!];
+      return _SayView(this, ln.scene, Say(who: ln.who, text: ln.text, emo: ln.emo), browsing: true);
+    }
     if (_chosen != null && e is BeatEvent) return _ChoiceMadeView(this, e.scene, _chosen!);
     if (e is BeatEvent) {
       final b = e.beat;
@@ -287,6 +297,12 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     final i = widget.episode.indexOf(_story.scene.id);
     return (i + 1) / widget.episode.scenes.length;
   }
+}
+
+/// Прочитанная реплика — для «Артқа» и списка «Оқылған мәтін».
+class _Line {
+  const _Line({required this.scene, required this.who, required this.text, required this.emo});
+  final Scene scene; final String who; final L10n text; final String emo;
 }
 
 // ---------------------------------------------------------------- общие части сюжета
@@ -331,12 +347,13 @@ class _IconBtn extends StatelessWidget {
 
 /// Нижняя панель управления: «Артқа» и «Жалғастыру» с приглушённым таймером.
 class _Controls extends StatelessWidget {
-  const _Controls(this.st_);
-  final _StoryScreenState st_;
+  const _Controls(this.st_, {this.browsing = false});
+  final _StoryScreenState st_; final bool browsing;
   @override
   Widget build(BuildContext context) {
     final s = st_._s.s;
-    final canBack = st_._history.length >= 2;
+    final canBack = st_._canBack;
+    final locked = !browsing && st_._locked;
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 22, 20, 0),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -353,7 +370,7 @@ class _Controls extends StatelessWidget {
           animation: st_._lock,
           builder: (_, __) => Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Opacity(
-              opacity: st_._locked ? .5 : 1,
+              opacity: locked ? .5 : 1,
               child: Row(children: [
                 Text(s('next'), style: st(15, w: 600)),
                 const SizedBox(width: 6),
@@ -361,7 +378,7 @@ class _Controls extends StatelessWidget {
               ]),
             ),
             const SizedBox(height: 7),
-            SizedBox(width: 118, height: 2, child: LinearProgressIndicator(value: st_._locked ? st_._lock.value : 1, backgroundColor: const Color(0xFF332720), color: C.goldDim)),
+            SizedBox(width: 118, height: 2, child: LinearProgressIndicator(value: locked ? st_._lock.value : 1, backgroundColor: const Color(0xFF332720), color: C.goldDim)),
           ]),
         ),
       ]),
@@ -377,8 +394,8 @@ BoxDecoration _panelDeco() => const BoxDecoration(gradient: LinearGradient(
 
 // ---------------------------------------------------------------- реплика
 class _SayView extends StatelessWidget {
-  const _SayView(this.st_, this.scene, this.say);
-  final _StoryScreenState st_; final Scene scene; final Say say;
+  const _SayView(this.st_, this.scene, this.say, {this.browsing = false});
+  final _StoryScreenState st_; final Scene scene; final Say say; final bool browsing;
   @override
   Widget build(BuildContext context) {
     final l = st_._l;
@@ -426,10 +443,19 @@ class _SayView extends StatelessWidget {
                 style: st(19, w: 500, height: 1.45).copyWith(fontStyle: isNarrator ? FontStyle.italic : FontStyle.normal, shadows: _sh),
               )),
             ),
-            _Controls(st_),
+            _Controls(st_, browsing: browsing),
           ]),
         )),
         Positioned(left: 0, right: 0, top: MediaQuery.of(context).padding.top, child: _TopBar(st_, scene, progress: st_._progress)),
+        if (browsing)
+          Positioned(
+            left: 0, right: 0, top: MediaQuery.of(context).padding.top + 108,
+            child: Center(child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(color: const Color(0xB3221A14), borderRadius: BorderRadius.circular(999)),
+              child: Text(st_._s.s('rereading'), style: st(11.5, w: 600, color: const Color(0xFFE8D9BD), spacing: 1)),
+            )),
+          ),
       ]),
     );
   }

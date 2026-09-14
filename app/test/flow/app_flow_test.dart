@@ -108,11 +108,16 @@ void main() {
     await tester.pump(const Duration(milliseconds: 150));
     expect(second, findsOneWidget, reason: 'заблокировано таймером');
 
-    // ---- «Артқа» возвращает первую реплику
+    // ---- «Артқа» перечитывает первую реплику, вперёд — возвращает к живой
     await tester.pump(const Duration(seconds: 4));
     await tester.tap(find.text('Артқа'));
     await tester.pump(const Duration(milliseconds: 200));
-    expect(find.text('1457 жыл. Сығанақ түбі.'), findsOneWidget, reason: 'назад на реплику');
+    expect(find.text('1457 жыл. Сығанақ түбі.'), findsOneWidget, reason: 'перечитываем первую');
+    expect(find.text('ҚАЙТА ОҚУ'), findsOneWidget, reason: 'помечено как просмотр');
+    await tester.tapAt(const Offset(195, 300));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(second, findsOneWidget, reason: 'вернулись к живой реплике');
+    expect(find.text('ҚАЙТА ОҚУ'), findsNothing);
 
     // ---- едем по сюжету, что бы ни было на экране: реплика, развилка, вопрос, разбор.
     // Сценарий ещё меняется, поэтому тест не знает порядок сцен — он просто ведёт игру.
@@ -138,8 +143,19 @@ void main() {
         chosen++;
         await _settle(tester, 3);
         if (find.text('СЕНІҢ ТАҢДАУЫҢ').evaluate().isNotEmpty) {
+          expect(find.text('Артқа'), findsNothing, reason: 'на экране выбора назад нет');
           await tester.tap(find.text('Жалғастыру'));          // «выбор сделан»
           await _settle(tester, 3);
+          // назад после выбора — только чтение, развилка не возвращается
+          if (find.text('Артқа').evaluate().isNotEmpty) {
+            await tester.tap(find.text('Артқа'));
+            await tester.pump(const Duration(milliseconds: 200));
+            expect(find.text('ТАҢДА'), findsNothing, reason: 'выбор окончательный');
+            for (var k = 0; k < 4 && find.text('ҚАЙТА ОҚУ').evaluate().isNotEmpty; k++) {
+              await tester.tapAt(const Offset(195, 300));
+              await tester.pump(const Duration(milliseconds: 200));
+            }
+          }
         }
       } else if (find.byIcon(Icons.menu_rounded).evaluate().isNotEmpty) {
         await tester.pump(const Duration(seconds: 4));         // реплика: дочитали
