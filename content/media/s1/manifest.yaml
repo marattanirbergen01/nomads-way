@@ -5,44 +5,44 @@
 
 - id: art_s1e01_010
   kind: scene
-  status: draft
+  status: approved
   brief: 1457, окраина Сыгнака после набега. Разорённая стоянка, пустой загон, вдали — уходящие всадники-ойраты. Рассвет, пыль. Без крупных лиц.
   seed: null
   prompt_ref: prompts/scenes/art_s1e01_010.md
-  approved_by: null
+  approved_by: Marat
   file: scenes/art_s1e01_010.png
   generated: '2026-09-07'
-  note: квадрат 1024×1024, в приложении кадрируется по центру
+  note: 'Первая редакция, утверждён как есть 2026-09-13. Формат отличается от новых сцен (не 1344×768). Инструмент генерации в media.yaml не заполнен — вписать.'
 - id: art_s1e01_020
   kind: scene
-  status: draft
+  status: approved
   brief: Совет в юрте. Два султана в чапанах XV века у очага, шанырак над ними, полумрак, отсветы огня. Никаких доспехов «в стиле фэнтези».
   seed: null
   prompt_ref: prompts/scenes/art_s1e01_020.md
-  approved_by: null
+  approved_by: Marat
   file: scenes/art_s1e01_020.jpg
   generated: '2026-09-07'
-  note: 1376×768
+  note: 'Первая редакция, утверждён как есть 2026-09-13. Формат отличается от новых сцен (не 1344×768). Инструмент генерации в media.yaml не заполнен — вписать.'
 - id: art_s1e01_030
   kind: scene
-  status: draft
+  status: approved
   brief: 1465, долина Шу весной. Кочевье ставит юрты у реки, зелёные предгорья, широкое небо. Ощущение прибытия, а не бегства.
   seed: null
   prompt_ref: prompts/scenes/art_s1e01_030.md
-  approved_by: null
+  approved_by: Marat
   file: scenes/art_s1e01_030.png
-  generated: '2026-09-07'
-  note: квадрат 1024×1024, в приложении кадрируется по центру
+  generated: '2026-09-13'
+  note: 'Перерисован в ChatGPT 2026-09-13 по брифу и черновику первой редакции: шаныраки по правилу, манера серии. Квадрат 1254×1254, в приложении кадрируется по центру.'
 - id: art_s1e01_040
   kind: scene
-  status: draft
+  status: approved
   brief: '1468. Роды стягиваются к ставке: караваны и всадники подходят к лагерю с разных сторон, вечер, много огней. Масштаб, а не портрет.'
   seed: null
   prompt_ref: prompts/scenes/art_s1e01_040.md
-  approved_by: null
+  approved_by: Marat
   file: scenes/art_s1e01_040.png
-  generated: '2026-09-07'
-  note: квадрат 1024×1024, в приложении кадрируется по центру
+  generated: '2026-09-13'
+  note: 'Перерисован в ChatGPT 2026-09-13 по брифу и черновику первой редакции: шаныраки по правилу, манера серии. Квадрат 1254×1254, в приложении кадрируется по центру.'
 - id: cover_s1e01
   kind: cover
   status: draft
@@ -74,85 +74,116 @@
 # --- редакция 2: новые сцены -------------------------------------------
 - id: art_s1e01_012
   kind: scene
-  status: missing
+  status: approved
   brief: 'Ханские сборщики в разорённом ауле. Двое-трое верховых в дорогих чапанах перед пешими людьми, пустой загон, женщина уводит последнюю лошадь. Напряжение без драки.'
-  seed: null
+  seed: 266584148
   prompt_ref: prompts/scenes/art_s1e01_012.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_012.png
+  generated: '2026-09-12'
+  note: 'Аватар в кадре только со спины или в толпе. База — Draw Things seed 266584148, 1344×768, steps 4; в ChatGPT сняты бороды (тонкие усы) и убраны жерди над юртами. Seed справочный: даёт базу, не этот файл.'
 - id: art_s1e01_022
   kind: scene
-  status: missing
-  brief: 'Сборы кочевья. Разобранные юрты, вьюки на верблюдах, толпа слушает султана, вдали — родовое кладбище с куласами. Утро, движение, решимость.'
-  seed: null
+  status: approved
+  brief: 'Сборы кочевья. Разобранные юрты, вьюки на верблюдах, толпа слушает двух султанов — Керея и Жанибека, вдали — родовое кладбище с куласами. Утро, движение, решимость.'
+  seed: 2023505680
   prompt_ref: prompts/scenes/art_s1e01_022.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_022.png
+  generated: '2026-09-12'
+  note: 'Аватар в кадре только со спины или в толпе. txt2img 1344×768, steps 4. Двое султанов: один говорит с поднятой рукой, второй позади. Юрты по правилу без жердей. На визу историку: бороды у толпы, покрой чапанов.'
 - id: art_s1e01_025
   kind: scene
-  status: missing
+  status: approved
   brief: 'Переход зимой. Длинная вереница кочевья по заснеженной степи, низкое солнце, пар от дыхания животных. Усталость и упорство, лиц не видно.'
-  seed: null
+  seed: 2934767948
   prompt_ref: prompts/scenes/art_s1e01_025.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_025.png
+  generated: '2026-09-12'
+  note: 'Лиц не видно — вереница спиной к зрителю. txt2img 1344×768, steps 4. Юрты на переднем плане — читать как покидаемую зимовку.'
 - id: art_s1e01_032
   kind: scene
-  status: missing
+  status: approved
   brief: 'Первый вечер в долине Шу: юрты уже стоят, дымы очагов, женщины у казана, табун у реки, горы в закатном свете. Обжитой лагерь, а не привал.'
-  seed: null
+  seed: 3449318570
   prompt_ref: prompts/scenes/art_s1e01_032.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
-- id: art_s1e01_035
-  kind: scene
-  status: missing
-  brief: 'Приём посланца Есен-Буги. Всадники с бунчуком у юрты султанов, обмен приветствиями, свиток в руках, вдали предгорья Могулистана. Дипломатия, не битва.'
-  seed: null
-  prompt_ref: prompts/scenes/art_s1e01_035.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_032.png
+  generated: '2026-09-12'
+  note: 'Аватар в кадре только со спины или в толпе. txt2img 1344×768, steps 4. Выбран ближний план: группа у казана, конь у реки.'
 - id: art_s1e01_038
   kind: scene
-  status: missing
+  status: approved
   brief: '1468, выступление войска Абулхайра. Колонна всадников уходит на восток в пыли, знамёна, тяжёлое небо. Вид со стороны, без крупных лиц.'
-  seed: null
+  seed: 2426081863
   prompt_ref: prompts/scenes/art_s1e01_038.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_038.png
+  generated: '2026-09-12'
+  note: 'Без крупных лиц — колонна уходит от зрителя. txt2img 1344×768, steps 4.'
 - id: art_s1e01_042
   kind: scene
-  status: missing
+  status: approved
   brief: 'Осень, новые роды приходят в Жетысу. Караваны и стада подходят к разросшейся ставке с нескольких сторон, много юрт, дымы. Ощущение растущего народа.'
-  seed: null
+  seed: 3677098553
   prompt_ref: prompts/scenes/art_s1e01_042.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_042.png
+  generated: '2026-09-12'
+  note: 'Аватар в кадре только со спины или в толпе. txt2img 1344×768, steps 4. Тянь-Шань на горизонте — та же долина, что в 030/032.'
 - id: art_s1e01_045
   kind: scene
-  status: missing
+  status: approved
   brief: 'Послесловие: старик и юноша на холме над долиной в сумерках, внизу огни большого лагеря. Тихий, итоговый кадр.'
-  seed: null
+  seed: 1628254230
   prompt_ref: prompts/scenes/art_s1e01_045.md
-  approved_by: null
-  file: null
-  note: 'редакция 2: новая сцена. Аватар в кадре — только со спины или в толпе, лицо не крупно.'
+  approved_by: Marat
+  file: scenes/art_s1e01_045.png
+  generated: '2026-09-12'
+  note: 'ЛЮДЕЙ В КАДРЕ НЕТ — чистый пейзаж: аватара плеер кладёт бюстом поверх, аксакала показывает кружком. txt2img 1344×768, steps 4. Юрта на холме слева, правая половина свободна под бюст.'
 - id: map_s1e01_route
   kind: map
-  status: missing
+  status: approved
   brief: 'Карта пути откочёвки: от Сыгнака и низовий Сырдарьи на юго-восток в Западное Жетысу (долины Шу и Козыбасы). Подписи kk/ru, пунктир маршрута, владения Абулхайра и Могулистан разными заливками.'
   seed: null
   prompt_ref: prompts/maps/map_s1e01_route.md
-  approved_by: null
-  file: null
-  note: 'НЕ генерировать ИИ: география и подписи должны быть точными. Рисуется вручную (вектор) по исторической карте, ИИ — только фон-текстура.'
+  approved_by: Marat
+  file: maps/map_s1e01_route.png
+  generated: '2026-09-15'
+  note: 'Не ИИ-генерация: скан из школьного атласа, в Gemini сняты красная надпись и названия соседних государств (в т.ч. анахроничные Жоңғар и Сібір хандығы), подпись «Шу» нанесена нами. Сверено с историком 2026-09-15. Автор и лицензия скана НЕ установлены — открытый вопрос владельца проекта. Подписи городов на русском, «Моғолстан» на казахском; бриф kk/ru не выполнен. 1190×880.'
+
+# --- арт вариантов выбора и вариантов по флагу --------------------------
+- id: art_s1e01_032_river
+  kind: scene
+  status: approved
+  brief: 'Юрта, поставленная у реки Шу: одна свежая юрта на берегу, табун у воды, лагерь вдали, Тянь-Шань. Предвечерний свет. Без людей.'
+  seed: 629663294
+  prompt_ref: prompts/scenes/art_s1e01_032_river.md
+  approved_by: Marat
+  file: scenes/art_s1e01_032_river.png
+  generated: '2026-09-13'
+  note: 'Арт варианта river в выборе sc032. txt2img 1344×768, steps 4, без людей. Масштаб юрты задан через коня у стены. Вечерний вариант 045_river делается ОТ ЭТОГО кадра — то же место.'
+- id: art_s1e01_032_hill
+  kind: scene
+  status: approved
+  brief: 'Юрта, поставленная на холме над долиной: степь до горизонта, лагерь и река внизу, Тянь-Шань. Предвечерний свет. Без людей.'
+  seed: 1628254230
+  prompt_ref: prompts/scenes/art_s1e01_032_hill.md
+  approved_by: Marat
+  file: scenes/art_s1e01_032_hill.png
+  generated: '2026-09-13'
+  note: 'Арт варианта hill в выборе sc032. img2img от утверждённого 045 на его seed — то же место днём. Без людей. В небе слева остались несколько бледных звёзд, принято сознательно.'
+- id: art_s1e01_045_river
+  kind: scene
+  status: approved
+  brief: 'Послесловие для выбравшего реку: пустой холм на переднем плане, внизу огни лагеря и одна юрта у самой воды. Сумерки. Без людей.'
+  seed: 629663294
+  prompt_ref: prompts/scenes/art_s1e01_045_river.md
+  approved_by: Marat
+  file: scenes/art_s1e01_045_river.png
+  generated: '2026-09-13'
+  note: 'Вариант 045 по флагу practical — ТО ЖЕ МЕСТО, что 032_river, в сумерках. База: img2img от 032_river на его seed; в ChatGPT убран дым над юртами. Seed справочный. Показывается, когда формат научится выбирать арт по флагу (DECISIONS 2026-09-13).'
 
 # --- аватары игрока (3 варианта внешности) -----------------------------
 
@@ -239,69 +270,88 @@
   note: 'img2img от avatar_02_aqyn_calm.png, strength 1.0, seed тот же, steps 4. Печаль сдержаннее, чем у аватара 01: работают веки и взгляд, наклона головы нет.'
 - id: avatar_03_ustaqyz_calm
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — спокойствие.'
-  seed: null
+  seed: 3935690092
   prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  approved_by: Marat
+  file: avatars/avatar_03_ustaqyz_calm.png
+  generated: '2026-09-11'
+  note: 'Эталон аватара 03. txt2img, steps 4, принят с первого захода. Эталон родной, не правился — эмоции делать img2img strength 1.0 на этом же seed.'
 - id: avatar_03_ustaqyz_joy
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — радость.'
-  seed: null
+  seed: 3935690092
   prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  approved_by: Marat
+  file: avatars/avatar_03_ustaqyz_joy.png
+  generated: '2026-09-11'
+  note: 'img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed тот же, steps 4. Расхождение с эталоном 6.5 из 255.'
 - id: avatar_03_ustaqyz_alarm
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — тревога.'
-  seed: null
+  seed: 3935690092
   prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  approved_by: Marat
+  file: avatars/avatar_03_ustaqyz_alarm.png
+  generated: '2026-09-11'
+  note: 'img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed тот же, steps 4. Усиленная формулировка тревоги, как у аватаров 01 и 02.'
 - id: avatar_03_ustaqyz_sorrow
   kind: avatar
-  status: missing
+  status: approved
   brief: 'Аватар «Ұста қыз, мастерица», ~17 лет — печаль.'
-  seed: null
+  seed: 3935690092
   prompt_ref: prompts/avatars/avatar_03_ustaqyz.md
-  approved_by: null
-  file: null
-  note: 'Лицо и свет как у варианта calm того же аватара. calm генерируется первым и служит эталоном.'
+  approved_by: Marat
+  file: avatars/avatar_03_ustaqyz_sorrow.png
+  generated: '2026-09-11'
+  note: 'img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed тот же, steps 4. Единственный кадр серии, где отрисовались сведённые брови.'
+
+# --- портреты говорящих: вымышленные -----------------------------------
+- id: char_aksakal
+  kind: character
+  status: approved
+  brief: 'Аксакал, старейшина рода, за шестьдесят. Вымышленный персонаж. Один портрет — второстепенным эмоции не нужны.'
+  seed: 4252702689
+  prompt_ref: prompts/characters/char_aksakal.md
+  approved_by: Marat
+  file: characters/char_aksakal.png
+  generated: '2026-09-14'
+  note: 'Портрет для кружка у реплик. txt2img, steps 4, seed 4252702689. Такия по фото Марата, взгляд с прищуром в сторону. Пояс — плетёный шнур, принят сознательно. Эмоций нет: второстепенные персонажи показываются только кружком (решение 2026-09-14).'
 
 # --- канонические портреты исторических лиц ----------------------------
 - id: char_kerei
   kind: character
-  status: missing
+  status: approved
   brief: 'Канонический портрет: Керей-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
-  seed: null
+  seed: 3261745991
   prompt_ref: prompts/characters/char_kerei.md
-  approved_by: null
-  file: null
-  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+  approved_by: Marat
+  file: characters/char_kerei.png
+  generated: '2026-09-15'
+  note: 'Канон Керея, портрет для кружка. txt2img, steps 4. Иконография по прототипам Марата: бөрік с меховым околышем, полосатой тульёй и пером, косички, синий чапан с золотом. Без визы историка в сборку не идёт.'
 - id: char_zhanibek
   kind: character
-  status: missing
+  status: approved
   brief: 'Канонический портрет: Жанибек-султан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
-  seed: null
+  seed: 445151562
   prompt_ref: prompts/characters/char_zhanibek.md
-  approved_by: null
-  file: null
-  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+  approved_by: Marat
+  file: characters/char_zhanibek.png
+  generated: '2026-09-15'
+  note: 'Канон Жәнібека, портрет для кружка. txt2img, steps 4. Иконография по прототипам: шапка со светлой тульёй и синим околышем, перо, усы с острой бородкой, золотой чапан, нож на поясе. Около сорока — на десять лет моложе Керея. Без визы историка в сборку не идёт.'
 - id: char_abilqaiyr
   kind: character
-  status: missing
+  status: approved
   brief: 'Канонический портрет: Абулхайр-хан. Достоверных изображений не существует — канон назначаем сами и визируем у историка.'
-  seed: null
+  seed: 2385198106
   prompt_ref: prompts/characters/char_abilqaiyr.md
-  approved_by: null
-  file: null
-  note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+  approved_by: Marat
+  file: characters/char_abilqaiyr.png
+  generated: '2026-09-15'
+  note: 'Канон Абулхайра, портрет для кружка. База — Draw Things seed 2385198106, steps 4; в Gemini тулья сделана ниже и шире, по прототипу. Seed справочный. Иконография по прототипу неизвестного авторства: взгляд, шапка, золотая вышивка. Без визы историка в сборку не идёт.'
 - id: char_esen_buga
   kind: character
   status: missing
@@ -311,3 +361,13 @@
   approved_by: null
   file: null
   note: 'Утверждённый seed переносится во все сцены сезона. Без визы историка в сборку не идёт.'
+- id: art_s1e01_023
+  kind: scene
+  status: approved
+  brief: 'Сборы кочевья: разобранные юрты, вьюки на верблюдах, семьи среди тюков, вдали родовое кладбище. Утро, движение и тихая горечь.'
+  seed: 4260910958
+  prompt_ref: prompts/scenes/art_s1e01_023.md
+  approved_by: Marat
+  file: scenes/art_s1e01_023.png
+  generated: '2026-09-11'
+  note: 'АВАТАР В КАДРЕ отдельной фигурой (мальчик рядом с аксакалом, седло у ног) — бюст поверх не рисовать, см. DECISIONS 2026-09-12. Личный слой. Аватар в кадре только со спины или в общей массе. txt2img 1344×768, steps 4. Выбран общий план: дети на сложенной кереге, аксакал с мальчиком у правого края. На визу историку: покрой чапанов, обувь, сбруя.'

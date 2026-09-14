@@ -20,18 +20,18 @@
 - id: art_s1e01_030
   file: content/media/s1/scenes/art_s1e01_030.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_030.md
-  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  origin: 'ИИ-генерация в ChatGPT по брифу манифеста и черновику первой редакции; промпт content/media/s1/prompts/scenes/art_s1e01_030.md как основа'
+  tool: 'ChatGPT (генерация изображения)'
   author: Marat Tanirbergen
-  date: '2026-09-07'
+  date: '2026-09-13'
   hist_review: null
 - id: art_s1e01_040
   file: content/media/s1/scenes/art_s1e01_040.png
   license: own-generation
-  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_040.md
-  tool: ЗАПОЛНИТЬ (Gemini / Draw Things / другое)
+  origin: 'ИИ-генерация в ChatGPT по брифу манифеста и черновику первой редакции; промпт content/media/s1/prompts/scenes/art_s1e01_040.md как основа'
+  tool: 'ChatGPT (генерация изображения)'
   author: Marat Tanirbergen
-  date: '2026-09-07'
+  date: '2026-09-13'
   hist_review: null
 - id: cover_s1e01
   file: content/media/s1/backgrounds/cover_s1e01.jpg
@@ -113,3 +113,163 @@
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
+- id: art_s1e01_023
+  file: content/media/s1/scenes/art_s1e01_023.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_023.md; txt2img 1344×768, seed 4260910958, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-11'
+  hist_review: null
+- id: avatar_03_ustaqyz_calm
+  file: content/media/s1/avatars/avatar_03_ustaqyz_calm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; txt2img, seed 3935690092, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-11'
+  hist_review: null
+- id: avatar_03_ustaqyz_joy
+  file: content/media/s1/avatars/avatar_03_ustaqyz_joy.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-11'
+  hist_review: null
+- id: avatar_03_ustaqyz_alarm
+  file: content/media/s1/avatars/avatar_03_ustaqyz_alarm.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-11'
+  hist_review: null
+- id: avatar_03_ustaqyz_sorrow
+  file: content/media/s1/avatars/avatar_03_ustaqyz_sorrow.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-11'
+  hist_review: null
+- id: art_s1e01_012
+  file: content/media/s1/scenes/art_s1e01_012.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_012.md; база Draw Things seed 266584148, лица и верх юрт доработаны в ChatGPT'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + ChatGPT (правка)'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_022
+  file: content/media/s1/scenes/art_s1e01_022.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_022.md; txt2img 1344×768, seed 2023505680, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_025
+  file: content/media/s1/scenes/art_s1e01_025.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_025.md; txt2img 1344×768, seed 2934767948, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_032
+  file: content/media/s1/scenes/art_s1e01_032.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032.md; txt2img 1344×768, seed 3449318570, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_038
+  file: content/media/s1/scenes/art_s1e01_038.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_038.md; txt2img 1344×768, seed 2426081863, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_042
+  file: content/media/s1/scenes/art_s1e01_042.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_042.md; txt2img 1344×768, seed 3677098553, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_045
+  file: content/media/s1/scenes/art_s1e01_045.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045.md; txt2img 1344×768, seed 1628254230, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-12'
+  hist_review: null
+- id: art_s1e01_032_river
+  file: content/media/s1/scenes/art_s1e01_032_river.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_river.md; txt2img 1344×768, seed 629663294, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-13'
+  hist_review: null
+- id: art_s1e01_032_hill
+  file: content/media/s1/scenes/art_s1e01_032_hill.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_hill.md; img2img от art_s1e01_045.png, seed 1628254230, steps 4'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-13'
+  hist_review: null
+- id: art_s1e01_045_river
+  file: content/media/s1/scenes/art_s1e01_045_river.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045_river.md; база Draw Things img2img от art_s1e01_032_river.png, seed 629663294; дым над юртами убран в ChatGPT'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + ChatGPT (правка)'
+  author: Marat Tanirbergen
+  date: '2026-09-13'
+  hist_review: null
+- id: char_aksakal
+  file: content/media/s1/characters/char_aksakal.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_aksakal.md; txt2img, seed 4252702689, steps 4. Вымышленный персонаж.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-14'
+  hist_review: null
+- id: char_kerei
+  file: content/media/s1/characters/char_kerei.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_kerei.md; txt2img, seed 3261745991, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-15'
+  hist_review: null
+- id: char_zhanibek
+  file: content/media/s1/characters/char_zhanibek.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_zhanibek.md; txt2img, seed 445151562, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-09-15'
+  hist_review: null
+- id: char_abilqaiyr
+  file: content/media/s1/characters/char_abilqaiyr.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_abilqaiyr.md; база Draw Things seed 2385198106, форма шапки доработана в Gemini. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)'
+  author: Marat Tanirbergen
+  date: '2026-09-15'
+  hist_review: null
+- id: map_s1e01_route
+  file: content/media/s1/maps/map_s1e01_route.png
+  license: licensed
+  origin: 'Скан карты из школьного атласа (издание не установлено), присланный Маратом; в Gemini убраны надписи, подпись «Шу» нанесена в проекте (Pillow). Автор и лицензия исходника не установлены — до подтверждения статус «licensed» условный.'
+  tool: 'скан + Gemini (правка) + Pillow (подпись)'
+  author: 'неизвестен (исходник); правка — Marat Tanirbergen'
+  date: '2026-09-15'
+  hist_review: 'Marat, 2026-09-15 — сверено с историком (устно)'

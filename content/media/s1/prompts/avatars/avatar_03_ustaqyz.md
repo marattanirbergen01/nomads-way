@@ -15,9 +15,11 @@
 
 ## Базовый промпт (общая часть, не меняется)
 Стиль сверен с утверждёнными аватарами 01 и 02 и с артом серии `art_s1e01_020`, `art_s1e01_030`.
+Костюм сверен с фото 2026-09-11: высокий конический борик с меховой опушкой, тёмное бархатное
+платье с орнаментом по груди и обшлагам. Цвет платья — сливовый, не синий: индиго уже занят акыном.
 Черты лица и формы головного убора заданы утверждением: при guidance 1.0 отрицания не работают.
 
-A waist-up character portrait for a historical video game, painted as a digital illustration: visible brushwork, soft edges, semi-realistic stylised features, honest natural colour. Not a photograph, no photographic skin texture, no pores, no sharp photographic detail. 15th-century Kazakh steppe. Plain warm background, a soft dusty ochre-to-grey gradient, no scenery and nothing behind the figure. Warm directional light from the upper left, gentle rim light on the right shoulder. The crop runs from just above her cap down to her waist, so head and chest fill most of the frame; eyes on the upper third line, same camera distance in every variant. No lettering, no border, no modern clothing, no fantasy armour. A Kazakh girl of seventeen who works felt and cloth: distinctly Central Asian features — broad flat cheekbones, dark almond eyes with a pronounced epicanthic fold at the inner corner, straight black brows, a low-bridged nose, a soft rounded chin. Her complexion is fair and warm, only lightly tanned. Two long dark braids fall forward over her shoulders. She wears a borik: a soft rounded cap of dark cloth sitting close on her head, a band of dark fur running round its lower edge and keeping close to the head, a single upright owl feather standing at the front. She wears a deep muted red dress, its yoke and cuffs worked with a narrow line of quiet embroidery, under an open sleeveless coat of undyed heavy cloth. Her clothes are simple but kept neat, the cloth honest in colour — not grey, not washed out.
+A waist-up character portrait for a historical video game, painted as a digital illustration: visible brushwork, soft edges, semi-realistic stylised features, honest natural colour. Not a photograph, no photographic skin texture, no pores, no sharp photographic detail. 15th-century Kazakh steppe. Plain warm background, a soft dusty ochre-to-grey gradient, no scenery and nothing behind the figure. Warm directional light from the upper left, gentle rim light on the right shoulder. The crop runs from just above her cap down to her waist, so head and chest fill most of the frame; eyes on the upper third line, same camera distance in every variant. No lettering, no border, no modern clothing, no fantasy armour. A Kazakh girl of seventeen who works felt and cloth: distinctly Central Asian features — broad flat cheekbones, dark almond eyes with a pronounced epicanthic fold at the inner corner, straight black brows, a low-bridged nose, a soft rounded chin. Her complexion is fair and warm, only lightly tanned. Two long dark braids fall forward over her shoulders. She wears a tall conical felt cap of dark cloth, its point rising high above her head, a band of soft grey fur running round its base and keeping close to the head, a curling ornament in muted thread worked over the cone. She wears a fitted dress of deep muted plum velvet with long narrow sleeves, a curling Kazakh ornament in dull old-brass thread laid over the chest and along the cuffs — worn and quiet, the colour of old brass rather than bright gold. Everything stays subdued: dark plum cloth and quiet ornament, never festive. Her clothes are simple but kept neat, the cloth honest in colour — not grey, not washed out.
 
 ## Варианты эмоций
 Дописывается одним предложением в конец базового промпта.
@@ -38,7 +40,7 @@ She is smiling widely with genuine delight, eyes crinkled at the corners, head l
 ### avatar_03_ustaqyz_alarm — Тревога
 Где используется: sc010 набег, sc038 весть о походе
 ```
-Her eyes are wide with alarm, brows drawn up and together, lips parted as if she has just drawn breath, head turned a little as if reacting to something off-frame.
+Her eyes are wide and round with the whites showing above the iris, her brows lifted high and pinched together at the inner ends, her mouth open in a sharp intake of breath, her head turned a little as if reacting to something off-frame.
 ```
 
 

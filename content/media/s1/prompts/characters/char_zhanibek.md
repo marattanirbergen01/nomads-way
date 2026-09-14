@@ -22,11 +22,19 @@
 Это сделано специально — так расхождение между кадрами не бросается в глаза.
 
 ## Канон внешности (переносить в промпты сцен дословно)
-Младший из двух. Чёрная борода без седины, прямая осанка, более живое лицо. Тёмно-красный чапан, шапка с бобровой оторочкой, на поясе нож в простых ножнах. Внешне заметно моложе Керея — так зритель различает их с первого кадра.
+Младший из двух, около сорока — на десять лет моложе Керея. Усы и небольшая острая чёрная бородка без седины, живое лицо, прямая осанка. Круглая шапка со светлой тульёй, синим околышем и пером. Светло-золотой чапан с мягким орнаментом, на поясе нож в простых ножнах.
+
+Иконография — по прототипам, присланным Маратом 2026-09-14 (памятник в Астане и живописный
+портрет пары): взяты типы головных уборов, бород, цвета одежды; конкретное произведение не копируется.
 
 ## Prompt
-A waist-up portrait in painterly semi-realistic historical illustration style, 15th-century Central Asian steppe. Plain warm grey-brown backdrop, soft even light from the upper left. Muted earth palette. Authentic 15th-century nomadic dress, no plate armour, no fantasy elements, no lettering. Dignified, calm, documentary in feel rather than heroic. A Kazakh sultan of the 15th century in his forties. A full black beard without grey, upright bearing, alert and open expression. He wears a deep red quilted chapan, a beaver-trimmed hat, and a belt carrying a plain sheathed knife. Visibly younger and more animated than the older sultan beside him; hands not visible.
+A waist-up character portrait for a historical video game, painted as a digital illustration: visible brushwork, soft edges, semi-realistic stylised features, honest natural colour. Not a photograph, no photographic skin texture, no pores, no sharp photographic detail. 15th-century Kazakh steppe. Plain warm background, a soft dusty ochre-to-grey gradient, no scenery and nothing behind the figure. Warm directional light from the upper left, gentle rim light on the right shoulder. The crop runs from just above his hat down to his waist, so head and chest fill most of the frame; eyes on the upper third line. No lettering, no border, no modern clothing, no fantasy armour. Dignified and calm, documentary in feel rather than heroic; hands not visible. Zhanibek, the younger of the two sultans, a Kazakh ruler of about forty: distinctly Central Asian features — broad flat cheekbones, narrow dark eyes with a pronounced epicanthic fold, a low-bridged nose, straight black brows, a dark moustache and a small pointed black goatee without a trace of grey, an alert lively face and an upright bearing. He wears a rounded cap fitting close to the head, its crown of pale cream cloth and its band of deep blue, a single plume of white feathers standing at the front. Over a plain shirt he wears a chapan of pale gold cloth with a soft curling ornament woven into it, wrapped across the chest, a leather belt, and at the belt a knife in a plain leather sheath. Visibly younger than Kerei, by about ten years.
 
 ## Параметры (Draw Things · FLUX.2 [klein] 4B 8-bit)
-- Size: 896×1152 · Steps: 24 · Guidance (CFG): 1.0 · Sampler: Euler A Trailing · Shift: 3.0
+- Size: 896×1152 · Steps: 4 · Guidance (CFG): 1.0 · Sampler: Euler A Trailing · Shift: 3.0
+- Промпт переписан 2026-09-14 под каркас аватаров: стиль серии, кадр, явные черты лица,
+  шапки без слова brim. Один портрет, без эмоций — второстепенные показываются кружком.
+- Пробовали «за сорок, морщины, первая седина» — на том же seed возраст не меняется, на новых
+  seed лица хуже; утверждённый кадр сделан исходной формулировкой, она и оставлена.
+- Перстень Абулхайра из канона не рисуется: руки вне кадра, модель рисует их хуже всего.
 - Seed утверждённого варианта записать в manifest.yaml и использовать во всех сценах

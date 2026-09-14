@@ -22,11 +22,18 @@
 Это сделано специально — так расхождение между кадрами не бросается в глаза.
 
 ## Канон внешности (переносить в промпты сцен дословно)
-Правитель Государства кочевых узбеков. Массивная фигура, жёсткое лицо, тяжёлый прямой взгляд. Богатый чапан глубокого зелёного цвета с золотой каймой, соболья шапка, перстень. Он не злодей: показывать властным и уставшим, а не жестоким.
+Правитель Государства кочевых узбеков, около пятидесяти пяти. Массивная фигура, тяжёлое лицо, прямой тяжёлый взгляд из-под низких бровей — главное в портрете. Усы и короткая бородка с проседью. Высокая остроконечная шапка: широкий собольий околыш и синяя тулья, расшитая золотом. Тёмно-синий бархатный чапан с густой золотой вышивкой по вороту и полам, золотые застёжки, круглый золотой медальон у горла. Он не злодей: властный и уставший, а не жестокий.
+
+Иконография — по прототипу, присланному Маратом 2026-09-15 (живописный портрет неизвестного
+авторства): взяты взгляд, тип шапки и золотая вышивка; само произведение не используется —
+автор и лицензия неизвестны, по STYLE.md в сборку не проходит.
 
 ## Prompt
-A waist-up portrait in painterly semi-realistic historical illustration style, 15th-century Central Asian steppe. Plain warm grey-brown backdrop, soft even light from the upper left. Muted earth palette. Authentic 15th-century nomadic dress, no plate armour, no fantasy elements, no lettering. Dignified, calm, documentary in feel rather than heroic. A powerful Central Asian khan of the 15th century, a heavy-set man past fifty. A broad hard face, thick greying beard, direct unblinking gaze carrying both authority and fatigue. He wears a rich deep green robe with gold-thread borders, a sable hat, and a single heavy ring. Commanding rather than cruel; hands resting, not visible above the frame edge.
+A waist-up character portrait for a historical video game, painted as a digital illustration: visible brushwork, soft edges, semi-realistic stylised features, honest natural colour. Not a photograph, no photographic skin texture, no pores, no sharp photographic detail. 15th-century Kazakh steppe. Plain warm background, a soft dusty ochre-to-grey gradient, no scenery and nothing behind the figure. Warm directional light from the upper left, gentle rim light on the right shoulder. The crop runs from just above his hat down to his waist, so head and chest fill most of the frame; eyes on the upper third line. No lettering, no border, no modern clothing, no fantasy armour. Dignified and calm, documentary in feel rather than heroic; hands not visible. Abulkhair Khan, ruler of the Uzbek nomads, a heavy-built man of about fifty-five: distinctly Central Asian features — a broad heavy face, flat cheekbones, narrow dark eyes under thick black brows drawn low, a low-bridged nose, a dark moustache and a short dark goatee streaked with grey, a hard set mouth. His gaze is the centre of the portrait: level, heavy and direct, staring straight at the viewer from under the brows — the look of a man used to being obeyed, tired rather than cruel. He wears a tall pointed hat: a wide thick band of dark brown sable fur round the head, and above it a high conical crown of deep blue cloth worked all over with gold embroidery, rising to a point. Over a fine shirt he wears a rich chapan of deep blue-black velvet, its wide collar and front edges covered in dense curling gold embroidery, a row of small gold clasps down the chest, and a heavy round gold medallion on a cord at the throat. Power and weariness, not villainy.
 
 ## Параметры (Draw Things · FLUX.2 [klein] 4B 8-bit)
-- Size: 896×1152 · Steps: 24 · Guidance (CFG): 1.0 · Sampler: Euler A Trailing · Shift: 3.0
+- Size: 896×1152 · Steps: 4 · Guidance (CFG): 1.0 · Sampler: Euler A Trailing · Shift: 3.0
+- Промпт переписан 2026-09-14 под каркас аватаров: стиль серии, кадр, явные черты лица,
+  шапки без слова brim. Один портрет, без эмоций — второстепенные показываются кружком.
+- Перстень Абулхайра из канона не рисуется: руки вне кадра, модель рисует их хуже всего.
 - Seed утверждённого варианта записать в manifest.yaml и использовать во всех сценах
