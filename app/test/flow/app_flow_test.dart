@@ -187,6 +187,29 @@ void main() {
     // ---- вернулись на период, «продолжить» появилось
     expect(find.text('Кезең тесті'), findsOneWidget);
     expect(find.textContaining('жалғастыру'), findsWidgets);
+
+    // ---- снова в серию: позиция та же, а «Артқа» перечитывает прочитанное ДО выхода
+    await tester.tap(find.textContaining('Шу бойында').first);
+    await _settle(tester, 6);
+    await tester.tap(find.textContaining('Жалғастыру').first);
+    await _settle(tester, 12);
+    for (var step = 0; step < 10 && find.byIcon(Icons.menu_rounded).evaluate().isEmpty; step++) {
+      if (find.text('A').evaluate().isNotEmpty) { await tester.tap(find.text('A')); await _settle(tester, 2); }
+      else if (find.text('Жалғастыру').evaluate().isNotEmpty) { await tester.tap(find.text('Жалғастыру').first); await _settle(tester, 2); }
+      else { await _settle(tester, 2); }
+    }
+    expect(find.byIcon(Icons.menu_rounded), findsOneWidget, reason: 'снова в сюжете');
+    expect(find.text('Артқа'), findsOneWidget);
+    await tester.tap(find.text('Артқа'));
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('ҚАЙТА ОҚУ'), findsOneWidget, reason: 'список прочитанного пережил выход из серии');
+    await tester.tapAt(const Offset(195, 300));
+    await tester.pump(const Duration(milliseconds: 250));
+    // выходим обратно на период — замки на месте
+    await tester.tap(find.byIcon(Icons.menu_rounded));
+    await _settle(tester, 3);
+    await tester.tap(find.text('Сақтап шығу'));
+    await _settle(tester, 5);
     expect(find.byIcon(Icons.lock_outline_rounded), findsNWidgets(3));
     expect(tester.takeException(), isNull);
   });

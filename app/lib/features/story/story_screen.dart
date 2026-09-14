@@ -58,6 +58,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     super.initState();
     final snap = _s.store.storySnapshot(_id, contentHash: widget.contentHash);
     _story = snap != null ? StoryRunner.restore(widget.episode, snap) : StoryRunner(widget.episode);
+    if (snap != null) _restoreLines(snap['lines']);
     _lock.addStatusListener((_) => setState(() {}));
     _advance();
   }
@@ -69,7 +70,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   void _advance() {
     if (_story.awaitingChoice) return;
     _browse = null;
-    final snap = _story.snapshot();
+    final snap = {..._story.snapshot(), 'lines': [for (final l in _transcript) l.toJson()]};
     if (!_story.ended) {
       _s.store.saveStory(_id, snap, contentHash: widget.contentHash);
       _s.store.saveContinueMeta(_id, widget.episode.indexOf(_story.scene.id), widget.episode.scenes.length);
@@ -77,7 +78,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     final e = _story.next();
     if (e is BeatEvent) {
       final b = e.beat;
-      if (b is Say) _transcript.add(_Line(scene: e.scene, who: b.who, text: b.text, emo: b.emo ?? 'calm'));
+      if (b is Say) _transcript.add(_Line(scene: e.scene, beat: e.scene.beats.indexOf(b), who: b.who, text: b.text, emo: b.emo ?? 'calm'));
       _startLock(b is Say ? b.text.of(_l) : (b as Choice).prompt.of(_l));
     }
     if (e is QuizBreak) {
@@ -112,6 +113,24 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     if (next != null) precacheImage(next, context, onError: (_, __) {});
     for (final k in [i - 2, i + 2]) {
       provider(k)?.evict();
+    }
+  }
+
+  /// Прочитанные реплики из сохранённого снимка. Сценарий мог измениться —
+  /// пропускаем всё, что не находится или перестало быть репликой.
+  void _restoreLines(dynamic raw) {
+    if (raw is! List) return;
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final sid = item['s'] as String?; final bi = item['b'] as int?;
+      if (sid == null || bi == null) continue;
+      final si = widget.episode.indexOf(sid);
+      if (si < 0) continue;
+      final scene = widget.episode.scenes[si];
+      if (bi < 0 || bi >= scene.beats.length) continue;
+      final b = scene.beats[bi];
+      if (b is! Say) continue;
+      _transcript.add(_Line(scene: scene, beat: bi, who: b.who, text: b.text, emo: b.emo ?? 'calm'));
     }
   }
 
@@ -301,8 +320,9 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
 
 /// Прочитанная реплика — для «Артқа» и списка «Оқылған мәтін».
 class _Line {
-  const _Line({required this.scene, required this.who, required this.text, required this.emo});
-  final Scene scene; final String who; final L10n text; final String emo;
+  const _Line({required this.scene, required this.beat, required this.who, required this.text, required this.emo});
+  final Scene scene; final int beat; final String who; final L10n text; final String emo;
+  Map<String, Object> toJson() => {'s': scene.id, 'b': beat};
 }
 
 // ---------------------------------------------------------------- общие части сюжета
