@@ -55,14 +55,14 @@ void main(List<String> args) {
     final qFile = File(p.join(content, 'questions', season, '${id.substring(2)}.yaml')); // s1e01 → e01.yaml
     if (!qFile.existsSync()) { err('$id: нет файла вопросов ${qFile.path}'); continue; }
     final questions = (_yaml(qFile.path) as List).cast<Map>();
-    final media = <String>{
-      for (final m in _yaml(p.join(content, 'media', season, 'manifest.yaml')) as List) m['id'] as String,
-    };
+    final mediaList = (_yaml(p.join(content, 'media', season, 'manifest.yaml')) as List).cast<Map>();
+    final media = <String>{for (final m in mediaList) m['id'] as String};
+    final portraits = <String>{for (final m in mediaList) if (m['kind'] == 'character' && m['status'] == 'approved') m['id'] as String};
 
     final report = _validateEpisode(ep, questions, facts, sources, media, strict);
     if (check) { _print(id, report); continue; }
     if (errors.isEmpty) {
-      _write(out, id, ep, questions, factTopic, report);
+      _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(p.join(content, 'media', season, 'out')));
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -184,8 +184,8 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
       if (b.containsKey('say')) {
         final say = b['say'] as Map;
         if (!chars.contains(say['who'])) err('$id/$sid: неизвестный персонаж ${say['who']}');
-        final emo = say['emo'] as String?;
-        if (emo != null && !_emotions.contains(emo)) err('$id/$sid: emo должен быть одним из ${_emotions.join('|')}');
+        final emo = (say['emotion'] ?? say['emo']) as String?;
+        if (emo != null && !_emotions.contains(emo)) err('$id/$sid: emotion должен быть одним из ${_emotions.join('|')}');
         if (say['when'] != null) {
           final cond = _parseCond(say['when'].toString());
           if (cond == null) err('$id/$sid say when: не разобрал условие «${say['when']}»');
@@ -201,6 +201,15 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
           _needLangs(o, '$id/$sid option ${o['id']}');
           if (o['art'] != null && !media.contains(o['art'])) {
             err('$id/$sid option ${o['id']}: art ${o['art']} нет в media/manifest.yaml');
+          }
+          if (o['reply'] != null) {
+            final r = o['reply'];
+            if (r is! Map) { err('$id/$sid option ${o['id']}: reply должен быть {kk, ru, emotion?}'); }
+            else {
+              _needLangs(r, '$id/$sid option ${o['id']} reply');
+              final re = r['emotion'] as String?;
+              if (re != null && !_emotions.contains(re)) err('$id/$sid option ${o['id']} reply: emotion ${re}');
+            }
           }
           final g = o['goto'] as String?;
           if (g == null) { err('$id/$sid option ${o['id']}: нет goto'); continue; }
@@ -273,7 +282,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -285,6 +294,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
   final episode = {
     'id': id,
     'version': 1,
+    if (mediaExt.isNotEmpty) 'mediaExt': mediaExt,
     'title': t(ep['title']),
     'topics': ep['topics'],
     'era': ep['era'],
@@ -295,6 +305,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
           'fiction': c['fiction'] == true,
           if (c['avatar'] == true) 'avatar': true,
           if (c['default_name'] != null) 'defaultName': t(c['default_name']),
+          if (c['portrait'] != null) 'portrait': c['portrait']
+          else if (portraitMedia.contains('char_${c['id']}')) 'portrait': 'char_${c['id']}',
         },
     },
     'scenes': [
@@ -317,7 +329,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
               if (b.containsKey('say'))
                 {
                   'type': 'say', 'who': b['say']['who'], 'text': t(b['say']),
-                  if (b['say']['emo'] != null) 'emo': b['say']['emo'],
+                  if ((b['say']['emotion'] ?? b['say']['emo']) != null) 'emo': b['say']['emotion'] ?? b['say']['emo'],
                   if (b['say']['when'] != null) 'when': _parseCond(b['say']['when'].toString()),
                 }
               else
@@ -326,7 +338,12 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                   'prompt': t(b['choice']['prompt']),
                   'options': [
                     for (final o in (b['choice']['options'] as List).cast<Map>())
-                      {'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto'], if (o['art'] != null) 'art': o['art']},
+                      {
+                        'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto'],
+                        if (o['art'] != null) 'art': o['art'],
+                        if (o['reply'] is Map) 'reply': t(o['reply'] as Map),
+                        if (o['reply'] is Map && (o['reply'] as Map)['emotion'] != null) 'replyEmo': (o['reply'] as Map)['emotion'],
+                      },
                   ],
                 },
           ],
@@ -404,7 +421,7 @@ int _copyMedia(String content, String out) {
   return n;
 }
 
-const _emotions = ['calm', 'joy', 'alarm', 'sorrow'];
+const _emotions = ['calm', 'joy', 'alarm', 'sorrow', 'resolve'];
 
 /// Общий для всех серий контент: аватары игрока (три внешности × эмоции).
 /// Собирается из media/<season>/manifest.yaml: kind avatar, status approved,
@@ -444,7 +461,23 @@ Map<String, Object?> _common(String content, String out) {
   }
   final list = looks.values.toList()..sort((a, b) => (a['look'] as int).compareTo(b['look'] as int));
   for (final l in list) { (l['emotions'] as List<String>).sort((a, b) => _emotions.indexOf(a).compareTo(_emotions.indexOf(b))); }
-  return {'version': 1, 'avatars': list};
+
+  // портреты исторических лиц: kind character, approved, файл в out/characters/
+  final chars = <Map<String, Object?>>[];
+  if (mediaRoot.existsSync()) {
+    for (final season in mediaRoot.listSync().whereType<Directory>()) {
+      final mf = File(p.join(season.path, 'manifest.yaml'));
+      if (!mf.existsSync()) continue;
+      final sid = p.basename(season.path);
+      for (final m in (_yaml(mf.path) as List).cast<Map>()) {
+        if (m['kind'] != 'character' || m['status'] != 'approved') continue;
+        final f = File(p.join(out, 'media', sid, 'characters', '${m['id']}.jpg'));
+        if (!f.existsSync()) { warn('портрет ${m['id']}: нет файла в out/characters — пропущен'); continue; }
+        chars.add({'id': m['id'], 'season': sid});
+      }
+    }
+  }
+  return {'version': 1, 'avatars': list, 'characters': chars};
 }
 
 /// Оценка положения лица по альфе PNG: верх непрозрачной области — верх головного убора,
@@ -512,6 +545,18 @@ List<Map<String, Object>>? _parseCond(String src) {
 
 int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group(1) ?? '') ?? 0;
 int _seasonOf(String id) => int.tryParse(RegExp(r'^s(\d+)').firstMatch(id)?.group(1) ?? '') ?? 1;
+
+/// Расширения медиа-файлов сезона, отличные от jpg: {id: 'png'}. Клиент по умолчанию ждёт jpg.
+Map<String, String> _mediaExt(String outDir) {
+  final dir = Directory(outDir);
+  if (!dir.existsSync()) return const {};
+  final res = <String, String>{};
+  for (final f in dir.listSync().whereType<File>()) {
+    final ext = p.extension(f.path).replaceFirst('.', '');
+    if (ext.isNotEmpty && ext != 'jpg') res[p.basenameWithoutExtension(f.path)] = ext;
+  }
+  return res;
+}
 
 /// Плоский список узлов программы: периоды (без родителя) и темы с фактами.
 /// Клиент строит из него экран «Жол» и «Дайындық», не разбирая YAML.

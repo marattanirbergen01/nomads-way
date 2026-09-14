@@ -111,14 +111,23 @@ class AvatarLook {
       );
 }
 
-/// Общий для всех серий контент: аватары и общий бандл.
+/// Портрет исторического лица в общем пакете.
+class CharacterPortrait {
+  const CharacterPortrait({required this.id, required this.season});
+  final String id; final String season;
+}
+
+/// Общий для всех серий контент: аватары, портреты персонажей, общий бандл.
 class CommonInfo {
-  const CommonInfo({required this.avatars, this.bundle});
+  const CommonInfo({required this.avatars, this.characters = const [], this.bundle});
   final List<AvatarLook> avatars;
+  final List<CharacterPortrait> characters;
   final Bundle? bundle;
   AvatarLook? byLook(int n) => avatars.where((a) => a.look == n).firstOrNull;
+  CharacterPortrait? portrait(String id) => characters.where((c) => c.id == id).firstOrNull;
   factory CommonInfo.fromJson(Map<String, dynamic> j) => CommonInfo(
         avatars: [for (final a in (j['avatars'] as List? ?? [])) AvatarLook.fromJson(a)],
+        characters: [for (final c in (j['characters'] as List? ?? [])) CharacterPortrait(id: c['id'], season: c['season'])],
         bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
       );
 }

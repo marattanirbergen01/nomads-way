@@ -423,6 +423,7 @@ class _SayView extends StatelessWidget {
     final isNarrator = say.who == 'narrator';
     final name = st_._speakerName(say.who);
     final look = st_._s.store.look;
+    final who = st_.widget.episode.characters[say.who];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: st_._tapForward,
@@ -446,7 +447,7 @@ class _SayView extends StatelessWidget {
                 child: Transform.translate(
                   offset: Offset(0, avatar ? 0 : -18),
                   child: Row(children: [
-                    if (!avatar) AvatarCircle(size: 46, look: look, services: st_._s),
+                    if (!avatar) CharacterCircle(size: 46, services: st_._s, portraitId: who?.portrait, fallbackLetter: name.isEmpty ? '·' : name[0]),
                     if (!avatar) const SizedBox(width: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -562,7 +563,7 @@ class _ChoiceMadeView extends StatelessWidget {
       _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.artFor(st_._story.vars)), pan: option.art == null ? max(scene.pan, 62) : 62),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x80141010), Color(0x0D141010), Color(0x00141010), Color(0x40221A14), Color(0x80221A14)], stops: [0, .26, .46, .66, 1]))),
-      Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look, services: st_._s)),
+      Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look, services: st_._s, emo: option.replyEmo ?? 'calm')),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(
         decoration: _panelDeco(),
         padding: EdgeInsets.fromLTRB(24, 26, 24, 34 + MediaQuery.of(context).padding.bottom),
@@ -572,6 +573,10 @@ class _ChoiceMadeView extends StatelessWidget {
           Text(s('your.choice'), style: st(11, w: 600, color: C.gold, spacing: 1.4).copyWith(shadows: _sh)),
           const SizedBox(height: 8),
           Text(option.text.ofPlayer(l, st_._player), style: st(27, w: 700, height: 1.2).copyWith(shadows: _sh)),
+          if (option.reply != null) ...[
+            const SizedBox(height: 12),
+            Text(option.reply!.ofPlayer(l, st_._player), style: st(15, color: const Color(0xFFD8C8AF), height: 1.5).copyWith(shadows: _sh)),
+          ],
           const SizedBox(height: 20),
           Align(alignment: Alignment.centerRight, child: GoldButton(label: s('next'), trailingArrow: true, onTap: () => st_._advance())),
         ]),

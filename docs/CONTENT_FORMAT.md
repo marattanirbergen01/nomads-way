@@ -12,7 +12,8 @@ episode: s1e01
 title: {kk, ru, en}
 topics: [kz.4.1]                # темы, которые серия покрывает
 characters:
-  - {id, name: {kk, ru}, fiction: bool, note, avatar: bool?, default_name: {kk, ru}?}
+  - {id, name: {kk, ru}, fiction: bool, note, avatar: bool?, default_name: {kk, ru}?, portrait: media_id?}
+# portrait — портрет в кружке у реплик. Без поля берётся char_<id> из media/manifest.yaml (kind character, approved).
 # avatar: true — персонаж-аватар игрока; в его репликах и prompt допустим плейсхолдер {player},
 # клиент подставляет имя из профиля (default_name — пока имя не задано). Имя не склонять.
 scenes:
@@ -29,14 +30,17 @@ scenes:
     # Условие: flag (> 0), !flag (== 0), var op число (== != < <= > >=), части через &&.
     # Отсутствующая переменная равна 0. Переменные задаются в set у вариантов выбора.
     beats:
-      - say: {who, kk, ru, en, emo?, when?}
-        # emo:  calm | joy | alarm | sorrow — состояние аватара в этой реплике
+      - say: {who, kk, ru, en, emotion?, when?}
+        # emotion: calm | joy | alarm | sorrow | resolve — состояние аватара в этой реплике
+        #          (синоним emo). Кадра «resolve» у аватаров пока нет — клиент покажет calm.
         # when: условие на переменные сюжета (тот же синтаксис, что у art_when); реплика без when звучит всегда.
         #       Факты из covers должны звучать в безусловных репликах — компилятор предупредит.
       - choice:
           prompt: {kk, ru, en}
           options:
-            - {id, kk, ru, en, set: {var: +n}, goto: sc020, art: art_id?}   # art у ОБЕИХ опций → развилка двумя кадрами
+            - {id, kk, ru, en, set: {var: +n}, goto: sc020, art: art_id?, reply: {kk, ru, en?, emotion?}?}
+              # art у ОБЕИХ опций → развилка двумя кадрами
+              # reply — что произошло после выбора: текст экрана «выбор сделан», emotion — состояние аватара на нём
     quiz: [q_s1e01_001, ...]    # вопросы, задаваемые после сцены
 final_test:                     # итоговый мини-тест серии, формат ЕНТ
   single: 10
@@ -64,6 +68,18 @@ final_test:                     # итоговый мини-тест серии,
 ## content/sources/registry.yaml
 `{id, type: primary|academic|textbook|spec, title, author, year, note}`.
 Любой `source:` в вопросах и `covers` фактах должен ссылаться на существующий `id`.
+
+## content/media/<season>/ — раскладка
+```
+scenes/<id>.png|jpg        кадры сцен и вариантов       → out/<id>.jpg (1920)
+backgrounds/<id>.*         обложки, баннер              → out/<id>.jpg (1600)
+maps/<id>.png              карты, без сжатия            → out/<id>.png (как есть)
+avatars/<id>.png           портрет аватара для кружка   → out/avatars/<id>.jpg (512)
+avatars/<id>_bust.png      фигура по пояс, альфа        → out/avatars/<id>_bust.png (960)
+characters/<id>.png        портреты исторических лиц    → out/characters/<id>.jpg (512)
+```
+`sh tools/pack_media.sh` пересобирает out/ с нуля. Аватары и портреты уходят в общий пакет
+`common.zip`, остальное — в бандл серии. Расширение не-jpg кадра (карта) клиент узнаёт из episode.json.
 
 ## content/media/<season>/manifest.yaml
 `{id, file, kind: scene|card|cover, license, origin, author, seed, prompt_ref, approved_by}`.

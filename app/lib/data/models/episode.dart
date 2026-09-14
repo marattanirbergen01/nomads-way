@@ -1,10 +1,12 @@
 import '../../core/l10n.dart';
 
 class Episode {
-  Episode({required this.id, required this.title, required this.scenes, required this.characters, required this.finalTest, this.era});
+  Episode({required this.id, required this.title, required this.scenes, required this.characters, required this.finalTest, this.era, this.mediaExt = const {}});
   final String id;
   final L10n title;
   final String? era;
+  /// Расширения медиа, отличные от jpg: карта — png.
+  final Map<String, String> mediaExt;
   final List<Scene> scenes;
   final Map<String, Character> characters;
   final FinalTestSpec finalTest;
@@ -16,6 +18,7 @@ class Episode {
         id: j['id'],
         title: L10n.fromJson(j['title']),
         era: j['era'],
+        mediaExt: {for (final e in ((j['mediaExt'] as Map?) ?? {}).entries) e.key as String: e.value as String},
         scenes: [for (final s in j['scenes']) Scene.fromJson(s)],
         characters: {for (final e in (j['characters'] as Map).entries) e.key: Character.fromJson(e.value)},
         finalTest: FinalTestSpec(single: j['finalTest']['single'], context: j['finalTest']['context']),
@@ -23,17 +26,20 @@ class Episode {
 }
 
 class Character {
-  Character({required this.name, required this.fiction, this.avatar = false, this.defaultName});
+  Character({required this.name, required this.fiction, this.avatar = false, this.defaultName, this.portrait});
   final L10n name;
   final bool fiction;
   /// Персонаж-аватар игрока: имя берётся из профиля, реплики показываются с фигурой.
   final bool avatar;
   final L10n? defaultName;
+  /// Портрет из общего пакета (characters/`<id>`.jpg); null — кружка нет.
+  final String? portrait;
   factory Character.fromJson(Map<String, dynamic> j) => Character(
         name: L10n.fromJson(j['name']),
         fiction: j['fiction'] == true,
         avatar: j['avatar'] == true,
         defaultName: j['defaultName'] == null ? null : L10n.fromJson(j['defaultName']),
+        portrait: j['portrait'],
       );
 }
 
@@ -126,19 +132,25 @@ class Choice implements Beat {
 }
 
 class Option {
-  Option({required this.id, required this.text, required this.set, required this.goto, this.art});
+  Option({required this.id, required this.text, required this.set, required this.goto, this.art, this.reply, this.replyEmo});
   final String id;
   final L10n text;
   final Map<String, int> set;
   final String goto;
   /// Свой кадр у опции — развилка показывается двумя картинками.
   final String? art;
+  /// Что произошло после выбора — текст экрана «выбор сделан».
+  final L10n? reply;
+  /// Состояние аватара на экране «выбор сделан».
+  final String? replyEmo;
   factory Option.fromJson(Map<String, dynamic> j) => Option(
         id: j['id'],
         text: L10n.fromJson(j['text']),
         set: {for (final e in (j['set'] as Map? ?? {}).entries) e.key as String: (e.value as num).toInt()},
         goto: j['goto'],
         art: j['art'],
+        reply: j['reply'] == null ? null : L10n.fromJson(j['reply']),
+        replyEmo: j['replyEmo'],
       );
 }
 

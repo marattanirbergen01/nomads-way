@@ -49,12 +49,16 @@ class ContentRepository {
         final ep = jsonDecode(local.readAsStringSync());
         final qs = jsonDecode(qf.readAsStringSync()) as List;
         await store.cache('$id/questions.json', qf.readAsStringSync());
-        return (Episode.fromJson(ep), [for (final q in qs) Question.fromJson(q)]);
+        final e = Episode.fromJson(ep);
+        _ext[id] = e.mediaExt;
+        return (e, [for (final q in qs) Question.fromJson(q)]);
       }
     }
     final ep = await _get('$id/episode.json');
     final qs = await _get('$id/questions.json');
-    return (Episode.fromJson(ep), [for (final q in qs as List) Question.fromJson(q)]);
+    final e = Episode.fromJson(ep);
+    _ext[id] = e.mediaExt;
+    return (e, [for (final q in qs as List) Question.fromJson(q)]);
   }
 
   /// Вопросы всех когда-либо загруженных серий — из кэша, синхронно. Для режима повторения.
@@ -65,11 +69,20 @@ class ContentRepository {
       ];
 
   /// Адрес картинки: build/media/`<season>`/`<id>`.jpg. Сезон выводится из id серии (s1e01 → s1).
-  String mediaUrl(String episodeId, String artId) => '$baseUrl/media/${_season(episodeId)}/$artId.jpg';
+  /// Расширения медиа по сериям, отличные от jpg (карта — png). Заполняется при загрузке серии.
+  final _ext = <String, Map<String, String>>{};
+  String _extOf(String episodeId, String artId) => _ext[episodeId]?[artId] ?? 'jpg';
+
+  /// Адрес картинки: build/media/`<season>`/`<id>`.`<ext>`. Сезон выводится из id серии (s1e01 → s1).
+  String mediaUrl(String episodeId, String artId) => '$baseUrl/media/${_season(episodeId)}/$artId.${_extOf(episodeId, artId)}';
   static String _season(String episodeId) => RegExp(r'^(s\d+)').firstMatch(episodeId)?.group(1) ?? 's1';
 
   /// Кадр из установленной серии, если она скачана. Виджеты предпочитают файл сети.
-  File? mediaFile(String episodeId, String artId) => episodes.fileSync(episodeId, 'media/$artId.jpg');
+  File? mediaFile(String episodeId, String artId) => episodes.fileSync(episodeId, 'media/$artId.${_extOf(episodeId, artId)}');
+
+  /// Портрет исторического лица из общего пакета.
+  String characterUrl(CharacterPortrait c) => '$baseUrl/media/${c.season}/characters/${c.id}.jpg';
+  File? characterFile(CharacterPortrait c) => episodes.fileSync('common', 'media/${c.season}/characters/${c.id}.jpg');
 
   Future<dynamic> _get(String path) async {
     try {

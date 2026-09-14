@@ -113,3 +113,27 @@ class _BustPainter extends CustomPainter {
   @override
   bool shouldRepaint(_BustPainter o) => o.look != look;
 }
+
+
+/// Портрет исторического лица в кружке. Нет портрета — первая буква имени.
+class CharacterCircle extends StatelessWidget {
+  const CharacterCircle({super.key, required this.size, required this.services, this.portraitId, required this.fallbackLetter});
+  final double size; final Services services; final String? portraitId; final String fallbackLetter;
+  @override
+  Widget build(BuildContext context) {
+    final c = portraitId == null ? null : services.content.commonSync?.portrait(portraitId!);
+    final letter = Center(child: Text(fallbackLetter, style: TextStyle(fontFamily: 'Golos', fontSize: size * .42, fontVariations: const [FontVariation('wght', 700)], color: const Color(0xFFD9A441))));
+    return Container(
+      width: size, height: size,
+      decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF43352A)),
+      clipBehavior: Clip.antiAlias,
+      child: c == null
+          ? letter
+          : Art(
+              url: services.content.characterUrl(c), file: services.content.characterFile(c),
+              fit: BoxFit.cover, alignment: const Alignment(0, -.35), width: size, height: size, logicalWidth: size,
+              fallback: letter,
+            ),
+    );
+  }
+}

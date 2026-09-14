@@ -38,9 +38,12 @@ void main(List<String> args) {
     final manifest = jsonDecode(File(p.join(epDir.path, 'manifest.json')).readAsStringSync()) as Map<String, dynamic>;
     final media = <String>{...(manifest['media'] as List).cast<String>(), 'cover_$id'};
     var missing = 0;
+    // кадр может быть png (карта): расширение из episode.json → mediaExt, по умолчанию jpg
+    final ext = ((jsonDecode(files['episode.json']!.readAsStringSync()) as Map)['mediaExt'] as Map?) ?? const {};
     for (final m in media) {
-      final f = File(p.join(build.path, 'media', season, '$m.jpg'));
-      if (f.existsSync()) { files['media/$m.jpg'] = f; } else { missing++; }
+      final e = (ext[m] as String?) ?? 'jpg';
+      final f = File(p.join(build.path, 'media', season, '$m.$e'));
+      if (f.existsSync()) { files['media/$m.$e'] = f; } else { missing++; }
     }
 
     final b = _writeBundle(outDir, id, files);
@@ -64,6 +67,10 @@ void main(List<String> args) {
           files['media/$season/avatars/$name'] = File(p.join(build.path, 'media', season, 'avatars', name));
         }
       }
+    }
+    for (final c in ((common['characters'] as List?) ?? []).cast<Map<String, dynamic>>()) {
+      final name = '${c['id']}.jpg';
+      files['media/${c['season']}/characters/$name'] = File(p.join(build.path, 'media', c['season'] as String, 'characters', name));
     }
     final banner = File(p.join(build.path, 'media', 's1', 'cover_season1.jpg'));
     if (banner.existsSync()) files['media/s1/cover_season1.jpg'] = banner;
