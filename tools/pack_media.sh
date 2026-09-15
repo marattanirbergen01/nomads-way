@@ -14,12 +14,22 @@
 set -e
 cd "$(dirname "$0")/.."
 
+# sips -Z умеет и увеличивать — а апскейл даёт только байты и мыло. Уменьшаем, если крупнее цели; иначе не трогаем размер.
+maxdim() { sips -g pixelWidth -g pixelHeight "$1" | awk '/pixel/{if($2>m)m=$2} END{print m}'; }
 jpg() { # src dst maxdim quality
-  sips -s format jpeg -s formatOptions "$4" -Z "$3" "$1" --out "$2" >/dev/null
-  printf '%-34s → %-34s %5s KB\n' "$(basename "$1")" "${2#content/media/}" "$(( $(stat -f%z "$2") / 1024 ))"
+  if [ "$(maxdim "$1")" -gt "$3" ]; then
+    sips -s format jpeg -s formatOptions "$4" -Z "$3" "$1" --out "$2" >/dev/null
+  else
+    sips -s format jpeg -s formatOptions "$4" "$1" --out "$2" >/dev/null
+  fi
+  printf '%-34s → %-34s %5s KB  %s\n' "$(basename "$1")" "${2#content/media/}" "$(( $(stat -f%z "$2") / 1024 ))" "$(sips -g pixelWidth -g pixelHeight "$2" | awk '/pixel/{printf "%s ",$2}' | sed 's/ $//;s/ /×/')"
 }
 png() { # src dst maxdim
-  sips -s format png -Z "$3" "$1" --out "$2" >/dev/null
+  if [ "$(maxdim "$1")" -gt "$3" ]; then
+    sips -s format png -Z "$3" "$1" --out "$2" >/dev/null
+  else
+    cp "$1" "$2"
+  fi
   printf '%-34s → %-34s %5s KB\n' "$(basename "$1")" "${2#content/media/}" "$(( $(stat -f%z "$2") / 1024 ))"
 }
 copy() { # src dst

@@ -327,10 +327,10 @@ class _Line {
 
 // ---------------------------------------------------------------- общие части сюжета
 class _Art extends StatelessWidget {
-  const _Art({required this.url, required this.pan, this.file});
-  final String url; final int pan; final File? file;
+  const _Art({required this.url, required this.pan, this.file, this.alignment});
+  final String url; final int pan; final File? file; final Alignment? alignment;
   @override
-  Widget build(BuildContext context) => Art(url: url, file: file, pan: pan, fit: BoxFit.cover, width: double.infinity, height: double.infinity, logicalWidth: MediaQuery.sizeOf(context).width);
+  Widget build(BuildContext context) => Art(url: url, file: file, pan: pan, alignment: alignment, fit: BoxFit.cover, width: double.infinity, height: double.infinity, logicalWidth: MediaQuery.sizeOf(context).width);
 }
 
 class _TopBar extends StatelessWidget {
@@ -503,7 +503,8 @@ class _ChoiceView extends StatelessWidget {
       Widget half(Option o, {required bool first}) => Expanded(child: GestureDetector(
             onTap: () => st_._choose(o),
             child: Stack(fit: StackFit.expand, children: [
-              _Art(url: st_._s.content.mediaUrl(st_._id, o.art!), file: st_._s.content.mediaFile(st_._id, o.art!), pan: 50),
+              // кадры 9:16 с небом сверху; в широкой половине показываем нижнюю часть, где юрта
+              _Art(url: st_._s.content.mediaUrl(st_._id, o.art!), file: st_._s.content.mediaFile(st_._id, o.art!), pan: 50, alignment: const Alignment(0, .55)),
               DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
                   colors: [first ? const Color(0x9E141010) : const Color(0xD9221A14), const Color(0x00141010), const Color(0x00141010), const Color(0xEB221A14)], stops: const [0, .34, .58, 1]))),
               Positioned(left: 20, right: 20, bottom: first ? 16 : 22 + MediaQuery.of(context).padding.bottom,
