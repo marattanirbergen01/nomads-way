@@ -142,19 +142,18 @@ void main() {
         }
         chosen++;
         await _settle(tester, 3);
-        if (find.text('СЕНІҢ ТАҢДАУЫҢ').evaluate().isNotEmpty) {
-          expect(find.text('Артқа'), findsNothing, reason: 'на экране выбора назад нет');
-          await tester.tap(find.text('Жалғастыру'));          // «выбор сделан»
-          await _settle(tester, 3);
-          // назад после выбора — только чтение, развилка не возвращается
-          if (find.text('Артқа').evaluate().isNotEmpty) {
-            await tester.tap(find.text('Артқа'));
+        // ответ на выбор — обычная реплика аватара, без крупного повтора варианта
+        expect(find.text('ТАҢДА'), findsNothing, reason: 'развилка закрылась');
+        expect(find.text('СЕНІҢ ТАҢДАУЫҢ'), findsNothing, reason: 'отдельного экрана выбора нет');
+        expect(find.byIcon(Icons.menu_rounded), findsOneWidget, reason: 'это обычный экран реплики');
+        // назад после выбора — только чтение, развилка не возвращается
+        if (find.text('Артқа').evaluate().isNotEmpty) {
+          await tester.tap(find.text('Артқа'));
+          await tester.pump(const Duration(milliseconds: 200));
+          expect(find.text('ТАҢДА'), findsNothing, reason: 'выбор окончательный');
+          for (var k = 0; k < 4 && find.text('ҚАЙТА ОҚУ').evaluate().isNotEmpty; k++) {
+            await tester.tapAt(const Offset(195, 300));
             await tester.pump(const Duration(milliseconds: 200));
-            expect(find.text('ТАҢДА'), findsNothing, reason: 'выбор окончательный');
-            for (var k = 0; k < 4 && find.text('ҚАЙТА ОҚУ').evaluate().isNotEmpty; k++) {
-              await tester.tapAt(const Offset(195, 300));
-              await tester.pump(const Duration(milliseconds: 200));
-            }
           }
         }
       } else if (find.byIcon(Icons.menu_rounded).evaluate().isNotEmpty) {
@@ -193,8 +192,15 @@ void main() {
     await _settle(tester, 6);
     await tester.tap(find.textContaining('Жалғастыру').first);
     await _settle(tester, 12);
-    for (var step = 0; step < 10 && find.byIcon(Icons.menu_rounded).evaluate().isEmpty; step++) {
+    // доехать до экрана реплики: позиция могла сохраниться на вопросе или развилке
+    for (var step = 0; step < 12 && find.text('Артқа').evaluate().isEmpty; step++) {
       if (find.text('A').evaluate().isNotEmpty) { await tester.tap(find.text('A')); await _settle(tester, 2); }
+      else if (find.text('ТАҢДА').evaluate().isNotEmpty) {
+        await tester.pump(const Duration(seconds: 4));
+        final opts = find.byType(OutlinedButton);
+        if (opts.evaluate().isNotEmpty) { await tester.tap(opts.first); } else { await tester.tapAt(const Offset(195, 200)); }
+        await _settle(tester, 3);
+      }
       else if (find.text('Жалғастыру').evaluate().isNotEmpty) { await tester.tap(find.text('Жалғастыру').first); await _settle(tester, 2); }
       else { await _settle(tester, 2); }
     }

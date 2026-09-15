@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../core/l10n.dart';
 import '../../core/services.dart';
@@ -122,12 +121,20 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     if (raw is! List) return;
     for (final item in raw) {
       if (item is! Map) continue;
-      final sid = item['s'] as String?; final bi = item['b'] as int?;
-      if (sid == null || bi == null) continue;
+      final sid = item['s'] as String?;
+      if (sid == null) continue;
       final si = widget.episode.indexOf(sid);
       if (si < 0) continue;
       final scene = widget.episode.scenes[si];
-      if (bi < 0 || bi >= scene.beats.length) continue;
+      final oid = item['o'] as String?;
+      if (oid != null) {
+        final opt = scene.beats.whereType<Choice>().expand((c) => c.options).where((o) => o.id == oid).firstOrNull;
+        if (opt?.reply == null) continue;
+        _transcript.add(_Line(scene: scene, beat: -1, who: _avatarId, text: opt!.reply!, emo: opt.replyEmo ?? 'calm', optionId: oid, art: opt.art));
+        continue;
+      }
+      final bi = item['b'] as int?;
+      if (bi == null || bi < 0 || bi >= scene.beats.length) continue;
       final b = scene.beats[bi];
       if (b is! Say) continue;
       _transcript.add(_Line(scene: scene, beat: bi, who: b.who, text: b.text, emo: b.emo ?? 'calm'));
@@ -151,7 +158,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     _advance();
   }
 
-  bool get _canBack => _quiz == null && _chosen == null && (_browse == null ? _transcript.length >= 2 : _browse! > 0);
+  bool get _canBack => _quiz == null && (_browse == null ? _transcript.length >= 2 : _browse! > 0);
 
   /// Назад — только перечитать. Сюжет не откатывается, выбор не отменяется.
   void _back() {
@@ -162,8 +169,15 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   void _choose(Option o) {
     if (_locked) return;
     _story.choose(o);
+    if (o.reply == null) { _advance(); return; }
+    // ответ на выбор — обычная реплика аватара: без крупного повтора варианта
+    _transcript.add(_Line(scene: _story.scene, beat: -1, who: _avatarId, text: o.reply!, emo: o.replyEmo ?? 'calm', optionId: o.id, art: o.art));
+    _startLock(o.reply!.of(_l));
     setState(() => _chosen = o);
   }
+
+  String get _avatarId =>
+      widget.episode.characters.entries.where((e) => e.value.avatar).map((e) => e.key).firstOrNull ?? 'aidar';
 
   String get _player {
     final av = widget.episode.characters.entries.where((e) => e.value.avatar || e.key == 'aidar').firstOrNull;
@@ -299,9 +313,12 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     final e = _event;
     if (_browse != null && _browse! < _transcript.length) {
       final ln = _transcript[_browse!];
-      return _SayView(this, ln.scene, Say(who: ln.who, text: ln.text, emo: ln.emo), browsing: true);
+      return _SayView(this, ln.scene, Say(who: ln.who, text: ln.text, emo: ln.emo), browsing: true, artOverride: ln.art);
     }
-    if (_chosen != null && e is BeatEvent) return _ChoiceMadeView(this, e.scene, _chosen!);
+    if (_chosen != null && e is BeatEvent) {
+      final o = _chosen!;
+      return _SayView(this, e.scene, Say(who: _avatarId, text: o.reply!, emo: o.replyEmo), artOverride: o.art);
+    }
     if (e is BeatEvent) {
       final b = e.beat;
       if (b is Say) return _SayView(this, e.scene, b);
@@ -320,9 +337,13 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
 
 /// Прочитанная реплика — для «Артқа» и списка «Оқылған мәтін».
 class _Line {
-  const _Line({required this.scene, required this.beat, required this.who, required this.text, required this.emo});
+  const _Line({required this.scene, required this.beat, required this.who, required this.text, required this.emo, this.optionId, this.art});
   final Scene scene; final int beat; final String who; final L10n text; final String emo;
-  Map<String, Object> toJson() => {'s': scene.id, 'b': beat};
+  /// Реплика-ответ на выбор: хранится как id варианта, а не индекс бита.
+  final String? optionId;
+  /// Кадр, на фоне которого звучала реплика (выбранный вариант развилки).
+  final String? art;
+  Map<String, Object> toJson() => optionId != null ? {'s': scene.id, 'o': optionId!} : {'s': scene.id, 'b': beat};
 }
 
 // ---------------------------------------------------------------- общие части сюжета
@@ -414,8 +435,10 @@ BoxDecoration _panelDeco() => const BoxDecoration(gradient: LinearGradient(
 
 // ---------------------------------------------------------------- реплика
 class _SayView extends StatelessWidget {
-  const _SayView(this.st_, this.scene, this.say, {this.browsing = false});
+  const _SayView(this.st_, this.scene, this.say, {this.browsing = false, this.artOverride});
   final _StoryScreenState st_; final Scene scene; final Say say; final bool browsing;
+  /// Кадр вместо кадра сцены — выбранный вариант развилки.
+  final String? artOverride;
   @override
   Widget build(BuildContext context) {
     final l = st_._l;
@@ -428,7 +451,7 @@ class _SayView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: st_._tapForward,
       child: Stack(fit: StackFit.expand, children: [
-        _Art(url: st_._s.content.mediaUrl(st_._id, scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, scene.artFor(st_._story.vars)), pan: scene.pan),
+        _Art(url: st_._s.content.mediaUrl(st_._id, artOverride ?? scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, artOverride ?? scene.artFor(st_._story.vars)), pan: scene.pan),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x40221A14)], stops: [0, .24, .5, .75]))),
         if (avatar)
@@ -553,39 +576,3 @@ class _ChoiceView extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------- выбор сделан
-class _ChoiceMadeView extends StatelessWidget {
-  const _ChoiceMadeView(this.st_, this.scene, this.option);
-  final _StoryScreenState st_; final Scene scene; final Option option;
-  @override
-  Widget build(BuildContext context) {
-    final l = st_._l; final s = st_._s.s;
-    return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, option.art ?? scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, option.art ?? scene.artFor(st_._story.vars)), pan: option.art == null ? max(scene.pan, 62) : 62),
-      const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          colors: [Color(0x80141010), Color(0x0D141010), Color(0x00141010), Color(0x40221A14), Color(0x80221A14)], stops: [0, .26, .46, .66, 1]))),
-      Positioned(left: -18, top: 250, width: 267, height: 400, child: AvatarBust(look: st_._s.store.look, services: st_._s, emo: option.replyEmo ?? 'calm')),
-      Positioned(left: 0, right: 0, bottom: 0, child: Container(
-        decoration: _panelDeco(),
-        padding: EdgeInsets.fromLTRB(24, 26, 24, 34 + MediaQuery.of(context).padding.bottom),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-          const OrnamentLine(),
-          const SizedBox(height: 18),
-          Text(s('your.choice'), style: st(11, w: 600, color: C.gold, spacing: 1.4).copyWith(shadows: _sh)),
-          const SizedBox(height: 8),
-          Text(option.text.ofPlayer(l, st_._player), style: st(27, w: 700, height: 1.2).copyWith(shadows: _sh)),
-          if (option.reply != null) ...[
-            const SizedBox(height: 12),
-            Text(option.reply!.ofPlayer(l, st_._player), style: st(15, color: const Color(0xFFD8C8AF), height: 1.5).copyWith(shadows: _sh)),
-          ],
-          const SizedBox(height: 20),
-          Align(alignment: Alignment.centerRight, child: GoldButton(label: s('next'), trailingArrow: true, onTap: () => st_._advance())),
-        ]),
-      )),
-      Positioned(left: 0, right: 0, top: MediaQuery.of(context).padding.top + 4, child: Column(children: [
-        Text("NOMAD'S WAY", style: st(14, w: 800, spacing: 2.2).copyWith(shadows: _sh)),
-        Text(st_.widget.episode.era ?? '', style: st(12.5, color: const Color(0xFFE8D9BD)).copyWith(shadows: _sh)),
-      ])),
-    ]);
-  }
-}
