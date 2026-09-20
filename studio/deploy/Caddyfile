@@ -1,0 +1,5 @@
+# HTTPS автоматически (Let's Encrypt). STUDIO_HOST — домен или <ip>.sslip.io
+{$STUDIO_HOST} {
+	encode gzip
+	reverse_proxy studio:8795
+}

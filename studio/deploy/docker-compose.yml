@@ -1,0 +1,39 @@
+# Развёртывание на VPS. Репозиторий nomads-way клонирован в /srv/nomads-way (см. setup.sh).
+services:
+  studio:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - GIT_PUSH=1
+      - GIT_AUTHOR_NAME=Nomads Studio
+      - GIT_AUTHOR_EMAIL=studio@nomads-way.local
+      - GIT_COMMITTER_NAME=Nomads Studio
+      - GIT_COMMITTER_EMAIL=studio@nomads-way.local
+    volumes:
+      - /srv/nomads-way:/repo
+      - studio-data:/data
+      - /root/.ssh:/root/.ssh:ro        # deploy-ключ для git push
+    expose:
+      - "8795"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - STUDIO_HOST=${STUDIO_HOST}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  studio-data:
+  caddy-data:
+  caddy-config:

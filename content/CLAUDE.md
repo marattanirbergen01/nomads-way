@@ -7,6 +7,12 @@
 - Придумывать факты. Каждое `must_know`, каждый `source:` — ссылка на запись в `sources/registry.yaml`.
 - Писать вопрос на факт, которого нет в `covers` сцены. Компилятор это отклонит.
 
+## Студия
+Серии, заведённые в студии (`studio/`), правятся через неё, а не через файлы:
+`node studio/bin/studio.mjs pull s1e02` → правка `studio/work/s1e02/episode.yaml` и `questions.yaml`
+→ `node studio/bin/studio.mjs push s1e02`. Комментарии команды: `studio comments s1e02` — это контекст,
+задание формулирует человек. Кадры: `studio media upload …`. Подробнее — `studio/README.md`.
+
 ## Порядок работы над серией
 1. Убедиться, что нужные факты есть в `curriculum/ent_history.yaml` → `must_know`. Нет — добавить со ссылкой на источник.
 2. Написать сцены в `episodes/<season>/<ep>.yaml`. Сначала kk, потом ru. `en` — позже.
