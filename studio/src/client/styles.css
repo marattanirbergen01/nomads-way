@@ -153,9 +153,9 @@ button.small, .small { font-size: 12px; }
 .when { gap: 8px; }
 .when input { flex: 1; }
 .emotions { display: flex; gap: 4px; }
-.emotion { padding: 2px; border-radius: 8px; background: none; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 1px; width: 44px; }
+.emotion { padding: 2px; border-radius: 8px; background: none; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 1px; width: 60px; }
 .emotion img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; object-position: 50% 15%; filter: grayscale(.6); opacity: .6; }
-.emotion em { font-style: normal; font-size: 9px; color: var(--ink-faint); }
+.emotion em { font-style: normal; font-size: 9.5px; color: var(--ink-faint); white-space: nowrap; }
 .emotion.active { border-color: var(--gold); background: var(--gold-soft); }
 .emotion.active img { filter: none; opacity: 1; }
 .emotion.active em { color: var(--gold-dark); }
@@ -177,18 +177,36 @@ button.small, .small { font-size: 12px; }
 .tab-body { padding: 12px 14px; overflow-y: auto; flex: 1; }
 
 .preview { display: flex; flex-direction: column; gap: 10px; }
-.phone { position: relative; aspect-ratio: 9 / 19; width: 100%; max-width: 300px; margin: 0 auto; background: #22190f; border-radius: 26px; overflow: hidden; border: 6px solid #2a2019; box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+@font-face { font-family: 'Golos'; src: url('/font/golos') format('truetype'); font-weight: 400 900; }
+.phone-box { width: 100%; max-width: 320px; margin: 0 auto; position: relative; }
+.phone { position: absolute; left: 0; top: 0; transform-origin: 0 0; background: #22190f; border-radius: 44px; overflow: hidden; box-shadow: 0 0 0 8px #2a2019, 0 10px 34px rgba(0,0,0,.3); font-family: 'Golos', var(--font); color: #f4ecdf; }
 .phone .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.phone .art.missing { display: flex; align-items: center; justify-content: center; color: #9d8c75; }
-.phone .ornament { position: absolute; top: 14px; left: 14px; right: 14px; height: 2px; background: linear-gradient(90deg, #d9a441 60%, #57472f 60%); }
-.phone .bust { position: absolute; bottom: 24%; height: 55%; max-width: 70%; object-fit: contain; object-position: bottom; }
-.phone .bust.left { left: -4%; } .phone .bust.right { right: -4%; }
-.phone .panel { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 14px 22px; background: linear-gradient(180deg, rgba(42,32,25,0) 0%, rgba(42,32,25,.85) 22%, #2a2019 100%); color: #f4ecdf; min-height: 34%; }
-.phone .speaker { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 12px; margin-bottom: 6px; color: #d9a441; }
-.phone .speaker img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: 50% 15%; }
-.phone .speaker em { font-style: normal; color: #b8a68f; font-weight: 400; }
-.phone .text { font-size: 13px; line-height: 1.4; }
+.phone .art.missing { display: flex; align-items: center; justify-content: center; color: #9d8c75; font-size: 18px; }
+.phone .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,16,16,.6) 0%, rgba(20,16,16,0) 24%, rgba(20,16,16,0) 50%, rgba(34,26,20,.25) 75%); }
+.phone .bust { position: absolute; top: 300px; left: -18px; width: 267px; height: 400px; object-fit: contain; object-position: top center; }
+.phone .bust.right { left: auto; right: -18px; transform: scaleX(-1); }
+.phone .topbar-p { position: absolute; left: 0; right: 0; }
+.phone .tb-row { display: flex; align-items: center; padding: 4px 8px 0; }
+.phone .tb-ic { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 26px; text-shadow: 0 2px 8px rgba(0,0,0,.7); }
+.phone .tb-titles { flex: 1; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,.7); }
+.phone .tb-ep { font-size: 11px; font-weight: 600; letter-spacing: 1.1px; color: rgba(232,217,189,.85); }
+.phone .tb-sc { font-size: 15px; font-weight: 600; }
+.phone .ornament-p { margin-top: 10px; height: 16px; position: relative; background: repeating-linear-gradient(90deg, #57472f 0 20px, transparent 20px 24px) center / 100% 2px no-repeat; }
+.phone .ornament-p div { position: absolute; left: 0; top: 0; bottom: 0; background: repeating-linear-gradient(90deg, #d9a441 0 20px, transparent 20px 24px) center / 100% 2px no-repeat; }
+.phone .panel { position: absolute; left: 0; right: 0; bottom: 0; padding-top: 22px; background: linear-gradient(180deg, rgba(34,26,20,0) 0%, rgba(34,26,20,.55) 12%, rgba(34,26,20,.82) 32%, rgba(34,26,20,.94) 62%, rgba(34,26,20,.98) 100%); }
+.phone .horizon { height: 2px; background: #d9a441; }
+.phone .speaker { display: flex; align-items: center; gap: 10px; padding: 0 20px; }
+.phone .circle { width: 46px; height: 46px; border-radius: 50%; overflow: hidden; background: #362a21; border: 2px solid #d9a441; display: flex; align-items: center; justify-content: center; color: #d9a441; font-weight: 700; font-size: 19px; }
+.phone .circle img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
+.phone .name { background: #d9a441; color: #2a2019; border-radius: 999px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; letter-spacing: .5px; }
+.phone .text { padding: 0 22px; font-size: 19px; font-weight: 500; line-height: 1.45; text-shadow: 0 2px 8px rgba(0,0,0,.7); white-space: pre-wrap; }
 .phone .text[lang=kk] { color: #f4ecdf; }
+.phone .text.narrator { font-style: italic; }
+.phone .text .empty, .phone .text.empty { color: #9d8c75; }
+.phone .controls { display: flex; justify-content: space-between; align-items: center; padding: 22px 20px 0; }
+.phone .back { border: 1px solid #5a4a3b; border-radius: 999px; height: 40px; padding: 0 14px 0 10px; display: flex; align-items: center; font-size: 13px; color: #b8a68f; }
+.phone .next { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; font-size: 15px; font-weight: 600; }
+.phone .next i { width: 118px; height: 2px; background: #57472f; }
 
 .scene-settings { display: flex; flex-direction: column; gap: 6px; }
 .scene-settings label.small { display: flex; flex-direction: column; gap: 3px; color: var(--ink-soft); }

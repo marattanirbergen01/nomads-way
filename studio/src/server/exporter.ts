@@ -31,6 +31,17 @@ function stringifyList(list: any[]) {
   return y.toString({ lineWidth: 0 });
 }
 
+
+// В строчной записи { kk: …, ru: … } строки всегда в двойных кавычках: «?», «:», «,» и кавычки
+// внутри текста иначе ломают строгие парсеры (PyYAML), хотя Dart-компилятор их прощает.
+function quoteFlowStrings(node: any) {
+  const items = YAML.isMap(node) ? node.items.map((p: any) => p.value) : YAML.isSeq(node) ? node.items : [];
+  for (const v of items) {
+    if (YAML.isScalar(v) && typeof v.value === 'string') v.type = 'QUOTE_DOUBLE';
+    else if (YAML.isMap(v) || YAML.isSeq(v)) quoteFlowStrings(v);
+  }
+}
+
 export function episodeToYaml(episodeId: string): { doc: any; text: string } {
   const ep = loadEpisode(episodeId);
   const doc: any = {
@@ -93,9 +104,9 @@ export function episodeToYaml(episodeId: string): { doc: any; text: string } {
   YAML.visit(y, {
     Pair(_, pair: any) {
       const k = pair.key?.value;
-      if (['title', 'name', 'prompt', 'set', 'default_name'].includes(k) && YAML.isMap(pair.value)) pair.value.flow = true;
-      if (['topics', 'covers', 'quiz'].includes(k) && YAML.isSeq(pair.value)) pair.value.flow = true;
-      if (k === 'art_when' && YAML.isSeq(pair.value)) for (const it of pair.value.items as any[]) if (YAML.isMap(it)) it.flow = true;
+      if (['title', 'name', 'prompt', 'set', 'default_name'].includes(k) && YAML.isMap(pair.value)) { pair.value.flow = true; quoteFlowStrings(pair.value); }
+      if (['topics', 'covers', 'quiz'].includes(k) && YAML.isSeq(pair.value)) { pair.value.flow = true; quoteFlowStrings(pair.value); }
+      if (k === 'art_when' && YAML.isSeq(pair.value)) for (const it of pair.value.items as any[]) if (YAML.isMap(it)) { it.flow = true; quoteFlowStrings(it); }
     },
   });
   const notes = ep.scenes.filter((s) => s.note).map((s) => `#   ${s.scene_id}: ${s.note!.replace(/\n/g, ' ')}`);
@@ -113,7 +124,7 @@ export function questionsToYaml(episodeId: string) {
   YAML.visit(y, {
     Pair(_, pair: any) {
       const k = pair.key?.value;
-      if (YAML.isSeq(pair.value) && k === 'options') for (const it of pair.value.items as any[]) if (YAML.isMap(it)) it.flow = true;
+      if (YAML.isSeq(pair.value) && k === 'options') for (const it of pair.value.items as any[]) if (YAML.isMap(it)) { it.flow = true; quoteFlowStrings(it); }
     },
   });
   return `# Вопросы серии ${episodeId}. Формат — docs/CONTENT_FORMAT.md. Создано студией.\n\n` + y.toString({ lineWidth: 0 });

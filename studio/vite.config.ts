@@ -11,6 +11,7 @@ export default defineConfig({
     proxy: {
       '^/api/': 'http://localhost:8795',
       '^/media/': 'http://localhost:8795',
+      '^/font/': 'http://localhost:8795',
       '/ws': { target: 'ws://localhost:8795', ws: true },
     },
   },

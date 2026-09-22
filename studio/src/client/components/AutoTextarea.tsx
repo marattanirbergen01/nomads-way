@@ -14,12 +14,27 @@ interface Props {
 // Textarea, растущая по содержимому. Ctrl/Cmd+Enter — снять фокус (= сохранить).
 export function AutoTextarea({ value, onChange, onFocus, onBlur, placeholder, disabled, lang, rows = 1 }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
+  const fit = () => {
     const el = ref.current;
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 2 + 'px';
-  }, [value]);
+  };
+  useEffect(fit, [value]);
+  // высота зависит и от ширины: при смене ширины окна/колонки пересчитываем
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let w = el.clientWidth;
+    const ro = new ResizeObserver(() => {
+      if (el.clientWidth !== w) {
+        w = el.clientWidth;
+        fit();
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   return (
     <textarea
       ref={ref}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api, mediaUrl } from '../api';
 import { can, useMe } from '../App';
 import type { Beat, Episode, Media, Scene } from '../types';
@@ -40,6 +40,14 @@ export function SidePanel({ ep, scene, media, target, onTarget }: { ep: Episode;
 }
 
 // ---------------------------------------------------------------- превью 9:16
+// Геометрия — один в один с app/lib/features/story/story_screen.dart (_SayView, _TopBar, _Controls):
+// телефон 390×844 логических точек, safe area 47/34; рисуем в этих точках и масштабируем целиком.
+const PHONE_W = 390;
+const PHONE_H = 844;
+const SAFE_TOP = 47;
+const SAFE_BOTTOM = 34;
+const UI = { kk: { back: 'Артқа', next: 'Жалғастыру' }, ru: { back: 'Назад', next: 'Дальше' } };
+
 function Preview({ ep, scene, media, target }: { ep: Episode; scene: Scene; media: Media[]; target: Target | null }) {
   const looks = avatarIdsFor(media);
   const [look, setLook] = useState(looks[0]);
@@ -52,15 +60,30 @@ function Preview({ ep, scene, media, target }: { ep: Episode; scene: Scene; medi
   useEffect(() => {
     if (targetBeat && targetBeat.kind === 'say') setIdx(says.findIndex((b) => b.id === targetBeat.id));
   }, [targetBeat?.id]);
+  const [lang, setLang] = useState<'kk' | 'ru'>('ru');
+  const [scale, setScale] = useState(0.75);
+  const boxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setScale(Math.min(el.clientWidth, 320) / PHONE_W));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const beat: Beat | undefined = says[Math.min(idx, says.length - 1)];
   const ch = beat ? ep.characters.find((c) => c.char_id === beat.who) : undefined;
   const isAvatar = !!ch?.avatar;
-  const artOk = scene.art && media.some((m) => m.id === scene.art && m.hasFile);
+  const isNarrator = beat?.who === 'narrator';
+  const has = (id: string | null | undefined) => !!id && media.some((m) => m.id === id && m.hasFile);
   const emotion = beat?.emotion ?? 'calm';
   const bust = look ? `${look}_${emotion}_bust` : null;
   const showBust = isAvatar && !scene.avatar_in_art && bust;
-  const portrait = ch?.portrait ?? (isAvatar && look ? `${look}_${emotion}` : ch ? `char_${ch.char_id}` : null);
-  const [lang, setLang] = useState<'kk' | 'ru'>('ru');
+  const right = scene.avatar_side === 'right';
+  const portrait = ch?.portrait ?? (ch ? `char_${ch.char_id}` : null);
+  const name = ch ? (lang === 'kk' ? ch.name_kk : ch.name_ru) : beat?.who ?? '';
+  const sceneTitle = lang === 'kk' ? scene.title_kk : scene.title_ru;
+  const progress = says.length ? (Math.min(idx, says.length - 1) + 1) / says.length : 0;
 
   return (
     <div className="preview">
@@ -77,25 +100,69 @@ function Preview({ ep, scene, media, target }: { ep: Episode; scene: Scene; medi
         <span className="muted">{says.length ? `${Math.min(idx, says.length - 1) + 1} / ${says.length}` : '—'}</span>
         <button className="link" disabled={idx >= says.length - 1} onClick={() => setIdx(idx + 1)}>›</button>
       </div>
-      <div className="phone">
-        {artOk ? <img className="art" src={mediaUrl(ep.season_id, scene.art!)} alt="" style={{ objectPosition: `${scene.pan ?? 50}% 50%` }} /> : <div className="art missing">нет кадра</div>}
-        <div className="ornament" />
-        {showBust && <img className={'bust ' + (scene.avatar_side ?? 'left')} src={mediaUrl(ep.season_id, bust!)} alt="" />}
-        <div className="panel">
-          {beat && (
-            <>
-              <div className="speaker">
-                {portrait && media.some((m) => m.id === portrait && m.hasFile) && <img src={mediaUrl(ep.season_id, portrait)} alt="" />}
-                <span>{ch ? (lang === 'kk' ? ch.name_kk : ch.name_ru) : beat.who}</span>
-                {isAvatar && <em className="muted">· {EMOTION_TITLES[emotion]}</em>}
-              </div>
-              <div className="text" lang={lang}>{beat[lang] || <span className="muted">(пусто)</span>}</div>
-            </>
+      <div ref={boxRef} className="phone-box" style={{ height: PHONE_H * scale }}>
+        <div className="phone" style={{ width: PHONE_W, height: PHONE_H, transform: `scale(${scale})` }}>
+          {has(scene.art) ? (
+            <img className="art" src={mediaUrl(ep.season_id, scene.art!)} alt="" style={{ objectPosition: `${scene.pan ?? 50}% 50%` }} />
+          ) : (
+            <div className="art missing">нет кадра</div>
           )}
-          {!beat && <div className="muted">нет реплик</div>}
+          <div className="shade" />
+          {/* _bust — производная от кадра аватара, своей записи в медиа не имеет; нет файла — просто скрываем */}
+          {showBust && (
+            <img key={bust} className={'bust' + (right ? ' right' : '')} src={mediaUrl(ep.season_id, bust!)} alt=""
+              onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          )}
+          <div className="topbar-p" style={{ top: SAFE_TOP }}>
+            <div className="tb-row">
+              <span className="tb-ic">‹</span>
+              <div className="tb-titles">
+                <div className="tb-ep">{(lang === 'kk' ? ep.title_kk : ep.title_ru).toUpperCase()}</div>
+                {sceneTitle && <div className="tb-sc">{sceneTitle}</div>}
+              </div>
+              <span className="tb-ic">≡</span>
+            </div>
+            <div className="ornament-p"><div style={{ width: `${progress * 100}%` }} /></div>
+          </div>
+          <div className="panel" style={{ paddingBottom: 26 + SAFE_BOTTOM }}>
+            {beat ? (
+              <>
+                {!isAvatar && <div className="horizon" />}
+                {!isNarrator && (
+                  <div className="speaker" style={{ transform: isAvatar ? undefined : 'translateY(-18px)' }}>
+                    {!isAvatar && (
+                      <span className="circle">
+                        {has(portrait) ? <img src={mediaUrl(ep.season_id, portrait!)} alt="" /> : (name[0] ?? '·')}
+                      </span>
+                    )}
+                    <span className="name">{name.toUpperCase()}</span>
+                  </div>
+                )}
+                <div
+                  className={'text' + (isNarrator ? ' narrator' : '')}
+                  lang={lang}
+                  style={{ paddingTop: isNarrator ? 0 : isAvatar ? 14 : 0 }}
+                >
+                  {beat[lang] || <span className="empty">(пусто)</span>}
+                </div>
+                <div className="controls">
+                  <span className="back">‹ {UI[lang].back}</span>
+                  <span className="next">
+                    <span>{UI[lang].next} ›</span>
+                    <i />
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="text empty">нет реплик</div>
+            )}
+          </div>
         </div>
       </div>
-      <div className="muted small">Так игрок увидит реплику: кадр сцены, бюст аватара с эмоцией, панель текста. Точная вёрстка — во Flutter.</div>
+      <div className="muted small">
+        Вёрстка как в приложении (iPhone 390×844): панель по высоте текста, кнопки «{UI[lang].back}» и «{UI[lang].next}», бюст аватара с выбранной эмоцией.
+        {isAvatar && scene.avatar_in_art ? ' В этой сцене аватар нарисован в кадре — бюст не показывается.' : ''}
+      </div>
     </div>
   );
 }

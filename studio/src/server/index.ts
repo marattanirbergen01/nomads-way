@@ -26,6 +26,15 @@ app.get('/media/:season/:id', (c) => {
   return c.body(fs.readFileSync(file));
 });
 
+// Шрифт приложения (Golos) — чтобы превью переносило строки так же, как телефон.
+app.get('/font/golos', (c) => {
+  const f = path.join(config.repoDir, 'app/assets/fonts/GolosText.ttf');
+  if (!fs.existsSync(f)) return c.text('нет шрифта', 404);
+  c.header('Content-Type', 'font/ttf');
+  c.header('Cache-Control', 'public, max-age=86400');
+  return c.body(fs.readFileSync(f));
+});
+
 // Собранный фронтенд (dist/), в dev его отдаёт vite.
 const dist = path.join(config.studioRoot, 'dist');
 if (fs.existsSync(dist)) {
