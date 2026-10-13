@@ -19,13 +19,18 @@ class QuizRunner {
   int get index => _i;
   int get total => _qs.length;
   int get correctCount => attempts.where((a) => a.correct).length;
+  /// Ответы по порядку: какой вариант выбран у каждого вопроса — для итогового разбора.
+  final picks = <AnswerOption>[];
+  List<Question> get questions => List.unmodifiable(_qs);
 
   /// Текущий вопрос с перемешанными вариантами. Порядок фиксируется до ответа.
+  /// `shuffle: false` — варианты ссылаются друг на друга («оба ответа верны»), порядок как в файле.
   Presented? current() {
     if (done) return null;
-    _shuffled ??= List.of(_qs[_i].options)..shuffle(_rnd);
+    final q = _qs[_i];
+    _shuffled ??= q.shuffle ? (List.of(q.options)..shuffle(_rnd)) : List.of(q.options);
     _shownAt ??= DateTime.now();
-    return Presented(_qs[_i], _shuffled!);
+    return Presented(q, _shuffled!);
   }
 
   AnswerResult answer(String optionId) {
@@ -34,6 +39,7 @@ class QuizRunner {
     final ms = DateTime.now().difference(_shownAt ?? DateTime.now()).inMilliseconds;
     final a = Attempt(questionId: q.id, fact: q.fact, correct: chosen.correct, ms: ms, at: DateTime.now());
     attempts.add(a);
+    picks.add(chosen);
     _i++;
     _shuffled = null;
     _shownAt = null;

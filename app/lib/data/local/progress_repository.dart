@@ -74,6 +74,11 @@ class ProgressRepository {
     await _p.setString('tests', jsonEncode(l));
   }
 
+  /// Вопросы последних [n] вариантов на банке (пробник и быстрая тренировка).
+  Set<String> recentBankQuestions({int n = 3}) => {
+        for (final t in tests().where((t) => t.kind == 'mock' || t.kind == 'quick').toList().reversed.take(n)) ...t.questions,
+      };
+
   // ---- марапаттар: id → сколько раз получено
   Map<String, int> awards() => {for (final e in (_json('awards') ?? {}).entries) e.key: (e.value as num).toInt()};
   Future<void> grantAward(String id) async {
@@ -131,10 +136,17 @@ class ContinueMeta {
 }
 
 class TestResult {
-  const TestResult({required this.kind, required this.correct, required this.total, required this.at, this.episode});
-  final String kind; // 'final' | 'mock'
+  const TestResult({required this.kind, required this.correct, required this.total, required this.at, this.episode, this.questions = const []});
+  final String kind; // 'final' | 'mock' | 'quick'
   final int correct; final int total; final DateTime at; final String? episode;
-  Map<String, dynamic> toJson() => {'k': kind, 'c': correct, 't': total, 'at': at.toIso8601String(), if (episode != null) 'ep': episode};
-  factory TestResult.fromJson(Map<String, dynamic> j) =>
-      TestResult(kind: j['k'], correct: j['c'], total: j['t'], at: DateTime.parse(j['at']), episode: j['ep']);
+  /// Вопросы варианта — чтобы следующий пробник не повторял их, пока в банке хватает других.
+  final List<String> questions;
+  Map<String, dynamic> toJson() => {
+        'k': kind, 'c': correct, 't': total, 'at': at.toIso8601String(), if (episode != null) 'ep': episode,
+        if (questions.isNotEmpty) 'q': questions,
+      };
+  factory TestResult.fromJson(Map<String, dynamic> j) => TestResult(
+        kind: j['k'], correct: j['c'], total: j['t'], at: DateTime.parse(j['at']), episode: j['ep'],
+        questions: (j['q'] as List?)?.cast<String>() ?? const [],
+      );
 }

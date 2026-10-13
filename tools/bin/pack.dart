@@ -77,11 +77,23 @@ void main(List<String> args) {
     if (files.isNotEmpty) {
       final entry = _writeBundle(outDir, 'common', files);
       common['bundle'] = entry;
-      commonFile.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(common));
       stdout.writeln('common  ${files.length} файлов  ${((entry['bytes'] as int) / 1024 / 1024).toStringAsFixed(1)} МБ  отпечаток ${entry['contentHash']}');
     }
+
+    // ---- банк пробника: вопросы школы + карты к ним, качается один раз на «Жаттығу»
+    final bankDir = Directory(p.join(build.path, 'bank'));
+    if (common['bank'] is Map && File(p.join(bankDir.path, 'bank.json')).existsSync()) {
+      final bf = <String, File>{
+        for (final f in bankDir.listSync(recursive: true).whereType<File>())
+          p.relative(f.path, from: bankDir.path).replaceAll(r'\\', '/'): f,
+      };
+      final entry = _writeBundle(outDir, 'bank', bf);
+      (common['bank'] as Map)['bundle'] = entry;
+      stdout.writeln('bank  ${bf.length} файлов  ${((entry['bytes'] as int) / 1024 / 1024).toStringAsFixed(1)} МБ  отпечаток ${entry['contentHash']}');
+    }
+    commonFile.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(common));
   }
-  stdout.writeln('\nбандлов: $packed + common → ${outDir.path}');
+  stdout.writeln('\nбандлов: $packed + common + bank → ${outDir.path}');
 }
 
 /// Пишет zip из файлов и возвращает описание бандла для каталога.

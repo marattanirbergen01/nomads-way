@@ -18,7 +18,7 @@ class QuestionView extends StatelessWidget {
   Widget build(BuildContext context) {
     final q = presented.question;
     final s = Str.of(locale);
-    const letters = ['A', 'B', 'C', 'D'];
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       children: [

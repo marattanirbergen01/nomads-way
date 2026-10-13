@@ -80,6 +80,7 @@ class CatalogEntry {
 }
 
 
+
 /// Внешность аватара из build/common.json.
 class AvatarLook {
   const AvatarLook({required this.look, required this.id, required this.season, required this.emotions, this.faceY = 0.33, this.aspect = 0.78});
@@ -119,15 +120,31 @@ class CharacterPortrait {
 
 /// Общий для всех серий контент: аватары, портреты персонажей, общий бандл.
 class CommonInfo {
-  const CommonInfo({required this.avatars, this.characters = const [], this.bundle});
+  const CommonInfo({required this.avatars, this.characters = const [], this.bundle, this.bank});
   final List<AvatarLook> avatars;
   final List<CharacterPortrait> characters;
   final Bundle? bundle;
+  /// Банк пробника ЕНТ: сводка и бандл. null — банк не собран.
+  final BankInfo? bank;
   AvatarLook? byLook(int n) => avatars.where((a) => a.look == n).firstOrNull;
   CharacterPortrait? portrait(String id) => characters.where((c) => c.id == id).firstOrNull;
   factory CommonInfo.fromJson(Map<String, dynamic> j) => CommonInfo(
         avatars: [for (final a in (j['avatars'] as List? ?? [])) AvatarLook.fromJson(a)],
         characters: [for (final c in (j['characters'] as List? ?? [])) CharacterPortrait(id: c['id'], season: c['season'])],
+        bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
+        bank: j['bank'] == null ? null : BankInfo.fromJson((j['bank'] as Map).cast<String, dynamic>()),
+      );
+}
+
+/// Сводка банка из common.json: хватает ли вопросов на вариант, где лежит бандл.
+class BankInfo {
+  const BankInfo({required this.singleOk, required this.contextsOk, this.bundle});
+  final int singleOk;
+  final int contextsOk;
+  final Bundle? bundle;
+  factory BankInfo.fromJson(Map<String, dynamic> j) => BankInfo(
+        singleOk: (j['singleOk'] as num?)?.toInt() ?? 0,
+        contextsOk: (j['contextsOk'] as num?)?.toInt() ?? 0,
         bundle: j['bundle'] == null ? null : Bundle.fromJson((j['bundle'] as Map).cast<String, dynamic>()),
       );
 }

@@ -4,6 +4,7 @@ import 'dart:io' show File;
 import 'package:http/http.dart' as http;
 import '../local/episode_store.dart';
 import '../local/progress_repository.dart';
+import '../models/bank.dart';
 import '../models/curriculum.dart';
 import '../models/episode.dart';
 import '../models/question.dart';
@@ -83,6 +84,54 @@ class ContentRepository {
   /// Портрет исторического лица из общего пакета.
   String characterUrl(CharacterPortrait c) => '$baseUrl/media/${c.season}/characters/${c.id}.jpg';
   File? characterFile(CharacterPortrait c) => episodes.fileSync('common', 'media/${c.season}/characters/${c.id}.jpg');
+
+  // ---- банк пробника ЕНТ
+  Bank? _bank;
+  String? _bankHash;
+
+  /// Банк школы. На телефоне — пакет `bank` на диске (качается один раз, дальше офлайн;
+  /// при новом отпечатке обновляется). В браузере — прямо с CDN, без копии в localStorage:
+  /// файл больше лимита хранилища браузера.
+  Future<Bank> bank({void Function(double)? onProgress}) async {
+    final info = (await common()).bank;
+    if (info == null) throw StateError('банк пробника не собран');
+    final hash = info.bundle?.contentHash;
+    if (_bank != null && _bankHash == hash) return _bank!;
+
+    String? text;
+    final b = info.bundle;
+    if (episodes.supported && b != null) {
+      try {
+        final st = await episodes.stateOf('bank', b);
+        if (st == InstallState.absent || st == InstallState.outdated) {
+          try {
+            await episodes.installBundle('bank', b, baseUrl, onProgress: onProgress);
+          } catch (_) {
+            if (st == InstallState.absent) rethrow; // старая копия лучше, чем ничего
+          }
+        }
+        await episodes.warm('bank');
+        text = (await episodes.file('bank', 'bank.json'))?.readAsStringSync();
+      } catch (_) {
+        // файловой системы нет (урезанная сборка, тест) — читаем с CDN; иначе ошибка настоящая
+        if (episodes.supported) rethrow;
+      }
+    }
+    text ??= await _fetchText('bank/bank.json');
+    _bank = Bank.fromJson((jsonDecode(text) as Map).cast<String, dynamic>());
+    _bankHash = hash;
+    return _bank!;
+  }
+
+  /// Картинка банка (карта, схема): `media/x.jpg` внутри пакета `bank`.
+  String bankImageUrl(String rel) => '$baseUrl/bank/$rel';
+  File? bankImageFile(String rel) => episodes.fileSync('bank', rel);
+
+  Future<String> _fetchText(String path) async {
+    final r = await _client.get(Uri.parse('$baseUrl/$path')).timeout(const Duration(seconds: 20));
+    if (r.statusCode != 200) throw Exception('GET $path → ${r.statusCode}');
+    return utf8.decode(r.bodyBytes);
+  }
 
   Future<dynamic> _get(String path) async {
     try {

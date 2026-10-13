@@ -9,7 +9,6 @@ import 'package:yaml/yaml.dart';
 
 final errors = <String>[];
 final warnings = <String>[];
-var enMissing = 0;
 void err(String m) => errors.add(m);
 void warn(String m) => warnings.add(m);
 
@@ -48,6 +47,7 @@ void main(List<String> args) {
 
   var compiled = 0;
   final catalog = <Map<String, Object?>>[];
+  final seriesQids = <String>{};
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
     final id = ep['episode'] as String;
@@ -55,6 +55,7 @@ void main(List<String> args) {
     final qFile = File(p.join(content, 'questions', season, '${id.substring(2)}.yaml')); // s1e01 → e01.yaml
     if (!qFile.existsSync()) { err('$id: нет файла вопросов ${qFile.path}'); continue; }
     final questions = (_yaml(qFile.path) as List).cast<Map>();
+    seriesQids.addAll(questions.map((q) => q['id'] as String));
     final mediaList = (_yaml(p.join(content, 'media', season, 'manifest.yaml')) as List).cast<Map>();
     final media = <String>{for (final m in mediaList) m['id'] as String};
     final portraits = <String>{for (final m in mediaList) if (m['kind'] == 'character' && m['status'] == 'approved') m['id'] as String};
@@ -74,8 +75,11 @@ void main(List<String> args) {
     _print(id, report);
   }
 
+  // ---- банк пробника ЕНТ: вне сюжета, правила серий к нему не применяются
+  final bank = _loadBank(content, sources, seriesQids);
+  if (bank != null) _printBank(bank);
+
   stdout.writeln('');
-  if (enMissing > 0) stdout.writeln('  △ без перевода en: $enMissing строк (пока допустимо)');
   for (final w in warnings) stdout.writeln('  △ $w');
   for (final e in errors) stdout.writeln('  ✗ $e');
   if (errors.isNotEmpty) { stdout.writeln('\n${errors.length} ошибок. Ничего не записано.'); exit(1); }
@@ -116,9 +120,15 @@ void main(List<String> args) {
     final common = _common(content, out);
     if (commonFile.existsSync()) {
       try {
-        final prevBundle = (jsonDecode(commonFile.readAsStringSync()) as Map)['bundle'];
-        if (prevBundle != null) common['bundle'] = prevBundle;
+        final prev = jsonDecode(commonFile.readAsStringSync()) as Map;
+        if (prev['bundle'] != null) common['bundle'] = prev['bundle'];
+        final prevBank = (prev['bank'] as Map?)?['bundle'];
+        if (prevBank != null) (bank?.summary)?['bundle'] = prevBank;
       } catch (_) {}
+    }
+    if (bank != null) {
+      _writeBank(content, out, bank);
+      common['bank'] = bank.summary;
     }
     commonFile.writeAsStringSync(enc.convert(common));
     File(p.join(out, 'curriculum.json')).writeAsStringSync(enc.convert(_flatCurriculum(curriculum)));
@@ -278,7 +288,6 @@ void _needLangs(Map m, String where) {
   for (final l in const ['kk', 'ru']) {
     if ((m[l] as String?)?.trim().isEmpty ?? true) err('$where: нет $l');
   }
-  if ((m['en'] as String?)?.trim().isEmpty ?? true) enMissing++;
 }
 
 // ---------------------------------------------------------------- вывод
@@ -573,6 +582,146 @@ List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
   }
   for (final r in roots) walk(r, null);
   return out;
+}
+
+// ---------------------------------------------------------------- банк пробника ЕНТ
+// content/bank/*.yaml → build/bank/bank.json + build/bank/media/. Формат — CONTENT_FORMAT.md,
+// раздел «content/bank». Банк не привязан к сюжету: fact ↔ covers, ru, explain к нему не применяются.
+
+class _Bank {
+  _Bank(this.contexts, this.questions, this.media, this.summary);
+  final List<Map<String, Object?>> contexts;
+  final List<Map<String, Object?>> questions;
+  final Set<String> media;              // пути от content/bank/: media/x.jpg
+  final Map<String, Object?> summary;   // уходит в common.json → bank
+}
+
+/// Годен для пробника: ответ не под сомнением и картинка на месте.
+bool _bankOk(Map q) => q['check'] != true && q['image_missing'] != true;
+
+_Bank? _loadBank(String content, Set<String> sources, Set<String> seriesQids) {
+  final dir = Directory(p.join(content, 'bank'));
+  if (!dir.existsSync()) return null;
+  final files = dir.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()
+    ..sort((a, b) => a.path.compareTo(b.path));
+  if (files.isEmpty) return null;
+
+  final contexts = <Map<String, Object?>>[];
+  final questions = <Map<String, Object?>>[];
+  final media = <String>{};
+  final ids = <String>{};
+  String? kk(Object? m) => m is Map ? (m['kk'] as String?)?.trim() : null;
+
+  void needImage(String where, Object? img) {
+    if (img == null) return;
+    final rel = img as String;
+    if (!File(p.join(dir.path, rel)).existsSync()) { err('bank $where: нет файла картинки $rel'); return; }
+    media.add(rel);
+  }
+
+  for (final f in files) {
+    final name = p.basename(f.path);
+    final b = _yaml(f.path) as Map;
+    final source = b['source'] as String?;
+    if (source == null || !sources.contains(source)) err('bank $name: неизвестный источник $source');
+
+    final ctx = <String, Map>{};
+    for (final c in (b['contexts'] as List? ?? []).cast<Map>()) {
+      final id = c['id'] as String;
+      if (!ids.add(id)) err('bank $id: повтор id');
+      if (seriesQids.contains(id)) err('bank $id: id совпадает с вопросом серии');
+      ctx[id] = c;
+      final text = kk(c['text']);
+      if ((text == null || text.isEmpty) && c['image'] == null) err('bank $id: у контекста нет ни text, ни image');
+      needImage(id, c['image']);
+      contexts.add({
+        'id': id,
+        if (text != null && text.isNotEmpty) 'text': {'kk': text},
+        if (c['image'] != null) 'image': c['image'],
+        if (kk(c['caption']) case final cap? when cap.isNotEmpty) 'caption': {'kk': cap},
+        'questions': (c['questions'] as List? ?? []).cast<String>(),
+      });
+    }
+
+    final byId = <String, Map>{};
+    for (final q in (b['questions'] as List? ?? []).cast<Map>()) {
+      final id = q['id'] as String;
+      if (!ids.add(id)) err('bank $id: повтор id');
+      if (seriesQids.contains(id)) err('bank $id: id совпадает с вопросом серии');
+      byId[id] = q;
+      final format = q['format'];
+      if (format != 'single' && format != 'context') err('bank $id: format должен быть single|context');
+      if (format == 'context') {
+        final c = ctx[q['context']];
+        if (c == null) {
+          err('bank $id: контекст ${q['context']} не найден');
+        } else if (!(c['questions'] as List? ?? []).contains(id)) {
+          err('bank $id: вопроса нет в questions контекста ${q['context']}');
+        }
+      }
+      if (format == 'single' && q['context'] != null) err('bank $id: у single не должно быть context');
+      if (kk(q['stem'])?.isEmpty ?? true) err('bank $id: пустой stem.kk');
+      final opts = (q['options'] as List? ?? []).cast<Object?>();
+      if (opts.length < 3 || opts.length > 6) err('bank $id: вариантов ${opts.length}, нужно 3–6');
+      for (var i = 0; i < opts.length; i++) {
+        if (kk(opts[i])?.isEmpty ?? true) err('bank $id: пустой вариант $i');
+      }
+      final answer = q['answer'];
+      if (answer is! int || answer < 0 || answer >= opts.length) err('bank $id: answer $answer вне options');
+      needImage(id, q['image']);
+      questions.add({
+        'id': id, 'format': format,
+        if (q['context'] != null) 'context': q['context'],
+        'stem': {'kk': kk(q['stem'])},
+        'options': [for (final o in opts) {'kk': kk(o)}],
+        'answer': answer,
+        if (q['shuffle'] == false) 'shuffle': false,
+        if (q['image'] != null) 'image': q['image'],
+        'topic': q['topic'], 'season': q['season'], 'episode': q['episode'],
+        if (q['check'] == true) 'check': true,
+        if (q['image_missing'] == true) 'image_missing': true,
+      });
+    }
+    // в обратную сторону: каждый id из контекста — существующий context-вопрос этого контекста
+    for (final c in ctx.values) {
+      for (final qid in (c['questions'] as List? ?? []).cast<String>()) {
+        final q = byId[qid];
+        if (q == null) { err('bank ${c['id']}: вопрос $qid не найден'); continue; }
+        if (q['context'] != c['id']) err('bank ${c['id']}: вопрос $qid указывает на контекст ${q['context']}');
+      }
+    }
+  }
+
+  final okIds = {for (final q in questions) if (_bankOk(q)) q['id']};
+  final singleOk = questions.where((q) => q['format'] == 'single' && _bankOk(q)).length;
+  final ctxOk = contexts.where((c) => (c['questions'] as List).where(okIds.contains).length >= 5).length;
+  return _Bank(contexts, questions, media, {
+    'questions': questions.length,
+    'single': questions.where((q) => q['format'] == 'single').length,
+    'context': questions.where((q) => q['format'] == 'context').length,
+    'contexts': contexts.length,
+    'singleOk': singleOk,
+    'contextsOk': ctxOk,
+    'media': media.length,
+  });
+}
+
+void _printBank(_Bank b) {
+  final s = b.summary;
+  stdout.writeln('bank   вопросов ${s['questions']} (${s['single']} single / ${s['context']} context)  '
+      'контекстов ${s['contexts']}  картинок ${s['media']}  '
+      'годны для пробника: single ${s['singleOk']}, контекстов ≥5 вопросов ${s['contextsOk']}');
+}
+
+void _writeBank(String content, String out, _Bank b) {
+  final dir = Directory(p.join(out, 'bank'));
+  if (dir.existsSync()) dir.deleteSync(recursive: true);
+  Directory(p.join(dir.path, 'media')).createSync(recursive: true);
+  for (final rel in b.media) {
+    File(p.join(content, 'bank', rel)).copySync(p.join(dir.path, rel));
+  }
+  // без отступов: файл большой, читается только приложением
+  File(p.join(dir.path, 'bank.json')).writeAsStringSync(jsonEncode({'contexts': b.contexts, 'questions': b.questions}));
 }
 
 // ---------------------------------------------------------------- utils

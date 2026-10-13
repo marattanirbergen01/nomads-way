@@ -41,7 +41,7 @@ class _ReadinessTabState extends State<ReadinessTab> {
     final allFacts = active.expand((t) => t.factIds).toList();
     final total = _s.mastery.topic(allFacts, attempts);
     final have = _s.store.awards();
-    final tests = _s.store.tests().reversed.take(3).toList();
+    final tests = _s.store.tests().where((t) => t.kind != 'quick').toList().reversed.take(3).toList();
     final periodTitle = topics.periods.firstOrNull?.title.of(l) ?? '';
 
     return ListView(padding: EdgeInsets.zero, children: [

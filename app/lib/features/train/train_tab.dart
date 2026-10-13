@@ -5,7 +5,9 @@ import '../../data/models/curriculum.dart';
 import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 import '../path/path_tab.dart' show LoadError;
-import 'mock_test_screen.dart';
+import '../../data/local/progress_repository.dart';
+import '../../engine/mock_composer.dart';
+import 'mock_screen.dart';
 import 'review_screen.dart';
 
 class TrainTab extends StatefulWidget {
@@ -16,9 +18,15 @@ class TrainTab extends StatefulWidget {
 }
 
 class _TrainTabState extends State<TrainTab> {
-  late Future<(List<CatalogEntry>, List<Topic>)> _data = _load();
+  late Future<(List<CatalogEntry>, List<Topic>, BankInfo?)> _data = _load();
   Services get _s => widget.services;
-  Future<(List<CatalogEntry>, List<Topic>)> _load() async => (await _s.content.catalog(), await _s.content.curriculum());
+  Future<(List<CatalogEntry>, List<Topic>, BankInfo?)> _load() async {
+    final catalog = await _s.content.catalog();
+    final curriculum = await _s.content.curriculum();
+    BankInfo? bank;
+    try { bank = (await _s.content.common()).bank; } catch (_) {}
+    return (catalog, curriculum, bank);
+  }
 
   @override
   void initState() { super.initState(); _s.changes.addListener(_r); _s.locale.addListener(_r); }
@@ -32,20 +40,17 @@ class _TrainTabState extends State<TrainTab> {
         builder: (context, snap) {
           if (snap.hasError) return LoadError(services: _s, message: '${snap.error}', onRetry: () => setState(() => _data = _load()));
           if (!snap.hasData) return const Center(child: CircularProgressIndicator(color: C.gold));
-          final (catalog, topics) = snap.data!;
-          return _content(catalog, topics);
+          final (catalog, topics, bankInfo) = snap.data!;
+          return _content(catalog, topics, bankInfo);
         },
       );
 
-  Widget _content(List<CatalogEntry> catalog, List<Topic> topics) {
+  Widget _content(List<CatalogEntry> catalog, List<Topic> topics, BankInfo? bankInfo) {
     final s = _s.s; final l = _s.l;
     final ids = catalog.where((e) => !e.planned).map((e) => e.id).toList();
     final bank = _s.content.cachedQuestions(ids);
     final due = _s.scheduler.due(_s.store.srs(), DateTime.now()).where(bank.map((q) => q.id).toSet().contains).length;
-    final mocks = _s.store.tests().where((t) => t.kind == 'mock').toList();
-    final last = mocks.isEmpty ? null : mocks.last;
     final attempts = _s.store.attempts();
-    final canMock = bank.length >= 10;
 
     return ListView(padding: EdgeInsets.zero, children: [
       SkyHeader(height: 186, sun: true, sunRise: .35, child: Positioned(left: 20, top: MediaQuery.of(context).padding.top + 14, right: 20, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -55,30 +60,9 @@ class _TrainTabState extends State<TrainTab> {
       ]))),
       const HorizonLine(),
       Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        GroundCard(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(s('mock.title'), style: st(18, w: 700)), const SizedBox(height: 5),
-              Text(s('mock.sub'), style: st(13, color: C.inkSoft, height: 1.45)),
-            ])),
-            const SizedBox(width: 12),
-            const Icon(Icons.assignment_outlined, color: C.gold, size: 28),
-          ]),
-          const SizedBox(height: 12),
-          Row(children: [
-            Expanded(child: last == null
-                ? Text(s('mock.none'), style: st(13, color: C.inkSoft))
-                : Text.rich(TextSpan(children: [
-                    TextSpan(text: '${s('mock.last')} ', style: st(13, color: C.inkSoft)),
-                    TextSpan(text: '${last.correct} / ${last.total}', style: st(13, w: 600)),
-                    TextSpan(text: ' · ${ago(last.at, s, DateTime.now())}', style: st(13, color: C.inkSoft)),
-                  ]))),
-            GoldButton(label: s('start'), height: 44, onTap: canMock ? () async {
-              await Navigator.of(context).push(MaterialPageRoute(builder: (_) => MockTestScreen(services: _s, bank: bank)));
-              _s.touch();
-            } : null),
-          ]),
-        ])),
+        _modeCard(MockMode.mock, bankInfo, Icons.assignment_outlined),
+        const SizedBox(height: 12),
+        _modeCard(MockMode.quick, bankInfo, Icons.bolt_rounded),
         const SizedBox(height: 12),
         GroundCard(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -117,5 +101,38 @@ class _TrainTabState extends State<TrainTab> {
         ],
       ])),
     ]);
+  }
+
+  /// Карточка режима на банке школы. «Бастау» активна, если банк собран и вопросов хватает на вариант.
+  Widget _modeCard(MockMode m, BankInfo? info, IconData icon) {
+    final s = _s.s;
+    final mock = m == MockMode.mock;
+    final runs = _s.store.tests().where((t) => t.kind == m.kind).toList();
+    final TestResult? last = runs.isEmpty ? null : runs.last;
+    final can = info != null && info.singleOk >= m.singles && info.contextsOk >= m.contexts;
+    return GroundCard(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(mock ? s('mock.title') : s('quick.title'), style: st(18, w: 700)), const SizedBox(height: 5),
+          Text(mock ? s('mock.sub') : s('quick.sub'), style: st(13, color: C.inkSoft, height: 1.45)),
+        ])),
+        const SizedBox(width: 12),
+        Icon(icon, color: C.gold, size: 28),
+      ]),
+      const SizedBox(height: 12),
+      Row(children: [
+        Expanded(child: last == null
+            ? Text(s('mock.none'), style: st(13, color: C.inkSoft))
+            : Text.rich(TextSpan(children: [
+                TextSpan(text: '${s('mock.last')} ', style: st(13, color: C.inkSoft)),
+                TextSpan(text: '${last.correct} / ${last.total}', style: st(13, w: 600)),
+                TextSpan(text: ' · ${ago(last.at, s, DateTime.now())}', style: st(13, color: C.inkSoft)),
+              ]))),
+        GoldButton(label: s('start'), height: 44, onTap: can ? () async {
+          await Navigator.of(context).push(MaterialPageRoute(builder: (_) => MockScreen(services: _s, mode: m)));
+          _s.touch();
+        } : null),
+      ]),
+    ]));
   }
 }
