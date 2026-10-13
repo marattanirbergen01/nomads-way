@@ -392,30 +392,42 @@ class _Question extends StatelessWidget {
 enum _Mark { none, right, wrong, dim }
 
 class _Option extends StatelessWidget {
-  const _Option({required this.letter, required this.text, this.onTap, this.mark = _Mark.none});
+  const _Option({required this.letter, required this.text, this.onTap, this.mark = _Mark.none, this.tag});
   final String letter; final String text; final VoidCallback? onTap; final _Mark mark;
+  /// Подпись словами под текстом варианта: «Дұрыс жауап» / «Сіздің жауабыңыз» — различимо и без цвета.
+  final String? tag;
   @override
   Widget build(BuildContext context) {
-    final border = switch (mark) { _Mark.right => C.gold, _Mark.wrong => C.ember, _ => Colors.transparent };
+    final tone = switch (mark) { _Mark.right => C.right, _Mark.wrong => C.wrong, _ => null };
+    final fill = tone == null ? C.card : Color.alphaBlend(tone.withValues(alpha: .16), C.card);
     final icon = switch (mark) {
-      _Mark.right => const Icon(Icons.check_circle_rounded, color: C.gold, size: 22),
-      _Mark.wrong => const Icon(Icons.cancel_rounded, color: C.ember, size: 22),
+      _Mark.right => const Icon(Icons.check_circle_rounded, color: C.right, size: 24),
+      _Mark.wrong => const Icon(Icons.cancel_rounded, color: C.wrong, size: 24),
       _ => null,
     };
     return Opacity(
-      opacity: mark == _Mark.dim ? .55 : 1,
+      opacity: mark == _Mark.dim ? .5 : 1,
       child: Material(
-        color: C.card,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: border, width: 1.5)),
+        color: fill,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: tone ?? Colors.transparent, width: 2),
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Row(children: [
-              Text(letter, style: st(15, w: 700, color: C.gold)),
+              Text(letter, style: st(15, w: 700, color: tone ?? C.gold)),
               const SizedBox(width: 14),
-              Expanded(child: Text(text, style: st(16, height: 1.35))),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(text, style: st(16, height: 1.35)),
+                if (tag != null) ...[
+                  const SizedBox(height: 3),
+                  Text(tag!, style: st(12, w: 600, color: tone ?? C.inkSoft)),
+                ],
+              ])),
               if (icon != null) ...[const SizedBox(width: 8), icon],
             ]),
           ),
@@ -438,7 +450,7 @@ class _Feedback extends StatelessWidget {
     return ListView(padding: const EdgeInsets.fromLTRB(24, 16, 24, 24), children: [
       _Head(services: services, variant: variant, index: index),
       const SizedBox(height: 16),
-      Text(ok ? s('correct') : s('wrong'), style: st(26, w: 700, color: ok ? C.gold : C.ember)),
+      Text(ok ? s('correct') : s('wrong'), style: st(26, w: 700, color: ok ? C.right : C.wrong)),
       const SizedBox(height: 10),
       Text(q.stem.of('kk'), style: st(16, w: 600, height: 1.35, color: C.inkSoft)),
       const SizedBox(height: 14),
@@ -446,6 +458,7 @@ class _Feedback extends StatelessWidget {
         _Option(
           letter: _letters[i], text: shown[i].text.of('kk'),
           mark: shown[i].correct ? _Mark.right : shown[i].id == result.chosen.id ? _Mark.wrong : _Mark.dim,
+          tag: shown[i].correct ? s('tag.right') : shown[i].id == result.chosen.id ? s('tag.yours') : null,
         ),
         const SizedBox(height: 10),
       ],
@@ -495,12 +508,12 @@ class _Score extends StatelessWidget {
             const SizedBox(height: 8),
             Text.rich(TextSpan(children: [
               TextSpan(text: '${s('your.answer')} ', style: st(13, color: C.inkSoft)),
-              TextSpan(text: quiz.picks[i].text.of('kk'), style: st(13.5, color: C.ember)),
+              TextSpan(text: quiz.picks[i].text.of('kk'), style: st(13.5, color: C.wrong)),
             ])),
             const SizedBox(height: 3),
             Text.rich(TextSpan(children: [
               TextSpan(text: '${s('right.answer')} ', style: st(13, color: C.inkSoft)),
-              TextSpan(text: quiz.questions[i].correct.text.of('kk'), style: st(13.5, w: 600, color: C.gold)),
+              TextSpan(text: quiz.questions[i].correct.text.of('kk'), style: st(13.5, w: 600, color: C.right)),
             ])),
           ])),
         ),

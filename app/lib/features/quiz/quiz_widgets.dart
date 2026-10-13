@@ -80,12 +80,12 @@ class ExplainView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text(ok ? s('correct') : s('wrong'), style: st(26, w: 700, color: ok ? C.gold : C.ember)),
+        Text(ok ? s('correct') : s('wrong'), style: st(26, w: 700, color: ok ? C.right : C.wrong)),
         const SizedBox(height: 8),
         if (!ok) ...[
           Text(s('right.answer'), style: st(13, color: C.inkSoft)),
           const SizedBox(height: 4),
-          Text(q.correct.text.of(locale), style: st(17, w: 600)),
+          Text(q.correct.text.of(locale), style: st(17, w: 600, color: C.right)),
           const SizedBox(height: 14),
         ],
         Container(

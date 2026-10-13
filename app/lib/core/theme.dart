@@ -17,6 +17,9 @@ abstract final class C {
   static const goldDim = Color(0xFF57472F);  // приглушённый таймер
   static const goldDark = Color(0xFF8E6E1E);
   static const ember = Color(0xFFE08A4C);    // тёплое предупреждение
+  // Верно/неверно в ответах: золото и ember слишком близки — нужны разные тона, не только яркость.
+  static const right = Color(0xFF5DBB78);    // верный ответ
+  static const wrong = Color(0xFFE5584F);    // неверный ответ
   static const locked = Color(0xFF6B7D97);   // закрытые периоды
   static const skyTop = Color(0xFFB9CBD9);   // небо шапок
   static const skyMid = Color(0xFFD9DDD7);
