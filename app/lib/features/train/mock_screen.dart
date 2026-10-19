@@ -19,7 +19,7 @@ import '../readiness/award_screen.dart';
 ///
 /// Вопрос контекста никогда не показывается без своего текста или карты: перед блоком —
 /// сам контекст целиком, на каждом вопросе блока — он же сверху, сворачиваемый.
-/// Вопросы банка только на казахском; объяснений у них нет, после ответа — верно/неверно и правильный вариант.
+/// Вопросы банка — на языке интерфейса, если есть перевод (иначе kk); объяснений у них нет.
 class MockScreen extends StatefulWidget {
   const MockScreen({super.key, required this.services, required this.mode});
   final Services services;
@@ -158,7 +158,8 @@ class _Head extends StatelessWidget {
         const Spacer(),
         Text('${index + 1} / ${variant.questions.length}', style: st(14, w: 600, color: C.inkSoft)),
       ]),
-      if (!services.s.isKk) ...[
+      // перевод банка — черновик и может быть не у всех вопросов: тогда честно говорим, что вопрос на казахском
+      if (!services.s.isKk && !variant.questions[index].stem.has(services.l)) ...[
         const SizedBox(height: 8),
         Text(s('bank.kk.only'), style: st(12, color: C.inkFaint)),
       ],
@@ -214,13 +215,13 @@ class _ContextBody extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     final c = context;
-    final text = c.text == null ? null : Text(c.text!.of('kk'), style: st(16, height: 1.55));
+    final text = c.text == null ? null : Text(c.text!.of(services.l), style: st(16, height: 1.55));
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       if (c.image != null) ...[
         BankImage(services: services, path: c.image!),
         if (c.caption != null) ...[
           const SizedBox(height: 6),
-          Text(c.caption!.of('kk'), style: st(12.5, color: C.inkSoft), textAlign: TextAlign.center),
+          Text(c.caption!.of(services.l), style: st(12.5, color: C.inkSoft), textAlign: TextAlign.center),
         ],
         if (text != null) const SizedBox(height: 12),
       ],
@@ -379,10 +380,10 @@ class _Question extends StatelessWidget {
         BankImage(services: services, path: q.image!),
         const SizedBox(height: 14),
       ],
-      Text(q.stem.of('kk'), style: st(20, w: 600, height: 1.3)),
+      Text(q.stem.of(services.l), style: st(20, w: 600, height: 1.3)),
       const SizedBox(height: 18),
       for (var i = 0; i < presented.options.length; i++) ...[
-        _Option(letter: _letters[i], text: presented.options[i].text.of('kk'), onTap: () => onAnswer(presented.options[i].id)),
+        _Option(letter: _letters[i], text: presented.options[i].text.of(services.l), onTap: () => onAnswer(presented.options[i].id)),
         const SizedBox(height: 10),
       ],
     ]);
@@ -452,11 +453,11 @@ class _Feedback extends StatelessWidget {
       const SizedBox(height: 16),
       Text(ok ? s('correct') : s('wrong'), style: st(26, w: 700, color: ok ? C.right : C.wrong)),
       const SizedBox(height: 10),
-      Text(q.stem.of('kk'), style: st(16, w: 600, height: 1.35, color: C.inkSoft)),
+      Text(q.stem.of(services.l), style: st(16, w: 600, height: 1.35, color: C.inkSoft)),
       const SizedBox(height: 14),
       for (var i = 0; i < shown.length; i++) ...[
         _Option(
-          letter: _letters[i], text: shown[i].text.of('kk'),
+          letter: _letters[i], text: shown[i].text.of(services.l),
           mark: shown[i].correct ? _Mark.right : shown[i].id == result.chosen.id ? _Mark.wrong : _Mark.dim,
           tag: shown[i].correct ? s('tag.right') : shown[i].id == result.chosen.id ? s('tag.yours') : null,
         ),
@@ -504,16 +505,16 @@ class _Score extends StatelessWidget {
               if (variant.blockOf(i) != null) '${s('ctx')} ${variant.blockOf(i)! + 1}',
             ].join(' · '), style: st(12, w: 600, color: C.inkSoft)),
             const SizedBox(height: 6),
-            Text(quiz.questions[i].stem.of('kk'), style: st(15, w: 600, height: 1.35)),
+            Text(quiz.questions[i].stem.of(services.l), style: st(15, w: 600, height: 1.35)),
             const SizedBox(height: 8),
             Text.rich(TextSpan(children: [
               TextSpan(text: '${s('your.answer')} ', style: st(13, color: C.inkSoft)),
-              TextSpan(text: quiz.picks[i].text.of('kk'), style: st(13.5, color: C.wrong)),
+              TextSpan(text: quiz.picks[i].text.of(services.l), style: st(13.5, color: C.wrong)),
             ])),
             const SizedBox(height: 3),
             Text.rich(TextSpan(children: [
               TextSpan(text: '${s('right.answer')} ', style: st(13, color: C.inkSoft)),
-              TextSpan(text: quiz.questions[i].correct.text.of('kk'), style: st(13.5, w: 600, color: C.right)),
+              TextSpan(text: quiz.questions[i].correct.text.of(services.l), style: st(13.5, w: 600, color: C.right)),
             ])),
           ])),
         ),

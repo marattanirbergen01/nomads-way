@@ -9,6 +9,7 @@ import '../../data/models/question.dart';
 import '../../engine/awards.dart';
 import '../../engine/quiz_runner.dart';
 import '../../engine/scheduler.dart';
+import '../../engine/season_vars.dart';
 import '../../engine/story_runner.dart';
 import '../../widgets/art.dart';
 import '../../widgets/avatar.dart';
@@ -51,12 +52,16 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   String get _l => _s.l;
   String get _id => widget.episode.id;
   bool get _locked => _lock.isAnimating;
+  /// Выборы прошлых серий этого сезона — с ними серия начинается (и начинается заново).
+  late final Map<String, int> _entryVars = SeasonVars.entryFor(_id, _s.store.endVars());
 
   @override
   void initState() {
     super.initState();
     final snap = _s.store.storySnapshot(_id, contentHash: widget.contentHash);
-    _story = snap != null ? StoryRunner.restore(widget.episode, snap) : StoryRunner(widget.episode);
+    _story = snap != null
+        ? StoryRunner.restore(widget.episode, snap, entryVars: _entryVars)
+        : StoryRunner(widget.episode, vars: _entryVars);
     if (snap != null) _restoreLines(snap['lines']);
     _lock.addStatusListener((_) => setState(() {}));
     _advance();
@@ -86,6 +91,8 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     }
     if (e is EpisodeEnd && !_finalTest) {
       _finalTest = true;
+      // сюжет дочитан — выборы окончательны; следующая серия сезона начнётся с ними
+      _s.store.saveEndVars(_id, _story.vars);
       _quiz = QuizRunner(QuizRunner.composeFinal(widget.questions,
           single: widget.episode.finalTest.single, context: widget.episode.finalTest.context));
     }
@@ -240,7 +247,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       case MenuAction.saveExit: Navigator.of(context).pop();
       case MenuAction.restart:
         await _s.store.clearStory(_id); await _s.store.clearContinueMeta(_id);
-        setState(() { _story = StoryRunner(widget.episode); _transcript.clear(); _browse = null; _quiz = null; _result = null; _finalTest = false; _chosen = null; });
+        setState(() { _story = StoryRunner(widget.episode, vars: _entryVars); _transcript.clear(); _browse = null; _quiz = null; _result = null; _finalTest = false; _chosen = null; });
         _advance();
       case MenuAction.toggleLang: _s.locale.set(_l == 'kk' ? 'ru' : 'kk'); setState(() {});
       case MenuAction.toggleSound: await _s.store.setSound(!_s.store.sound); setState(() {});

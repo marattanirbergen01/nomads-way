@@ -48,6 +48,8 @@ void main(List<String> args) {
   var compiled = 0;
   final catalog = <Map<String, Object?>>[];
   final seriesQids = <String>{};
+  // переменные сюжета, которые ставят уже прочитанные серии сезона: игрок приносит их с собой
+  final seasonVars = <String, Set<String>>{};
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
     final id = ep['episode'] as String;
@@ -60,7 +62,10 @@ void main(List<String> args) {
     final media = <String>{for (final m in mediaList) m['id'] as String};
     final portraits = <String>{for (final m in mediaList) if (m['kind'] == 'character' && m['status'] == 'approved') m['id'] as String};
 
-    final report = _validateEpisode(ep, questions, facts, sources, media, strict);
+    final inherited = seasonVars.putIfAbsent(season, () => <String>{});
+    final report = _validateEpisode(ep, questions, facts, sources, media, strict, inherited: inherited);
+    inherited.addAll((report['sets'] as Set<String>?) ?? const {});
+    report.remove('sets');
     if (check) { _print(id, report); continue; }
     if (errors.isEmpty) {
       _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(p.join(content, 'media', season, 'out')));
@@ -140,8 +145,9 @@ void main(List<String> args) {
 }
 
 // ---------------------------------------------------------------- валидация
+/// [inherited] — переменные, которые ставят более ранние серии того же сезона (переносятся к игроку).
 Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, Map> facts,
-    Set<String> sources, Set<String> media, bool strict) {
+    Set<String> sources, Set<String> media, bool strict, {Set<String> inherited = const {}}) {
   final id = ep['episode'] as String;
   final scenes = (ep['scenes'] as List).cast<Map>();
   final sceneIds = {for (final s in scenes) s['id'] as String};
@@ -149,13 +155,14 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
   final qById = {for (final q in questions) q['id'] as String: q};
   final reachable = <String>{scenes.first['id']};
   final usedQ = <String>{};
-  final knownVars = <String>{
+  final ownVars = <String>{
     for (final s in scenes)
       for (final b in (s['beats'] as List).cast<Map>())
         if (b['choice'] != null)
           for (final o in (b['choice']['options'] as List).cast<Map>())
             ...((o['set'] as Map?)?.keys.cast<String>() ?? const <String>[]),
   };
+  final knownVars = {...ownVars, ...inherited};
   final covered = <String>{};
   var beats = 0, choices = 0;
 
@@ -281,6 +288,7 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
     'context': questions.where((q) => q['format'] == 'context').length,
     'facts_covered': covered.length,
     'approved_by': ep['approved_by'],
+    'sets': ownVars,
   };
 }
 
@@ -602,9 +610,43 @@ bool _bankOk(Map q) => q['check'] != true && q['image_missing'] != true;
 _Bank? _loadBank(String content, Set<String> sources, Set<String> seriesQids) {
   final dir = Directory(p.join(content, 'bank'));
   if (!dir.existsSync()) return null;
-  final files = dir.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()
+  final all = dir.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()
     ..sort((a, b) => a.path.compareTo(b.path));
+  // Файл с `lang:` — не банк, а перевод к нему (school_tests_ru.yaml): те же id, только тексты.
+  final files = <File>[];
+  final tr = <String, Map<String, Map>>{}; // lang → id → запись перевода
+  for (final f in all) {
+    final y = _yaml(f.path) as Map;
+    final lang = y['lang'] as String?;
+    if (lang == null) { files.add(f); continue; }
+    final m = tr.putIfAbsent(lang, () => {});
+    for (final e in [...(y['contexts'] as List? ?? []), ...(y['questions'] as List? ?? [])].cast<Map>()) {
+      m[e['id'] as String] = e;
+    }
+  }
   if (files.isEmpty) return null;
+  /// kk из банка + переводы по id: {kk, ru}. Нет перевода — ошибка (если перевод на этот язык вообще есть).
+  Map<String, String> l10n(String id, String field, String kkText, {int? option}) {
+    final out = {'kk': kkText};
+    for (final e in tr.entries) {
+      final rec = e.value[id];
+      if (rec == null) continue; // отсутствие записи целиком проверяется отдельно
+      final node = option == null ? rec[field] : ((rec[field] as List?)?.elementAtOrNull(option));
+      final t = node is Map ? (node[e.key] as String?)?.trim() : null;
+      if (t == null || t.isEmpty) { err('bank $id: нет перевода ${e.key} для $field${option == null ? '' : '[$option]'}'); continue; }
+      out[e.key] = t;
+    }
+    return out;
+  }
+  void needTranslation(String id, {int? options}) {
+    for (final e in tr.entries) {
+      final rec = e.value[id];
+      if (rec == null) { err('bank $id: нет перевода ${e.key}'); continue; }
+      if (options != null && (rec['options'] as List? ?? []).length != options) {
+        err('bank $id: в переводе ${e.key} вариантов ${(rec['options'] as List? ?? []).length}, в оригинале $options');
+      }
+    }
+  }
 
   final contexts = <Map<String, Object?>>[];
   final questions = <Map<String, Object?>>[];
@@ -634,11 +676,12 @@ _Bank? _loadBank(String content, Set<String> sources, Set<String> seriesQids) {
       final text = kk(c['text']);
       if ((text == null || text.isEmpty) && c['image'] == null) err('bank $id: у контекста нет ни text, ни image');
       needImage(id, c['image']);
+      needTranslation(id);
       contexts.add({
         'id': id,
-        if (text != null && text.isNotEmpty) 'text': {'kk': text},
+        if (text != null && text.isNotEmpty) 'text': l10n(id, 'text', text),
         if (c['image'] != null) 'image': c['image'],
-        if (kk(c['caption']) case final cap? when cap.isNotEmpty) 'caption': {'kk': cap},
+        if (kk(c['caption']) case final cap? when cap.isNotEmpty) 'caption': l10n(id, 'caption', cap),
         'questions': (c['questions'] as List? ?? []).cast<String>(),
       });
     }
@@ -669,11 +712,12 @@ _Bank? _loadBank(String content, Set<String> sources, Set<String> seriesQids) {
       final answer = q['answer'];
       if (answer is! int || answer < 0 || answer >= opts.length) err('bank $id: answer $answer вне options');
       needImage(id, q['image']);
+      needTranslation(id, options: opts.length);
       questions.add({
         'id': id, 'format': format,
         if (q['context'] != null) 'context': q['context'],
-        'stem': {'kk': kk(q['stem'])},
-        'options': [for (final o in opts) {'kk': kk(o)}],
+        'stem': l10n(id, 'stem', kk(q['stem']) ?? ''),
+        'options': [for (var i = 0; i < opts.length; i++) l10n(id, 'options', kk(opts[i]) ?? '', option: i)],
         'answer': answer,
         if (q['shuffle'] == false) 'shuffle': false,
         if (q['image'] != null) 'image': q['image'],
@@ -695,7 +739,13 @@ _Bank? _loadBank(String content, Set<String> sources, Set<String> seriesQids) {
   final okIds = {for (final q in questions) if (_bankOk(q)) q['id']};
   final singleOk = questions.where((q) => q['format'] == 'single' && _bankOk(q)).length;
   final ctxOk = contexts.where((c) => (c['questions'] as List).where(okIds.contains).length >= 5).length;
+  // перевод на id, которого нет в банке, — скорее всего опечатка или устаревшая запись
+  final bankIds = {for (final c in contexts) c['id'], for (final q in questions) q['id']};
+  for (final e in tr.entries) {
+    for (final id in e.value.keys) { if (!bankIds.contains(id)) warn('bank перевод ${e.key}: $id нет в банке'); }
+  }
   return _Bank(contexts, questions, media, {
+    'langs': ['kk', ...tr.keys],
     'questions': questions.length,
     'single': questions.where((q) => q['format'] == 'single').length,
     'context': questions.where((q) => q['format'] == 'context').length,

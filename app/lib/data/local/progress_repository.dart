@@ -24,6 +24,17 @@ class ProgressRepository {
       _p.setString('story:$ep', jsonEncode({...snap, if (contentHash != null) 'hash': contentHash}));
   Future<void> clearStory(String ep) => _p.remove('story:$ep');
 
+  // ---- переменные сюжета на конце серии: следующая серия сезона стартует с ними
+  Map<String, Map<String, int>> endVars() => {
+        for (final e in (_json('vars.end') ?? {}).entries)
+          e.key: {for (final v in (e.value as Map).entries) v.key as String: (v.value as num).toInt()},
+      };
+  Future<void> saveEndVars(String ep, Map<String, int> vars) async {
+    final j = _json('vars.end') ?? {};
+    j[ep] = vars;
+    await _p.setString('vars.end', jsonEncode(j));
+  }
+
   // ---- результат серии
   EpisodeResult? result(String ep) {
     final j = _json('done:$ep');

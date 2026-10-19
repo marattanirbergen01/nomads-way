@@ -71,9 +71,10 @@ class StoryRunner {
 
   /// Восстановление терпимо к изменившемуся сценарию: если сцены больше нет
   /// или бит вне диапазона, начинаем серию заново вместо падения.
-  factory StoryRunner.restore(Episode ep, Map<String, dynamic> s) {
+  /// [entryVars] — с чем серия начинается заново, если снимок не подошёл (перенос из прошлой серии сезона).
+  factory StoryRunner.restore(Episode ep, Map<String, dynamic> s, {Map<String, int>? entryVars}) {
     final idx = ep.indexOf(s['scene'] as String? ?? '');
-    if (idx < 0) return StoryRunner(ep);
+    if (idx < 0) return StoryRunner(ep, vars: entryVars);
     final r = StoryRunner(ep, vars: (s['vars'] as Map).cast<String, int>());
     r._sceneIdx = idx;
     r._beatIdx = (s['beat'] as int? ?? 0).clamp(0, ep.scenes[idx].beats.length);

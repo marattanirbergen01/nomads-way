@@ -72,10 +72,12 @@ void main() {
     // ---- период: одна живая серия, остальные закрытые (сколько их — по каталогу)
     final s1 = [for (final e in jsonDecode(File('../build/catalog.json').readAsStringSync()) as List) if ((e as Map)['season'] == 's1') e];
     final closed = s1.where((e) => e['planned'] == true).toList();
+    // название живой серии тоже из каталога: контент её переименовывает
+    final live = (s1.firstWhere((e) => e['planned'] != true)['title'] as Map)['kk'] as String;
     await tester.tap(find.text('0 / ${s1.length}'));
     await _settle(tester);
     expect(find.text('Кезең тесті'), findsOneWidget);
-    expect(find.textContaining('Шу бойында'), findsWidgets);
+    expect(find.textContaining(live), findsWidgets);
     final next = closed.first;
     expect(find.text('${next['number']} · ${(next['title'] as Map)['kk']}'), findsOneWidget);
     expect(find.byIcon(Icons.lock_outline_rounded), findsWidgets, reason: 'замки на закрытых сериях');
@@ -85,10 +87,10 @@ void main() {
     expect(find.text('Кезең тесті'), findsOneWidget, reason: 'остались на периоде');
 
     // ---- заставка серии, затем сюжет (в тесте установка недоступна → поток)
-    await tester.tap(find.textContaining('Шу бойында').first);
+    await tester.tap(find.textContaining(live).first);
     await _settle(tester, 6);
     expect(find.text("NOMAD'S WAY"), findsOneWidget, reason: 'заставка серии');
-    expect(find.text('1 · Шу бойында'), findsOneWidget);
+    expect(find.text('1 · $live'), findsOneWidget);
     expect(find.textContaining('Жүктеу'), findsOneWidget, reason: 'серия ещё не скачана');
     await tester.tap(find.textContaining('Жүктеу'));
     await _settle(tester, 12);
@@ -193,7 +195,7 @@ void main() {
     expect(find.textContaining('жалғастыру'), findsWidgets);
 
     // ---- снова в серию: позиция та же, а «Артқа» перечитывает прочитанное ДО выхода
-    await tester.tap(find.textContaining('Шу бойында').first);
+    await tester.tap(find.textContaining(live).first);
     await _settle(tester, 6);
     await tester.tap(find.textContaining('Жалғастыру').first);
     await _settle(tester, 12);
