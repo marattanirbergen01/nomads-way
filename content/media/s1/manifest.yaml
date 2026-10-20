@@ -471,12 +471,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2711256425. Людей нет: слова про воинов убраны из блока стиля. Чалма Шайбани на песке вместо чёрной шапки на седле (портрет Бехзада).'
 - id: art_s1e02_120
   kind: scene
-  status: missing
+  status: approved
   brief: 'Рассвет, степная дорога. Постаревший хан с небольшим караваном уезжает на юг. У дороги султан с почётным отрядом прощается с ним.'
-  seed: null
+  seed: 3909329632
   prompt_ref: prompts/scenes/art_s1e02_120.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_120.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 3909329632, третья проба: караван идёт ОТ зрителя, Касым верхом справа, почётный отряд у обочины. Лицо Касыма видно слабо (вполоборота).'
 - id: art_s1e02_130
   kind: scene
   status: missing
