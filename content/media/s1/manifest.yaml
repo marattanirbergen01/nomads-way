@@ -642,12 +642,14 @@
   note: 'Личный слой. То же пепелище, что 090: img2img от утверждённого 090.'
 - id: char_temir
   kind: character
-  status: missing
+  status: approved
   brief: 'Темир, стражник ворот Сыгнака (вымысел).'
-  seed: null
+  seed: 3469557424
   prompt_ref: prompts/characters/char_temir.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_temir.png
+  generated: '2026-10-20'
+  note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Историку не нужен (fiction).'
 - id: char_beket
   kind: character
   status: missing
