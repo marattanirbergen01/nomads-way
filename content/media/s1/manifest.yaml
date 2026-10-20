@@ -391,12 +391,14 @@
   file: null
 - id: art_s1e02_030
   kind: scene
-  status: missing
+  status: approved
   brief: 'Рассвет, стан казахского войска. Широкоплечий султан с проседью в бороде срывает повязку с правой руки. Рядом молодой султан чертит на земле карту. Вдали гонец почти падает с коня.'
-  seed: null
+  seed: 1203705194
   prompt_ref: prompts/scenes/art_s1e02_030.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_030.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 1203705194, промпт переписан по правкам Марата (рана и лоскут, план на земле, без дыма, канон лица Бурундука). Шапка Бурундука — цилиндр без лопастей, рана на предплечье не видна — принято.'
 - id: art_s1e02_040
   kind: scene
   status: missing
