@@ -500,12 +500,14 @@
   note: 'Канон молодого Касыма, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Без визы историка в сборку не идёт.'
 - id: char_qasym_khan
   kind: character
-  status: missing
-  brief: 'Касым после 1500 г. (sc070–sc130, e03). Тот же канон, седина.'
-  seed: null
+  status: approved
+  brief: 'Касым после 1500 г. (sc070–sc130, e03). Тот же канон, что char_qasym, на тридцать лет старше.'
+  seed: 2819017190
   prompt_ref: prompts/characters/char_qasym_khan.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_qasym_khan.png
+  generated: '2026-10-20'
+  note: 'Зрелый Касым, портрет для кружка. txt2img 896×1152, steps 4, тот же seed, что у молодого (img2img от молодого strength 1.0 вернул тот же кадр — не использован). Без визы историка в сборку не идёт.'
 - id: char_shaibani
   kind: character
   status: missing

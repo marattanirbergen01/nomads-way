@@ -289,3 +289,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: char_qasym_khan
+  file: content/media/s1/characters/char_qasym_khan.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_qasym_khan.md; txt2img, seed 2819017190, steps 4. Достоверных портретов не существует, канон назначен; иконография — по распространённому образу (шлем со шпилем, волчий мех), конкретное произведение не копируется.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
