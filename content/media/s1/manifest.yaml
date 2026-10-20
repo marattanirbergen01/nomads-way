@@ -451,12 +451,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 436456824. Сожжённые юрты с оголёнными жердями (войлок сорван) — как в утверждённой art_s1e01_010; рядом воины и лошадь. Опора для 095: img2img от этого кадра на том же seed.'
 - id: art_s1e02_100
   kind: scene
-  status: missing
+  status: approved
   brief: 'Зимняя степь, туман. Слева тяжёлая конница Шайбани, справа всадники Касыма, их крылья охватывают врага. Знамя Шайбани падает.'
-  seed: null
+  seed: 2303100311
   prompt_ref: prompts/scenes/art_s1e02_100.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_100.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2303100311. Знамя ещё стоит (не падает), крылья казахов не замкнуты, белой обмотки на шлемах не видно — принято Маратом.'
 - id: art_s1e02_110
   kind: scene
   status: missing
