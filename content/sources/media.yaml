@@ -457,3 +457,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: art_s1e02_045
+  file: content/media/s1/scenes/art_s1e02_045.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_045.md; txt2img, seed 3938303444, steps 4, 768×1344. Персонажи по каноническим портретам char_esaul, char_temir, char_seiit, char_dana.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
