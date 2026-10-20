@@ -672,9 +672,11 @@
   note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. На меховой шапке торчат ушки — в описании не было, оставлено. Историку не нужен (fiction).'
 - id: char_rider
   kind: character
-  status: missing
+  status: approved
   brief: 'Человек Шайбани (вымысел): шлем с белой обмоткой.'
-  seed: null
+  seed: 1773202579
   prompt_ref: prompts/characters/char_rider.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_rider.png
+  generated: '2026-10-20'
+  note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Нагрудник похож на пластинчатый, лицо скорее европейское — в кадрах сцен держать кольчугу и белую обмотку шлема. Историку не нужен (fiction).'
