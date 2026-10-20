@@ -520,12 +520,14 @@
   note: 'Канон Шайбани, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Лицо менее круглое, чем на миниатюре. Без визы историка в сборку не идёт.'
 - id: char_mahmud
   kind: character
-  status: missing
+  status: approved
   brief: 'Махмуд-султан, брат Шайбани, пленник. Изображений нет — «из той же семьи».'
-  seed: null
+  seed: 1358360923
   prompt_ref: prompts/characters/char_mahmud.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_mahmud.png
+  generated: '2026-10-20'
+  note: 'Канон Махмуда, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Пятна пыли на лице похожи на оспины — на заметку. Без визы историка в сборку не идёт.'
 - id: char_ruzbihan
   kind: character
   status: missing
