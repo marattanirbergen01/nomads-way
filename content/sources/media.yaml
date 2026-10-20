@@ -465,3 +465,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: art_s1e02_095
+  file: content/media/s1/scenes/art_s1e02_095.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_095.md; txt2img, seed 1155894005, steps 4, 768×1344. Персонажи по каноническим портретам char_dana и char_beket (взрослый).'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null

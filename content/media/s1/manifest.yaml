@@ -655,13 +655,15 @@
 
 - id: art_s1e02_095
   kind: scene
-  status: missing
+  status: approved
   brief: '1509, под Улытау, на пепелище собираются всадники. Немолодая Дана протягивает аватару лук. Рядом — рослый взрослый воин (Бекет) или незнакомые парни.'
-  seed: null
+  seed: 1155894005
   prompt_ref: prompts/scenes/art_s1e02_095.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. То же пепелище, что 090: img2img от утверждённого 090.'
+  approved_by: Marat
+  file: scenes/art_s1e02_095.png
+  generated: '2026-10-20'
+  note: 'Личный слой. ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 1155894005, четвёртая проба (img2img от 090 тянул его композицию; целая юрта шла из общего блока про юрты — абзац убран). Дана с луком в центре, Бекет справа, слева место под бюст. Бекет стоит впритык к другому воину — принято.'
+
 - id: char_temir
   kind: character
   status: approved
