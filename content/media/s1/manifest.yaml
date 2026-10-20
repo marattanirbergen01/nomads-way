@@ -411,12 +411,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 908502268; промпт исправлен после первой пробы (девушка висела в небе). На башне две фигуры вместо одной — принято Маратом («норм»), при желании убрать вторую в Gemini.'
 - id: art_s1e02_050
   kind: scene
-  status: missing
+  status: approved
   brief: 'Вечер, на стене Сыгнака. Заходящее солнце. Раненый широкоплечий хан и молодой султан стоят рядом и смотрят на Сырдарью.'
-  seed: null
+  seed: 2109901126
   prompt_ref: prompts/scenes/art_s1e02_050.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_050.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2109901126, вторая проба: Дана третьей фигурой, глинобитная стена, плоскокрышие дома. Шапка Бурундука выше и уже, чем на портрете — принято.'
 - id: art_s1e02_070
   kind: scene
   status: missing
