@@ -297,3 +297,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: char_shaibani
+  file: content/media/s1/characters/char_shaibani.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_shaibani.md; txt2img, seed 141028886, steps 4. Иконография (белая чалма с красным верхом, голубой халат с золотыми пуговицами) — по миниатюре, приписываемой Бехзаду (Metropolitan Museum, ~1507, общественное достояние); картина не копируется, лицо назначено.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null

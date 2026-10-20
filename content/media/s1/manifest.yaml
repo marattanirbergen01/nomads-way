@@ -510,12 +510,14 @@
   note: 'Зрелый Касым, портрет для кружка. txt2img 896×1152, steps 4, тот же seed, что у молодого (img2img от молодого strength 1.0 вернул тот же кадр — не использован). Без визы историка в сборку не идёт.'
 - id: char_shaibani
   kind: character
-  status: missing
+  status: approved
   brief: 'Мухаммед Шайбани около 25. Образ — миниатюра Бехзада (Met): белая чалма с красным верхом, голубой халат с золотыми пуговицами.'
-  seed: null
+  seed: 141028886
   prompt_ref: prompts/characters/char_shaibani.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_shaibani.png
+  generated: '2026-10-20'
+  note: 'Канон Шайбани, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Лицо менее круглое, чем на миниатюре. Без визы историка в сборку не идёт.'
 - id: char_mahmud
   kind: character
   status: missing
