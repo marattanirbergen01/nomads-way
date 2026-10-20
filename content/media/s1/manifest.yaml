@@ -461,12 +461,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2303100311. Знамя ещё стоит (не падает), крылья казахов не замкнуты, белой обмотки на шлемах не видно — принято Маратом.'
 - id: art_s1e02_110
   kind: scene
-  status: missing
+  status: approved
   brief: 'Пустыня, горячий ветер, пыль. Из пыли выходит конь без всадника, на седле чёрная шапка.'
-  seed: null
+  seed: 2711256425
   prompt_ref: prompts/scenes/art_s1e02_110.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_110.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2711256425. Людей нет: слова про воинов убраны из блока стиля. Чалма Шайбани на песке вместо чёрной шапки на седле (портрет Бехзада).'
 - id: art_s1e02_120
   kind: scene
   status: missing
