@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import '../../core/l10n.dart';
 import '../../core/services.dart';
 import '../../core/theme.dart';
@@ -69,7 +71,57 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   }
 
   @override
-  void dispose() { _lock.dispose(); super.dispose(); }
+  void dispose() { _lock.dispose(); _motion?.dispose(); super.dispose(); }
+
+  // ---------------------------------------------------------------- анимированные карты
+  // Ролик кадра играет один раз за заход в серию и замирает на последнем кадре (постер — тот же кадр PNG).
+  // Реплики идут поверх как обычно. При перечитывании (Артқа) и повторном входе в сцену — только постер.
+  final _motionPlayed = <String>{};
+  VideoPlayerController? _motion;
+  String? _motionArt;
+  bool _motionPlaying = false;
+
+  Widget _sceneArt(String art, int pan, {bool browsing = false}) {
+    final lang = widget.episode.motionLang(art, _l);
+    if (lang == null) return _Art(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), pan: pan);
+    if (!browsing && _motionPlayed.add(art)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startMotion(art, lang));
+    }
+    final poster = '${art}_$lang.png';
+    return _MotionArt(
+      posterUrl: _s.content.mediaNamedUrl(_id, poster), posterFile: _s.content.mediaNamedFile(_id, poster),
+      video: _motionArt == art && _motionPlaying ? _motion : null,
+    );
+  }
+
+  Future<void> _startMotion(String art, String lang) async {
+    final old = _motion;
+    _motion = null; _motionPlaying = false;
+    old?.dispose();
+    final name = '${art}_$lang.mp4';
+    final file = kIsWeb ? null : _s.content.mediaNamedFile(_id, name);
+    final v = file != null
+        ? VideoPlayerController.file(file)
+        : VideoPlayerController.networkUrl(Uri.parse(_s.content.mediaNamedUrl(_id, name)));
+    _motion = v; _motionArt = art;
+    try {
+      await v.initialize().timeout(const Duration(seconds: 6));
+      if (!mounted || _motion != v) return;
+      await v.setVolume(0);
+      v.addListener(() {
+        final x = v.value;
+        if (_motionPlaying && x.isInitialized && x.duration > Duration.zero && x.position >= x.duration - const Duration(milliseconds: 50)) {
+          // доиграл: остаётся постер — тот же последний кадр, без шва
+          if (mounted) setState(() => _motionPlaying = false);
+        }
+      });
+      await v.play();
+      if (mounted && _motion == v) setState(() => _motionPlaying = true);
+    } catch (_) {
+      // нет сети, слабое устройство — просто постер
+      if (mounted && _motion == v) setState(() => _motionPlaying = false);
+    }
+  }
 
   // ---------------------------------------------------------------- сюжет
   void _advance() {
@@ -114,6 +166,12 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     ImageProvider? provider(int k) {
       if (k < 0 || k >= scenes.length) return null;
       final art = scenes[k].artFor(_story.vars);
+      final lang = widget.episode.motionLang(art, _l);
+      if (lang != null) {
+        // анимированная карта: заранее нужен её постер, а не старая картинка
+        final poster = '${art}_$lang.png';
+        return Art.provider(url: _s.content.mediaNamedUrl(_id, poster), file: _s.content.mediaNamedFile(_id, poster), logicalWidth: w, dpr: dpr);
+      }
       return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: w, dpr: dpr);
     }
     final next = provider(i + 1);
@@ -363,6 +421,26 @@ class _Art extends StatelessWidget {
   Widget build(BuildContext context) => Art(url: url, file: file, pan: pan, alignment: alignment, fit: BoxFit.cover, width: double.infinity, height: double.infinity, logicalWidth: MediaQuery.sizeOf(context).width);
 }
 
+/// Анимированная карта: постер (последний кадр) вписан целиком, поверх — ролик, пока играет.
+/// Целиком, а не «обрезать по экрану»: подписи у краёв карты не должны пропадать; поля — цвета фона
+/// плеера, края кадра карт нарисованы в тот же цвет.
+class _MotionArt extends StatelessWidget {
+  const _MotionArt({required this.posterUrl, this.posterFile, this.video});
+  final String posterUrl; final File? posterFile; final VideoPlayerController? video;
+  static const _ground = Color(0xFF2A2019);
+  @override
+  Widget build(BuildContext context) {
+    final v = video;
+    return Stack(fit: StackFit.expand, children: [
+      const ColoredBox(color: _ground),
+      Art(url: posterUrl, file: posterFile, fit: BoxFit.contain, width: double.infinity, height: double.infinity,
+          logicalWidth: MediaQuery.sizeOf(context).width, fallback: const ColoredBox(color: _ground)),
+      if (v != null && v.value.isInitialized)
+        FittedBox(fit: BoxFit.contain, child: SizedBox(width: v.value.size.width, height: v.value.size.height, child: VideoPlayer(v))),
+    ]);
+  }
+}
+
 class _TopBar extends StatelessWidget {
   const _TopBar(this.st_, this.scene, {this.progress});
   final _StoryScreenState st_; final Scene scene; final double? progress;
@@ -460,7 +538,10 @@ class _SayView extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: st_._tapForward,
       child: Stack(fit: StackFit.expand, children: [
-        _Art(url: st_._s.content.mediaUrl(st_._id, artOverride ?? scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, artOverride ?? scene.artFor(st_._story.vars)), pan: scene.pan),
+        if (artOverride != null)
+          _Art(url: st_._s.content.mediaUrl(st_._id, artOverride!), file: st_._s.content.mediaFile(st_._id, artOverride!), pan: scene.pan)
+        else
+          st_._sceneArt(scene.artFor(st_._story.vars), scene.pan, browsing: browsing),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x40221A14)], stops: [0, .24, .5, .75]))),
         if (avatar)
@@ -555,7 +636,7 @@ class _ChoiceView extends StatelessWidget {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      _Art(url: st_._s.content.mediaUrl(st_._id, scene.artFor(st_._story.vars)), file: st_._s.content.mediaFile(st_._id, scene.artFor(st_._story.vars)), pan: scene.pan),
+      st_._sceneArt(scene.artFor(st_._story.vars), scene.pan),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x66221A14)], stops: [0, .24, .5, .8]))),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(

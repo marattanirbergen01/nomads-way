@@ -46,6 +46,12 @@ void main(List<String> args) {
       if (f.existsSync()) { files['media/$m.$e'] = f; } else { missing++; }
     }
 
+    // ролики карт и их постеры (имена готовые, из manifest.motionFiles)
+    for (final name in ((manifest['motionFiles'] as List?) ?? const []).cast<String>()) {
+      final f = File(p.join(build.path, 'media', season, name));
+      if (f.existsSync()) { files['media/$name'] = f; } else { missing++; }
+    }
+
     final b = _writeBundle(outDir, id, files);
     entry['bundle'] = b;
     packed++;

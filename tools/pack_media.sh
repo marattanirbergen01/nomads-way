@@ -5,6 +5,7 @@
 #   scenes/<id>.png|jpg        → out/<id>.jpg               до 1920 по длинной стороне
 #   backgrounds/<id>.*         → out/<id>.jpg               до 1600
 #   maps/<id>.png              → out/<id>.png               без сжатия: подписи на карте
+#   maps/<id>_<lang>.mp4/.png  → out/ как есть             анимированная карта + постер (последний кадр)
 #   avatars/<id>_bust.png      → out/avatars/<id>_bust.png  PNG с альфой, до 960
 #   avatars/<id>.png           → out/avatars/<id>.jpg       портрет для кружка, до 512
 #   characters/<id>.png        → out/characters/<id>.jpg    портрет исторического лица, до 512
@@ -48,7 +49,8 @@ for season in content/media/s*/; do
     [ -e "$f" ] || continue
     jpg "$f" "$out/$(basename "${f%.*}").jpg" 1600 82
   done
-  for f in "$season"/maps/*.png; do
+  for f in "$season"/maps/*.png "$season"/maps/*.mp4; do
+    # карты — как есть: png без сжатия, ролики уже сжаты (<id>_<lang>.mp4 + постер <id>_<lang>.png)
     [ -e "$f" ] || continue
     copy "$f" "$out/$(basename "$f")"
   done

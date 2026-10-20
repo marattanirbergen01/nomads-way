@@ -81,6 +81,10 @@ class ContentRepository {
   /// Кадр из установленной серии, если она скачана. Виджеты предпочитают файл сети.
   File? mediaFile(String episodeId, String artId) => episodes.fileSync(episodeId, 'media/$artId.${_extOf(episodeId, artId)}');
 
+  /// Файл серии по готовому имени (ролик карты, его постер): media/`<season>`/`<name>`.
+  String mediaNamedUrl(String episodeId, String name) => '$baseUrl/media/${_season(episodeId)}/$name';
+  File? mediaNamedFile(String episodeId, String name) => episodes.fileSync(episodeId, 'media/$name');
+
   /// Портрет исторического лица из общего пакета.
   String characterUrl(CharacterPortrait c) => '$baseUrl/media/${c.season}/characters/${c.id}.jpg';
   File? characterFile(CharacterPortrait c) => episodes.fileSync('common', 'media/${c.season}/characters/${c.id}.jpg');

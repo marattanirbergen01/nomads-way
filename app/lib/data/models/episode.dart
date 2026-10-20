@@ -1,12 +1,21 @@
 import '../../core/l10n.dart';
 
 class Episode {
-  Episode({required this.id, required this.title, required this.scenes, required this.characters, required this.finalTest, this.era, this.mediaExt = const {}});
+  Episode({required this.id, required this.title, required this.scenes, required this.characters, required this.finalTest, this.era, this.mediaExt = const {}, this.motion = const {}});
   final String id;
   final L10n title;
   final String? era;
   /// Расширения медиа, отличные от jpg: карта — png.
   final Map<String, String> mediaExt;
+  /// Анимированные кадры (карты): кадр → языки, для которых есть ролик `<art>_<lang>.mp4`
+  /// и постер-последний кадр `<art>_<lang>.png`.
+  final Map<String, List<String>> motion;
+  /// Язык ролика для игрока: его язык, иначе kk, иначе любой. null — у кадра нет ролика.
+  String? motionLang(String art, String locale) {
+    final langs = motion[art];
+    if (langs == null || langs.isEmpty) return null;
+    return langs.contains(locale) ? locale : (langs.contains('kk') ? 'kk' : langs.first);
+  }
   final List<Scene> scenes;
   final Map<String, Character> characters;
   final FinalTestSpec finalTest;
@@ -19,6 +28,7 @@ class Episode {
         title: L10n.fromJson(j['title']),
         era: j['era'],
         mediaExt: {for (final e in ((j['mediaExt'] as Map?) ?? {}).entries) e.key as String: e.value as String},
+        motion: {for (final e in ((j['motion'] as Map?) ?? {}).entries) e.key as String: (e.value as List).cast<String>()},
         scenes: [for (final s in j['scenes']) Scene.fromJson(s)],
         characters: {for (final e in (j['characters'] as Map).entries) e.key: Character.fromJson(e.value)},
         finalTest: FinalTestSpec(single: j['finalTest']['single'], context: j['finalTest']['context']),

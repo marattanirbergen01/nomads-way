@@ -109,6 +109,7 @@ questions:
 scenes/<id>.png|jpg        кадры сцен и вариантов       → out/<id>.jpg (1920)
 backgrounds/<id>.*         обложки, баннер              → out/<id>.jpg (1600)
 maps/<id>.png              карты, без сжатия            → out/<id>.png (как есть)
+maps/<id>_<lang>.mp4|.png   анимированная карта (kk, ru) + её последний кадр → out/ как есть; 1080×1890, 3,5 с (docs/TZ_motion_maps.md)
 avatars/<id>.png           портрет аватара для кружка   → out/avatars/<id>.jpg (512)
 avatars/<id>_bust.png      фигура по пояс, альфа        → out/avatars/<id>_bust.png (960)
 characters/<id>.png        портреты исторических лиц    → out/characters/<id>.jpg (512)

@@ -27,3 +27,4 @@ void main() {
     expect(sc.artFor({'loyalty': 1}), 'art_doubt');
   });
 }
+

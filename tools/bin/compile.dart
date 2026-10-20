@@ -68,7 +68,9 @@ void main(List<String> args) {
     report.remove('sets');
     if (check) { _print(id, report); continue; }
     if (errors.isEmpty) {
-      _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(p.join(content, 'media', season, 'out')));
+      final outMedia = p.join(content, 'media', season, 'out');
+      _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(outMedia),
+          motion: _motion(outMedia, _artsOf(ep)));
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -304,7 +306,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, List<String>> motion = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -317,6 +319,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     'id': id,
     'version': 1,
     if (mediaExt.isNotEmpty) 'mediaExt': mediaExt,
+    // кадр → языки, для которых есть ролик: media/<art>_<lang>.mp4 и постер media/<art>_<lang>.png
+    if (motion.isNotEmpty) 'motion': motion,
     'title': t(ep['title']),
     'topics': ep['topics'],
     'era': ep['era'],
@@ -409,6 +413,11 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
               if (o['art'] != null) o['art'],
       ],
     ],
+    // файлы роликов и постеров: pack.dart кладёт их в бандл как есть
+    if (motion.isNotEmpty) 'motionFiles': [
+      for (final e in motion.entries)
+        for (final lang in e.value) ...['${e.key}_$lang.mp4', '${e.key}_$lang.png'],
+    ],
     'stats': report,
   };
 
@@ -433,7 +442,7 @@ int _copyMedia(String content, String out) {
     if (!src.existsSync()) continue;
     final dst = Directory(p.join(out, 'media', p.basename(season.path)))..createSync(recursive: true);
     for (final f in src.listSync(recursive: true).whereType<File>()) {
-      if (!f.path.endsWith('.jpg') && !f.path.endsWith('.png')) continue;
+      if (!f.path.endsWith('.jpg') && !f.path.endsWith('.png') && !f.path.endsWith('.mp4')) continue;
       final rel = p.relative(f.path, from: src.path);
       File(p.join(dst.path, rel)).parent.createSync(recursive: true);
       f.copySync(p.join(dst.path, rel));
@@ -569,13 +578,44 @@ int _numberOf(String id) => int.tryParse(RegExp(r'e(\d+)').firstMatch(id)?.group
 int _seasonOf(String id) => int.tryParse(RegExp(r'^s(\d+)').firstMatch(id)?.group(1) ?? '') ?? 1;
 
 /// Расширения медиа-файлов сезона, отличные от jpg: {id: 'png'}. Клиент по умолчанию ждёт jpg.
+/// Все кадры серии: сцены, art_when, варианты выбора.
+Iterable<String> _artsOf(Map ep) sync* {
+  for (final s in (ep['scenes'] as List).cast<Map>()) {
+    if (s['art'] != null) yield s['art'] as String;
+    for (final r in (s['art_when'] as List? ?? []).cast<Map>()) yield r['art'] as String;
+    for (final b in (s['beats'] as List).cast<Map>()) {
+      if (b['choice'] == null) continue;
+      for (final o in (b['choice']['options'] as List).cast<Map>()) { if (o['art'] != null) yield o['art'] as String; }
+    }
+  }
+}
+
+/// Анимированные кадры (карты): `<art>_<lang>.mp4` + `<art>_<lang>.png` (последний кадр) в out/.
+/// art → языки, для которых есть пара ролик + постер. Ролик без постера — предупреждение, не попадает.
+Map<String, List<String>> _motion(String outDir, Iterable<String> arts) {
+  final res = <String, List<String>>{};
+  for (final art in arts.toSet()) {
+    for (final lang in const ['kk', 'ru']) {
+      final mp4 = File(p.join(outDir, '${art}_$lang.mp4'));
+      if (!mp4.existsSync()) continue;
+      if (!File(p.join(outDir, '${art}_$lang.png')).existsSync()) {
+        warn('$art: есть ${art}_$lang.mp4, но нет постера ${art}_$lang.png — ролик не подключён');
+        continue;
+      }
+      (res[art] ??= []).add(lang);
+    }
+  }
+  return res;
+}
+
 Map<String, String> _mediaExt(String outDir) {
   final dir = Directory(outDir);
   if (!dir.existsSync()) return const {};
   final res = <String, String>{};
   for (final f in dir.listSync().whereType<File>()) {
     final ext = p.extension(f.path).replaceFirst('.', '');
-    if (ext.isNotEmpty && ext != 'jpg') res[p.basenameWithoutExtension(f.path)] = ext;
+    // ролики (mp4) — не кадры: у них своя запись motion, а постер — png с тем же именем
+    if (ext.isNotEmpty && ext != 'jpg' && ext != 'mp4') res[p.basenameWithoutExtension(f.path)] = ext;
   }
   return res;
 }
