@@ -4,32 +4,32 @@
 - id: art_s1e01_010
   file: content/media/s1/scenes/art_s1e01_010.png
   license: own-generation
-  origin: 'ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_010.md; 784×1360, приведено к 768×1344'
-  tool: 'Gemini (генерация изображения)'
+  origin: ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_010.md; 784×1360, приведено к 768×1344
+  tool: Gemini (генерация изображения)
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_020
   file: content/media/s1/scenes/art_s1e01_020.png
   license: own-generation
-  origin: 'ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_020.md и широкому кадру первой редакции; 768×1376, приведено к 768×1344'
-  tool: 'Gemini (генерация изображения)'
+  origin: ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_020.md и широкому кадру первой редакции; 768×1376, приведено к 768×1344
+  tool: Gemini (генерация изображения)
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_030
   file: content/media/s1/scenes/art_s1e01_030.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_030.md; txt2img 768×1344, seed 975447413, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_030.md; txt2img 768×1344, seed 975447413, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_040
   file: content/media/s1/scenes/art_s1e01_040.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_040.md; txt2img 768×1344, seed 1599292618, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_040.md; txt2img 768×1344, seed 1599292618, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
@@ -52,496 +52,428 @@
 - id: avatar_01_zhylqyshy_calm
   file: content/media/s1/avatars/avatar_01_zhylqyshy_calm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md, кадр seed 2106914426; головной убор, ворот и полы чапана доработаны в Gemini'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md, кадр seed 2106914426; головной убор, ворот и полы чапана доработаны в Gemini
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)
   author: Marat Tanirbergen
   date: '2026-09-09'
   hist_review: null
 - id: avatar_01_zhylqyshy_joy
   file: content/media/s1/avatars/avatar_01_zhylqyshy_joy.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png (в нём головной убор доработан в Gemini), strength 1.0, seed 2106914426'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png (в нём головной убор доработан в Gemini), strength 1.0, seed 2106914426
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-09'
   hist_review: null
 - id: avatar_01_zhylqyshy_alarm
   file: content/media/s1/avatars/avatar_01_zhylqyshy_alarm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: avatar_01_zhylqyshy_sorrow
   file: content/media/s1/avatars/avatar_01_zhylqyshy_sorrow.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_01_zhylqyshy.md; img2img от avatar_01_zhylqyshy_calm.png, strength 1.0, seed 2106914426, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: avatar_02_aqyn_calm
   file: content/media/s1/avatars/avatar_02_aqyn_calm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; txt2img, seed 3142706118, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; txt2img, seed 3142706118, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: avatar_02_aqyn_joy
   file: content/media/s1/avatars/avatar_02_aqyn_joy.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: avatar_02_aqyn_alarm
   file: content/media/s1/avatars/avatar_02_aqyn_alarm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: avatar_02_aqyn_sorrow
   file: content/media/s1/avatars/avatar_02_aqyn_sorrow.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_02_aqyn.md; img2img от avatar_02_aqyn_calm.png, strength 1.0, seed 3142706118, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-10'
   hist_review: null
 - id: art_s1e01_023
   file: content/media/s1/scenes/art_s1e01_023.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_023.md; txt2img 1344×768, seed 4260910958, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_023.md; txt2img 1344×768, seed 4260910958, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-11'
   hist_review: null
 - id: avatar_03_ustaqyz_calm
   file: content/media/s1/avatars/avatar_03_ustaqyz_calm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; txt2img, seed 3935690092, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; txt2img, seed 3935690092, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-11'
   hist_review: null
 - id: avatar_03_ustaqyz_joy
   file: content/media/s1/avatars/avatar_03_ustaqyz_joy.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-11'
   hist_review: null
 - id: avatar_03_ustaqyz_alarm
   file: content/media/s1/avatars/avatar_03_ustaqyz_alarm.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-11'
   hist_review: null
 - id: avatar_03_ustaqyz_sorrow
   file: content/media/s1/avatars/avatar_03_ustaqyz_sorrow.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/avatars/avatar_03_ustaqyz.md; img2img от avatar_03_ustaqyz_calm.png, strength 1.0, seed 3935690092, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-11'
   hist_review: null
 - id: art_s1e01_012
   file: content/media/s1/scenes/art_s1e01_012.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_012.md; txt2img 768×1344, seed 2594506064, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_012.md; txt2img 768×1344, seed 2594506064, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_022
   file: content/media/s1/scenes/art_s1e01_022.png
   license: own-generation
-  origin: 'ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_022.md; 768×1376, приведено к 768×1344'
-  tool: 'Gemini (генерация изображения)'
+  origin: ИИ-генерация в Gemini по промпту content/media/s1/prompts/scenes/art_s1e01_022.md; 768×1376, приведено к 768×1344
+  tool: Gemini (генерация изображения)
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_025
   file: content/media/s1/scenes/art_s1e01_025.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_025.md; txt2img 768×1344, seed 2670741087, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_025.md; txt2img 768×1344, seed 2670741087, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_032
   file: content/media/s1/scenes/art_s1e01_032.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032.md; txt2img 768×1344, seed 3527917295, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032.md; txt2img 768×1344, seed 3527917295, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_038
   file: content/media/s1/scenes/art_s1e01_038.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_038.md; txt2img 768×1344, seed 2550613875, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_038.md; txt2img 768×1344, seed 2550613875, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_042
   file: content/media/s1/scenes/art_s1e01_042.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_042.md; txt2img 768×1344, seed 3735732337, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_042.md; txt2img 768×1344, seed 3735732337, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_045
   file: content/media/s1/scenes/art_s1e01_045.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045.md; txt2img 768×1344, seed 2745442474, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045.md; txt2img 768×1344, seed 2745442474, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_032_river
   file: content/media/s1/scenes/art_s1e01_032_river.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_river.md; txt2img 768×1344, seed 1032615351, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_river.md; txt2img 768×1344, seed 1032615351, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_032_hill
   file: content/media/s1/scenes/art_s1e01_032_hill.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_hill.md; img2img 768×1344 от art_s1e01_045.png, seed 2745442474, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_032_hill.md; img2img 768×1344 от art_s1e01_045.png, seed 2745442474, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: art_s1e01_045_river
   file: content/media/s1/scenes/art_s1e01_045_river.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045_river.md; img2img 768×1344 от art_s1e01_032_river.png, seed 1032615351, steps 4'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e01_045_river.md; img2img 768×1344 от art_s1e01_032_river.png, seed 1032615351, steps 4
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: char_aksakal
   file: content/media/s1/characters/char_aksakal.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_aksakal.md; txt2img, seed 4252702689, steps 4. Вымышленный персонаж.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_aksakal.md; txt2img, seed 4252702689, steps 4. Вымышленный персонаж.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-14'
   hist_review: null
 - id: char_kerei
   file: content/media/s1/characters/char_kerei.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_kerei.md; txt2img, seed 3261745991, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_kerei.md; txt2img, seed 3261745991, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: char_zhanibek
   file: content/media/s1/characters/char_zhanibek.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_zhanibek.md; txt2img, seed 445151562, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_zhanibek.md; txt2img, seed 445151562, steps 4. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: char_abilqaiyr
   file: content/media/s1/characters/char_abilqaiyr.png
   license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_abilqaiyr.md; база Draw Things seed 2385198106, форма шапки доработана в Gemini. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)'
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_abilqaiyr.md; база Draw Things seed 2385198106, форма шапки доработана в Gemini. Достоверных портретов не существует, канон назначен; иконография по типу учебных образов, конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit (база) + Gemini (правка)
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
 - id: map_s1e01_route
   file: content/media/s1/maps/map_s1e01_route.png
   license: licensed
-  origin: 'Скан карты из школьного атласа (издание не установлено), присланный Маратом; в Gemini убраны надписи, подпись «Шу» нанесена в проекте (Pillow); 2026-09-16 переложена в вертикаль 768×1344 (Pillow). Автор и лицензия исходника не установлены — до подтверждения статус «licensed» условный.'
-  tool: 'скан + Gemini (правка) + Pillow (подпись)'
-  author: 'неизвестен (исходник); правка — Marat Tanirbergen'
+  origin: Скан карты из школьного атласа (издание не установлено), присланный Маратом; в Gemini убраны надписи, подпись «Шу» нанесена в проекте (Pillow); 2026-09-16 переложена в вертикаль 768×1344 (Pillow). Автор и лицензия исходника не установлены — до подтверждения статус «licensed» условный.
+  tool: скан + Gemini (правка) + Pillow (подпись)
+  author: неизвестен (исходник); правка — Marat Tanirbergen
   date: '2026-09-15'
-  hist_review: 'Marat, 2026-09-15 — сверено с историком (устно)'
-- id: char_burundyq
-  file: content/media/s1/characters/char_burundyq.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_burundyq.md; txt2img, seed 2287733095, steps 4. Достоверных портретов не существует, канон назначен; иконография — по живописному портрету из интернета (шапка, кафтан), конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  hist_review: Marat, 2026-09-15 — сверено с историком (устно)
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_burundyq.md; txt2img, seed 2287733095, steps 4. Достоверных портретов не существует, канон назначен; иконография — по живописному портрету из интернета (шапка, кафтан), конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_qasym
-  file: content/media/s1/characters/char_qasym.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_qasym.md; txt2img, seed 2819017190, steps 4. Достоверных портретов не существует, канон назначен; иконография — по распространённому образу (шлем со шпилем, волчий мех), конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_qasym.md; txt2img, seed 2819017190, steps 4. Достоверных портретов не существует, канон назначен; иконография — по распространённому образу (шлем со шпилем, волчий мех), конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_qasym_khan
-  file: content/media/s1/characters/char_qasym_khan.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_qasym_khan.md; txt2img, seed 2819017190, steps 4. Достоверных портретов не существует, канон назначен; иконография — по распространённому образу (шлем со шпилем, волчий мех), конкретное произведение не копируется.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_qasym_khan.md; txt2img, seed 2819017190, steps 4. Достоверных портретов не существует, канон назначен; иконография — по распространённому образу (шлем со шпилем, волчий мех), конкретное произведение не копируется.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_shaibani
-  file: content/media/s1/characters/char_shaibani.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_shaibani.md; txt2img, seed 141028886, steps 4. Иконография (белая чалма с красным верхом, голубой халат с золотыми пуговицами) — по миниатюре, приписываемой Бехзаду (Metropolitan Museum, ~1507, общественное достояние); картина не копируется, лицо назначено.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_shaibani.md; txt2img, seed 141028886, steps 4. Иконография (белая чалма с красным верхом, голубой халат с золотыми пуговицами) — по миниатюре, приписываемой Бехзаду (Metropolitan Museum, ~1507, общественное достояние); картина не копируется, лицо назначено.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_seiit
-  file: content/media/s1/characters/char_seiit.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_seiit.md; txt2img, seed 1909604760, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_seiit.md; txt2img, seed 1909604760, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_dana
-  file: content/media/s1/characters/char_dana.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_dana.md; txt2img, seed 4222647384, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_dana.md; txt2img, seed 4222647384, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_mahmud
-  file: content/media/s1/characters/char_mahmud.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_mahmud.md; txt2img, seed 1358360923, steps 4. Изображений Махмуд-султана не существует, образ назначен (семейное сходство с Шайбани).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_mahmud.md; txt2img, seed 1358360923, steps 4. Изображений Махмуд-султана не существует, образ назначен (семейное сходство с Шайбани).
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_ruzbihan
-  file: content/media/s1/characters/char_ruzbihan.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_ruzbihan.md; txt2img, seed 4129460187, steps 4. Портретов Ибн Рузбихана не существует, образ назначен (персидский учёный по типу придворных миниатюр рубежа XV–XVI вв.).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_ruzbihan.md; txt2img, seed 4129460187, steps 4. Портретов Ибн Рузбихана не существует, образ назначен (персидский учёный по типу придворных миниатюр рубежа XV–XVI вв.).
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_ubaidulla
-  file: content/media/s1/characters/char_ubaidulla.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_ubaidulla.md; txt2img, seed 1625787702, steps 4. Достоверного портрета Убайдуллы не существует, образ назначен.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_ubaidulla.md; txt2img, seed 1625787702, steps 4. Достоверного портрета Убайдуллы не существует, образ назначен.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_temir
-  file: content/media/s1/characters/char_temir.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_temir.md; txt2img, seed 3469557424, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_temir.md; txt2img, seed 3469557424, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_beket
-  file: content/media/s1/characters/char_beket.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_beket.md; txt2img, seed 2266133674, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_beket.md; txt2img, seed 2266133674, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_esaul
-  file: content/media/s1/characters/char_esaul.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_esaul.md; txt2img, seed 1516369594, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_esaul.md; txt2img, seed 1516369594, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: char_rider
-  file: content/media/s1/characters/char_rider.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_rider.md; txt2img, seed 1773202579, steps 4. Вымышленный персонаж (fiction: true).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: "ИИ-генерация по промпту content/media/s1/prompts/characters/char_rider.md; txt2img, seed 1773202579, steps 4. Вымышленный персонаж (fiction: true)."
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_030
-  file: content/media/s1/scenes/art_s1e02_030.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_030.md; txt2img, seed 1203705194, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq и char_qasym.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_030.md; txt2img, seed 1203705194, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq и char_qasym.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_040
-  file: content/media/s1/scenes/art_s1e02_040.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_040.md; txt2img, seed 908502268, steps 4, 768×1344.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_040.md; txt2img, seed 908502268, steps 4, 768×1344.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_050
-  file: content/media/s1/scenes/art_s1e02_050.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_050.md; txt2img, seed 2109901126, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq, char_qasym, char_dana.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_050.md; txt2img, seed 2109901126, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq, char_qasym, char_dana.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_070
-  file: content/media/s1/scenes/art_s1e02_070.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_070.md; txt2img, seed 2447852137, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq, char_qasym_khan, char_mahmud.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_070.md; txt2img, seed 2447852137, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq, char_qasym_khan, char_mahmud.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_080
-  file: content/media/s1/scenes/art_s1e02_080.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_080.md; txt2img, seed 857812810, steps 4, 768×1344. Персонажи по каноническим портретам char_ruzbihan и char_ubaidulla.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_080.md; txt2img, seed 857812810, steps 4, 768×1344. Персонажи по каноническим портретам char_ruzbihan и char_ubaidulla.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_090
-  file: content/media/s1/scenes/art_s1e02_090.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_090.md; txt2img, seed 436456824, steps 4, 768×1344. Персонажи по каноническим портретам char_qasym_khan и char_dana.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_090.md; txt2img, seed 436456824, steps 4, 768×1344. Персонажи по каноническим портретам char_qasym_khan и char_dana.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_100
-  file: content/media/s1/scenes/art_s1e02_100.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_100.md; txt2img, seed 2303100311, steps 4, 768×1344.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_100.md; txt2img, seed 2303100311, steps 4, 768×1344.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_110
-  file: content/media/s1/scenes/art_s1e02_110.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_110.md; txt2img, seed 2711256425, steps 4, 768×1344.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_110.md; txt2img, seed 2711256425, steps 4, 768×1344.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_120
-  file: content/media/s1/scenes/art_s1e02_120.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_120.md; txt2img, seed 3909329632, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq и char_qasym_khan.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_120.md; txt2img, seed 3909329632, steps 4, 768×1344. Персонажи по каноническим портретам char_burundyq и char_qasym_khan.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_130
-  file: content/media/s1/scenes/art_s1e02_130.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_130.md; txt2img, seed 1282447498, steps 4, 768×1344. Касым по каноническому портрету char_qasym_khan.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_130.md; txt2img, seed 1282447498, steps 4, 768×1344. Касым по каноническому портрету char_qasym_khan.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_045
-  file: content/media/s1/scenes/art_s1e02_045.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_045.md; txt2img, seed 3938303444, steps 4, 768×1344. Персонажи по каноническим портретам char_esaul, char_temir, char_seiit, char_dana.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_045.md; txt2img, seed 3938303444, steps 4, 768×1344. Персонажи по каноническим портретам char_esaul, char_temir, char_seiit, char_dana.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_095
-  file: content/media/s1/scenes/art_s1e02_095.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_095.md; txt2img, seed 1155894005, steps 4, 768×1344. Персонажи по каноническим портретам char_dana и char_beket (взрослый).'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_095.md; txt2img, seed 1155894005, steps 4, 768×1344. Персонажи по каноническим портретам char_dana и char_beket (взрослый).
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_025_outside
-  file: content/media/s1/scenes/art_s1e02_025_outside.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025_outside.md; txt2img, seed 3233626397, steps 4, 768×1344.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025_outside.md; txt2img, seed 3233626397, steps 4, 768×1344.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_010
-  file: content/media/s1/scenes/art_s1e02_010.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_010.md; txt2img, seed 8282904, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_010.md; txt2img, seed 8282904, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_015
-  file: content/media/s1/scenes/art_s1e02_015.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_015.md; txt2img, seed 3860875784, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_015.md; txt2img, seed 3860875784, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_020
-  file: content/media/s1/scenes/art_s1e02_020.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_020.md; txt2img, seed 1111913077, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_020.md; txt2img, seed 1111913077, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_025
-  file: content/media/s1/scenes/art_s1e02_025.jpg
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_026a
-  file: content/media/s1/scenes/art_s1e02_026a.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026a.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026a.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_026b
-  file: content/media/s1/scenes/art_s1e02_026b.jpg
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026b.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026b.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: art_s1e02_026c
-  file: content/media/s1/scenes/art_s1e02_026c.png
-  license: own-generation
-  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026c.md; txt2img, seed 4153658374, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
-  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+- license: own-generation
+  origin: ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026c.md; txt2img, seed 4153658374, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
-- id: map_s1e02_south
-  file: content/media/s1/maps/map_s1e02_south.png
-  license: licensed
-  origin: 'Не ИИ. Основа — карта № 9 «Государства послемонгольского периода» из школьного учебника истории Казахстана для 6 класса (tb06, рус. издание, с. 141; скан ~/ent_textbooks/maps/s1/tb06_ru_karta09_gosudarstva_poslemongolskogo.png, вне репозитория). Фрагмент вырезан, подписи «Ак Орда» и «Ханство Абулхаира» убраны ретушью; нашей работы — стрелка пути Шайбани, подписи «Шайбани, 1500», «Самарканд», «Узбек / Казахи», продление карты вниз. Права на скан принадлежат издательству; условно, до выяснения прав — как карта s1e01.'
-  tool: 'Python + Pillow + OpenCV (ретушь и подписи), основа — скан учебника'
+- license: licensed
+  origin: Не ИИ. Основа — карта № 9 «Государства послемонгольского периода» из школьного учебника истории Казахстана для 6 класса (tb06, рус. издание, с. 141; скан ~/ent_textbooks/maps/s1/tb06_ru_karta09_gosudarstva_poslemongolskogo.png, вне репозитория). Фрагмент вырезан, подписи «Ак Орда» и «Ханство Абулхаира» убраны ретушью; нашей работы — стрелка пути Шайбани, подписи «Шайбани, 1500», «Самарканд», «Узбек / Казахи», продление карты вниз. Права на скан принадлежат издательству; условно, до выяснения прав — как карта s1e01.
+  tool: Python + Pillow + OpenCV (ретушь и подписи), основа — скан учебника
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
