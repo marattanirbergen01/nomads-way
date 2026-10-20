@@ -353,3 +353,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: char_beket
+  file: content/media/s1/characters/char_beket.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_beket.md; txt2img, seed 2266133674, steps 4. Вымышленный персонаж (fiction: true).'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null

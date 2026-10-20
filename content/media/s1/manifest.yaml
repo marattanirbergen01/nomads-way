@@ -652,12 +652,14 @@
   note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Историку не нужен (fiction).'
 - id: char_beket
   kind: character
-  status: missing
+  status: approved
   brief: 'Бекет, сын Темира, ребёнок ~7 (вымысел). Взрослый в sc095 — один портрет или два, решает Марат.'
-  seed: null
+  seed: 2266133674
   prompt_ref: prompts/characters/char_beket.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_beket.png
+  generated: '2026-10-20'
+  note: 'Вымышленный персонаж, портрет для кружка (ребёнок). txt2img 896×1152, steps 4. Вариант B из двух. Вопрос про взрослого Бекета в sc095 открыт. Историку не нужен (fiction).'
 - id: char_esaul
   kind: character
   status: missing
