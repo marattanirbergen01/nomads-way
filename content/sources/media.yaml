@@ -281,6 +281,22 @@
   author: неизвестен (исходник); правка — Marat Tanirbergen
   date: '2026-09-15'
   hist_review: Marat, 2026-09-15 — сверено с историком (устно)
+- id: map_s1e01_route_motion
+  file: content/media/s1/maps/map_s1e01_route_kk.mp4
+  license: own-generation
+  origin: Анимированная карта, нарисована кодом (Canvas, motion/maps/maps.js) — файлы map_s1e01_route_{kk,ru}.mp4 и .png. Береговые линии и реки — Natural Earth 10m (public domain); реки Шу и Талас — © OpenStreetMap contributors (ODbL); хребты расставлены вручную по координатам. Учебник tb06 (карта 10) — только референс расположения, скан не использован. Шрифт PT Serif — ParaType, SIL OFL 1.1.
+  tool: HTML Canvas + headless Chrome (кадры) + AVFoundation (H.264)
+  author: Marat Tanirbergen (Claude, сессия «Анимация»)
+  date: '2026-10-21'
+  hist_review: null
+- id: map_s1e02_south_motion
+  file: content/media/s1/maps/map_s1e02_south_kk.mp4
+  license: own-generation
+  origin: Анимированная карта, нарисована кодом (Canvas, motion/maps/maps.js) — файлы map_s1e02_south_{kk,ru}.mp4 и .png. Береговые линии и реки — Natural Earth 10m (public domain); © OpenStreetMap contributors (ODbL); хребты расставлены вручную по координатам. Учебник tb06 (карта 9) — только референс расположения, скан не использован. Шрифт PT Serif — ParaType, SIL OFL 1.1.
+  tool: HTML Canvas + headless Chrome (кадры) + AVFoundation (H.264)
+  author: Marat Tanirbergen (Claude, сессия «Анимация»)
+  date: '2026-10-21'
+  hist_review: null
 - license: own-generation
   origin: ИИ-генерация по промпту content/media/s1/prompts/characters/char_burundyq.md; txt2img, seed 2287733095, steps 4. Достоверных портретов не существует, канон назначен; иконография — по живописному портрету из интернета (шапка, кафтан), конкретное произведение не копируется.
   tool: Draw Things · FLUX.2 [klein] 4B 8-bit
