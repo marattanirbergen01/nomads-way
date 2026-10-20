@@ -329,3 +329,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: char_ruzbihan
+  file: content/media/s1/characters/char_ruzbihan.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_ruzbihan.md; txt2img, seed 4129460187, steps 4. Портретов Ибн Рузбихана не существует, образ назначен (персидский учёный по типу придворных миниатюр рубежа XV–XVI вв.).'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null

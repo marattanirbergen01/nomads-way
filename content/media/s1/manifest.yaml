@@ -530,12 +530,14 @@
   note: 'Канон Махмуда, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Пятна пыли на лице похожи на оспины — на заметку. Без визы историка в сборку не идёт.'
 - id: char_ruzbihan
   kind: character
-  status: missing
+  status: approved
   brief: 'Ибн Рузбихан, персидский историк около 55. Изображений нет — по персидским миниатюрам.'
-  seed: null
+  seed: 4129460187
   prompt_ref: prompts/characters/char_ruzbihan.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_ruzbihan.png
+  generated: '2026-10-20'
+  note: 'Канон Рузбихана, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. За кушаком кисть вместо калама — в кружке не видно; в кадре sc080 калам задавать отдельно. Без визы историка в сборку не идёт.'
 - id: char_ubaidulla
   kind: character
   status: missing
