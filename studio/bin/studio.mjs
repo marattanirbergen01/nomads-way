@@ -8,6 +8,7 @@
 //   studio media list s1                        медиа сезона
 //   studio media upload s1 <id> <file> [--seed N] [--brief "…"] [--prompt file.md] [--kind scene]
 //   studio media set s1 <id> [--seed N] [--brief "…"] [--prompt file.md] [--note "…"]
+//   studio whoami                               чей токен используется
 //
 // Настройка: STUDIO_URL (по умолчанию http://localhost:8795) и STUDIO_TOKEN —
 // в окружении или в studio/.env. Токен выдаёт админ на странице «Команда».
@@ -17,8 +18,10 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const studioRoot = path.resolve(here, '..');
-const envFile = path.join(studioRoot, '.env');
-if (fs.existsSync(envFile)) {
+// STUDIO_ENV=.env.media — токен другого агента; читается раньше .env, поэтому главнее.
+const envFiles = [process.env.STUDIO_ENV, '.env'].filter(Boolean).map((f) => path.resolve(studioRoot, f));
+for (const envFile of envFiles) {
+  if (!fs.existsSync(envFile)) continue;
   for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
     const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/);
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2];
@@ -59,7 +62,10 @@ const [cmd, ...rest] = pos;
 const STATUS = { draft: 'черновик', review: 'на утверждении', approved: 'утверждена', published: 'собрана' };
 
 try {
-  if (cmd === 'status') {
+  if (cmd === 'whoami') {
+    const { user } = await call('GET', '/me');
+    console.log(user ? `${user.login} · ${user.roleTitle} · права: ${user.permissions.join(', ') || '—'}` : 'токен не принят');
+  } else if (cmd === 'status') {
     if (rest[0]) {
       const pf = await call('GET', `/episodes/${rest[0]}/preflight`);
       const ep = await call('GET', `/episodes/${rest[0]}`);

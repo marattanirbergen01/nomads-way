@@ -77,7 +77,10 @@ node studio/bin/studio.mjs media upload s1 art_s1e02_010 kadr.png --seed 123 --p
 (и `STUDIO_URL=https://…`, если студия на сервере). Удобный алиас: `alias studio='node ~/nomads-way/studio/bin/studio.mjs'`.
 
 `push` ничего не удаляет: реплики, которых нет в присланном YAML, остаются в конце сцены с пометкой;
-`--replace` удаляет их. Сцены, отсутствующие в YAML, не трогаются.
+`--replace` удаляет их.
+
+У каждого агента свой токен. Сценарий — `STUDIO_TOKEN` в `studio/.env`; медиа — `studio/.env.media`,
+вызов `STUDIO_ENV=.env.media node studio/bin/studio.mjs media upload …`. `studio whoami` показывает, чей токен в ходу. Сцены, отсутствующие в YAML, не трогаются.
 
 ## Сервер (Hetzner)
 
