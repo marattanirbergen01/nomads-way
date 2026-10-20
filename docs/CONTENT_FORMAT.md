@@ -1,6 +1,6 @@
 # Формат контента (v1)
 
-Все файлы — YAML, UTF-8. Все тексты для игрока — объекты `{kk, ru, en}`; на этапе черновика `en` может отсутствовать (валидатор — предупреждение), `kk` и `ru` обязательны (ошибка).
+Все файлы — YAML, UTF-8. Все тексты для игрока — объекты `{kk, ru}`, оба обязательны (ошибка). Английского в игре не будет (DECISIONS 2026-10-13).
 
 ## content/curriculum/ent_history.yaml
 Дерево тем программы. Узел: `id`, `title`, опционально `children` и `must_know`.
@@ -9,7 +9,7 @@
 ## content/episodes/<season>/<episode>.yaml
 ```
 episode: s1e01
-title: {kk, ru, en}
+title: {kk, ru}
 topics: [kz.4.1]                # темы, которые серия покрывает
 characters:
   - {id, name: {kk, ru}, fiction: bool, note, avatar: bool?, default_name: {kk, ru}?, portrait: media_id?}
@@ -20,7 +20,7 @@ scenes:
   - id: sc010
     art: art_s1e01_010          # id картинки в content/media/<season>/manifest.yaml
     covers: [f.4.1.a, ...]      # факты, которые прозвучали в этой сцене
-    title: {kk, ru, en}          # необязательно: название сцены для шапки плеера
+    title: {kk, ru}          # необязательно: название сцены для шапки плеера
     layer: history | personal    # необязательно: personal — пустой covers и без quiz, history — covers ≥ 1
     pan: 0..100                  # необязательно: горизонтальное панорамирование кадра (50 = центр)
     avatar: left | right         # необязательно: сторона фигуры аватара (по умолчанию left)
@@ -30,15 +30,15 @@ scenes:
     # Условие: flag (> 0), !flag (== 0), var op число (== != < <= > >=), части через &&.
     # Отсутствующая переменная равна 0. Переменные задаются в set у вариантов выбора.
     beats:
-      - say: {who, kk, ru, en, emotion?, when?}
+      - say: {who, kk, ru, emotion?, when?}
         # emotion: calm | joy | alarm | sorrow | resolve — состояние аватара в этой реплике
         #          (синоним emo). Кадра «resolve» у аватаров пока нет — клиент покажет calm.
         # when: условие на переменные сюжета (тот же синтаксис, что у art_when); реплика без when звучит всегда.
         #       Факты из covers должны звучать в безусловных репликах — компилятор предупредит.
       - choice:
-          prompt: {kk, ru, en}
+          prompt: {kk, ru}
           options:
-            - {id, kk, ru, en, set: {var: +n}, goto: sc020, art: art_id?, reply: {kk, ru, en?, emotion?}?}
+            - {id, kk, ru, set: {var: +n}, goto: sc020, art: art_id?, reply: {kk, ru, emotion?}?}
               # art у ОБЕИХ опций → развилка двумя кадрами
               # reply — что произошло после выбора: текст экрана «выбор сделан», emotion — состояние аватара на нём
     quiz: [q_s1e01_001, ...]    # вопросы, задаваемые после сцены
@@ -58,15 +58,50 @@ final_test:                     # итоговый мини-тест серии,
   format: single | context      # как на ЕНТ
   context: sc010                # обязателен для format: context
   difficulty: 1..3
-  stem: {kk, ru, en}
-  options: [{id: a|b|c|d, kk, ru, en, correct: true?}]   # ровно один correct
-  explain: {kk, ru, en}         # где происходит обучение
+  stem: {kk, ru}
+  options: [{id: a|b|c|d, kk, ru, correct: true?}]   # ровно один correct
+  explain: {kk, ru}         # где происходит обучение
   source: <source_id>#<locator>
   distractor_note: строка       # какую типичную ошибку ловят неправильные варианты
 ```
 
+## content/bank/<name>.yaml — банк пробника ЕНТ
+Вопросы для пробного ЕНТ вне серий. Не привязаны к сюжету: правило `fact` ↔ `covers` к ним не
+применяется, `explain` и `distractor_note` нет. Тексты — только `kk` (так в исходных тестах школы).
+Первый банк — `school_tests.yaml`, генерируется скриптом, руками не правится. Картинки — `content/bank/media/`.
+```
+source: <source_id>                 # одна запись в registry.yaml на весь банк
+contexts:
+  - id: c20252-1
+    text: {kk}                      # текст контекста; необязателен, если есть image
+    image: media/m_ig_6365.jpg      # необязательно: карта/схема, путь от content/bank/
+    caption: {kk}                   # необязательно: подпись к картинке
+    src: строка                     # файл и вариант, откуда текст
+    questions: [b5cefcbc, ...]      # вопросы этого текста, в исходном порядке
+questions:
+  - id: b5cefcbc                    # префикс b — банк; уникален во всём build
+    format: single | context
+    context: c20252-1               # только у context; вопрос обязан быть в questions этого контекста
+    stem: {kk}
+    options: [{kk}, ...]            # 3–6 вариантов, обычно 4
+    answer: 0                       # индекс правильного варианта в options
+    shuffle: false                  # необязательно: варианты ссылаются друг на друга, не перемешивать
+    image: media/m_ig_159.jpg       # необязательно: своя картинка у вопроса
+    topic: 51                       # тема спецификации ЕНТ (1–55), может быть null
+    season: 4                       # сезон и серия плана v2
+    episode: s4e01
+    check: true                     # необязательно: ответ под сомнением — в пробник не брать
+    image_missing: true             # необязательно: карта/схема была, но в файле её нет — в пробник не брать
+    note: строка                    # необязательно: пометка редактора
+    src: [строка, ...]              # где вопрос встречался в исходных файлах
+```
+
+Поле `source` вопроса серии может перечислять несколько ссылок через `;`: `bank:school_tests_2026; tb06_ru#§30,с.126`
+(вопрос взят из банка школы и подтверждён учебником). Каждая ссылка — `<id из registry>[#место]`, префикс `bank:` — пометка
+«сборник тестов». Компилятор проверяет каждую.
+
 ## content/sources/registry.yaml
-`{id, type: primary|academic|textbook|spec, title, author, year, note}`.
+`{id, type: primary|academic|textbook|spec|tests, title, author, year, note}`. `tests` — сборники тестов (источник банка пробника, не фактов).
 Любой `source:` в вопросах и `covers` фактах должен ссылаться на существующий `id`.
 
 ## content/media/<season>/ — раскладка
