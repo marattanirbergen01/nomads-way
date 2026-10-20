@@ -537,3 +537,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: map_s1e02_south
+  file: content/media/s1/maps/map_s1e02_south.png
+  license: licensed
+  origin: 'Не ИИ. Основа — карта № 9 «Государства послемонгольского периода» из школьного учебника истории Казахстана для 6 класса (tb06, рус. издание, с. 141; скан ~/ent_textbooks/maps/s1/tb06_ru_karta09_gosudarstva_poslemongolskogo.png, вне репозитория). Фрагмент вырезан, подписи «Ак Орда» и «Ханство Абулхаира» убраны ретушью; нашей работы — стрелка пути Шайбани, подписи «Шайбани, 1500», «Самарканд», «Узбек / Казахи», продление карты вниз. Права на скан принадлежат издательству; условно, до выяснения прав — как карта s1e01.'
+  tool: 'Python + Pillow + OpenCV (ретушь и подписи), основа — скан учебника'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
