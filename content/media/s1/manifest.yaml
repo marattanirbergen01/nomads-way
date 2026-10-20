@@ -554,12 +554,14 @@
   note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Историку не нужен (fiction).'
 - id: char_dana
   kind: character
-  status: missing
+  status: approved
   brief: 'Дана, 16 лет (вымысел). Один портрет на всю серию.'
-  seed: null
+  seed: 4222647384
   prompt_ref: prompts/characters/char_dana.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_dana.png
+  generated: '2026-10-20'
+  note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Один портрет на всю серию (решение Марата 2026-10-20). Историку не нужен (fiction).'
 - id: art_s1e02_015
   kind: scene
   status: missing
