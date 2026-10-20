@@ -481,12 +481,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 3909329632, третья проба: караван идёт ОТ зрителя, Касым верхом справа, почётный отряд у обочины. Лицо Касыма видно слабо (вполоборота).'
 - id: art_s1e02_130
   kind: scene
-  status: missing
+  status: approved
   brief: 'Великий сбор. Старейшины поднимают белую кошму за четыре угла, на ней — Касым. Один угол держит поседевшая Дана. Вокруг тысячи всадников.'
-  seed: null
+  seed: 1282447498
   prompt_ref: prompts/scenes/art_s1e02_130.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_130.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 1282447498. Дана в кадре не читается (двое в шлемах с косами у передних углов), Касым на помосте босиком, золотая цепь на шее — принято Маратом.'
 - id: map_s1e02_south
   kind: map
   status: missing
