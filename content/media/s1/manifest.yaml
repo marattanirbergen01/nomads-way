@@ -375,20 +375,26 @@
 # --- s1e02 «Бұрындық хан» (промпты 2026-10-20) ---------------------------
 - id: art_s1e02_010
   kind: scene
-  status: missing
+  status: draft
   brief: 'Базар Сыгнака днём: мешки с пшеницей, ткани, медные котлы, соль; степняки пригнали овец. На переднем плане бородатый сарт-купец с весами и девушка со связкой стрел. За ними городская стена и купол мечети.'
-  seed: null
+  seed: 8282904
   prompt_ref: prompts/scenes/art_s1e02_010.md
   approved_by: null
-  file: null
+  file: scenes/art_s1e02_010.png
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things), в студии статус draft. Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_020
   kind: scene
-  status: missing
+  status: approved
   brief: 'Ночь без луны. Ворота Сыгнака открыты изнутри. Внутрь въезжают всадники, впереди молодой человек в чёрной шапке с холодным лицом. На башне девушка со связкой стрел смотрит в испуге.'
-  seed: null
+  seed: 1111913077
   prompt_ref: prompts/scenes/art_s1e02_020.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_020.png
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things). Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_030
   kind: scene
   status: approved
@@ -590,22 +596,26 @@
   note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. Один портрет на всю серию (решение Марата 2026-10-20). Историку не нужен (fiction).'
 - id: art_s1e02_015
   kind: scene
-  status: missing
+  status: approved
   brief: 'Вечер, базар Сыгнака закрывается. Сарт-купец протягивает аватару мешочек с серебром. Позади, в свете лампы, девушка со связкой стрел смотрит на них.'
-  seed: null
+  seed: 3860875784
   prompt_ref: prompts/scenes/art_s1e02_015.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Вечерний вариант 010: img2img от утверждённого 010.'
+  approved_by: Marat
+  file: scenes/art_s1e02_015.png
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things). Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_025
   kind: scene
-  status: missing
+  status: approved
   brief: 'Ночь. Восточные ворота Сыгнака открыты. Стражник на коленях, перед ним вооружённый всадник — перед ним на седле маленький ребёнок. В ворота вливаются всадники. Из темноты смотрит аватар.'
   seed: null
   prompt_ref: prompts/scenes/art_s1e02_025.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Аватар не рисуется — бюст кладёт плеер.'
+  approved_by: Marat
+  file: scenes/art_s1e02_025.jpg
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things), JPEG 768×1353; метаданных с seed в файле нет. Темира на коленях и мальчика на седле в кадре нет — принято Маратом («нормально»). Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_025_outside
   kind: scene
   status: approved
@@ -619,31 +629,37 @@
 
 - id: art_s1e02_026a
   kind: scene
-  status: missing
+  status: approved
   brief: 'Узкая улочка, ночь. Аватар со свежей раной на лице прижимает ребёнка, прячась у стены. Вдали факелы всадников.'
   seed: null
   prompt_ref: prompts/scenes/art_s1e02_026a.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Аватар не рисуется — бюст кладёт плеер.'
+  approved_by: Marat
+  file: scenes/art_s1e02_026a.png
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things); исходный JPEG 784×1372 с чёрной полосой сверху, обрезан и приведён к 768×1344 окном «Медиа»; seed не сохранился. Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_026b
   kind: scene
-  status: missing
+  status: approved
   brief: 'Башня, ночь. Дана и аватар бьют в набат. Внизу люди выбегают из домов и прячут женщин и детей в мечети.'
   seed: null
   prompt_ref: prompts/scenes/art_s1e02_026b.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Аватар не рисуется — бюст кладёт плеер.'
+  approved_by: Marat
+  file: scenes/art_s1e02_026b.jpg
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things), JPEG 784×1372; метаданных с seed нет. Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_026c
   kind: scene
-  status: missing
+  status: approved
   brief: 'Склад за базаром, ночь. При лампе Сейит и человек Шайбани жмут друг другу руки. За окном подслушивает аватар.'
-  seed: null
+  seed: 4153658374
   prompt_ref: prompts/scenes/art_s1e02_026c.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Аватар не рисуется — бюст кладёт плеер.'
+  approved_by: Marat
+  file: scenes/art_s1e02_026c.png
+  generated: '2026-10-20'
+  note: 'Кадр Марата (Draw Things). Личный слой, аватар не рисуется.'
+
 - id: art_s1e02_045
   kind: scene
   status: approved

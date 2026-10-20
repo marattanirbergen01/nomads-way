@@ -481,3 +481,59 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: art_s1e02_010
+  file: content/media/s1/scenes/art_s1e02_010.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_010.md; txt2img, seed 8282904, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_015
+  file: content/media/s1/scenes/art_s1e02_015.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_015.md; txt2img, seed 3860875784, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_020
+  file: content/media/s1/scenes/art_s1e02_020.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_020.md; txt2img, seed 1111913077, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_025
+  file: content/media/s1/scenes/art_s1e02_025.jpg
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_026a
+  file: content/media/s1/scenes/art_s1e02_026a.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026a.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_026b
+  file: content/media/s1/scenes/art_s1e02_026b.jpg
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026b.md; txt2img, seed в файле не сохранён, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
+- id: art_s1e02_026c
+  file: content/media/s1/scenes/art_s1e02_026c.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_026c.md; txt2img, seed 4153658374, steps 4, модель flux_2_klein_4b_i8x. Персонажи по каноническим портретам сезона.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
