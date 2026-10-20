@@ -306,7 +306,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, List<String>> motion = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -319,7 +319,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     'id': id,
     'version': 1,
     if (mediaExt.isNotEmpty) 'mediaExt': mediaExt,
-    // кадр → языки, для которых есть ролик: media/<art>_<lang>.mp4 и постер media/<art>_<lang>.png
+    // кадр → {язык: постер}: ролик media/<art>_<lang>.mp4, постер — его последний кадр
     if (motion.isNotEmpty) 'motion': motion,
     'title': t(ep['title']),
     'topics': ep['topics'],
@@ -416,7 +416,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
     // файлы роликов и постеров: pack.dart кладёт их в бандл как есть
     if (motion.isNotEmpty) 'motionFiles': [
       for (final e in motion.entries)
-        for (final lang in e.value) ...['${e.key}_$lang.mp4', '${e.key}_$lang.png'],
+        for (final l in e.value.entries) ...['${e.key}_${l.key}.mp4', l.value],
     ],
     'stats': report,
   };
@@ -590,19 +590,19 @@ Iterable<String> _artsOf(Map ep) sync* {
   }
 }
 
-/// Анимированные кадры (карты): `<art>_<lang>.mp4` + `<art>_<lang>.png` (последний кадр) в out/.
-/// art → языки, для которых есть пара ролик + постер. Ролик без постера — предупреждение, не попадает.
-Map<String, List<String>> _motion(String outDir, Iterable<String> arts) {
-  final res = <String, List<String>>{};
+/// Анимированные кадры (карты): `<art>_<lang>.mp4` + постер-последний кадр `<art>_<lang>.jpg|png` в out/.
+/// art → {язык: файл постера}. Ролик без постера — предупреждение, не подключается.
+Map<String, Map<String, String>> _motion(String outDir, Iterable<String> arts) {
+  final res = <String, Map<String, String>>{};
   for (final art in arts.toSet()) {
     for (final lang in const ['kk', 'ru']) {
-      final mp4 = File(p.join(outDir, '${art}_$lang.mp4'));
-      if (!mp4.existsSync()) continue;
-      if (!File(p.join(outDir, '${art}_$lang.png')).existsSync()) {
-        warn('$art: есть ${art}_$lang.mp4, но нет постера ${art}_$lang.png — ролик не подключён');
+      if (!File(p.join(outDir, '${art}_$lang.mp4')).existsSync()) continue;
+      final poster = ['jpg', 'png'].map((e) => '${art}_$lang.$e').where((n) => File(p.join(outDir, n)).existsSync()).firstOrNull;
+      if (poster == null) {
+        warn('$art: есть ${art}_$lang.mp4, но нет постера ${art}_$lang.jpg|png — ролик не подключён');
         continue;
       }
-      (res[art] ??= []).add(lang);
+      (res[art] ??= {})[lang] = poster;
     }
   }
   return res;

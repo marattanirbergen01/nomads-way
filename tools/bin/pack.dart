@@ -39,8 +39,12 @@ void main(List<String> args) {
     final media = <String>{...(manifest['media'] as List).cast<String>(), 'cover_$id'};
     var missing = 0;
     // кадр может быть png (карта): расширение из episode.json → mediaExt, по умолчанию jpg
-    final ext = ((jsonDecode(files['episode.json']!.readAsStringSync()) as Map)['mediaExt'] as Map?) ?? const {};
+    final epJson = jsonDecode(files['episode.json']!.readAsStringSync()) as Map;
+    final ext = (epJson['mediaExt'] as Map?) ?? const {};
+    // у анимированной карты вместо старой картинки показывается постер ролика — старую не кладём
+    final animated = ((epJson['motion'] as Map?) ?? const {}).keys.toSet();
     for (final m in media) {
+      if (animated.contains(m)) continue;
       final e = (ext[m] as String?) ?? 'jpg';
       final f = File(p.join(build.path, 'media', season, '$m.$e'));
       if (f.existsSync()) { files['media/$m.$e'] = f; } else { missing++; }

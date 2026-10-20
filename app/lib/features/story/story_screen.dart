@@ -87,7 +87,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     if (!browsing && _motionPlayed.add(art)) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startMotion(art, lang));
     }
-    final poster = '${art}_$lang.png';
+    final poster = widget.episode.motionPoster(art, lang);
     return _MotionArt(
       posterUrl: _s.content.mediaNamedUrl(_id, poster), posterFile: _s.content.mediaNamedFile(_id, poster),
       video: _motionArt == art && _motionPlaying ? _motion : null,
@@ -169,7 +169,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       final lang = widget.episode.motionLang(art, _l);
       if (lang != null) {
         // анимированная карта: заранее нужен её постер, а не старая картинка
-        final poster = '${art}_$lang.png';
+        final poster = widget.episode.motionPoster(art, lang);
         return Art.provider(url: _s.content.mediaNamedUrl(_id, poster), file: _s.content.mediaNamedFile(_id, poster), logicalWidth: w, dpr: dpr);
       }
       return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: w, dpr: dpr);

@@ -5,7 +5,8 @@
 #   scenes/<id>.png|jpg        → out/<id>.jpg               до 1920 по длинной стороне
 #   backgrounds/<id>.*         → out/<id>.jpg               до 1600
 #   maps/<id>.png              → out/<id>.png               без сжатия: подписи на карте
-#   maps/<id>_<lang>.mp4/.png  → out/ как есть             анимированная карта + постер (последний кадр)
+#   maps/<id>_<lang>.mp4       → out/ как есть             анимированная карта
+#   maps/<id>_<lang>.png       → out/<id>_<lang>.jpg (q90) постер ролика — его последний кадр
 #   avatars/<id>_bust.png      → out/avatars/<id>_bust.png  PNG с альфой, до 960
 #   avatars/<id>.png           → out/avatars/<id>.jpg       портрет для кружка, до 512
 #   characters/<id>.png        → out/characters/<id>.jpg    портрет исторического лица, до 512
@@ -50,8 +51,12 @@ for season in content/media/s*/; do
     jpg "$f" "$out/$(basename "${f%.*}").jpg" 1600 82
   done
   for f in "$season"/maps/*.png "$season"/maps/*.mp4; do
-    # карты — как есть: png без сжатия, ролики уже сжаты (<id>_<lang>.mp4 + постер <id>_<lang>.png)
+    # карты — как есть: png без сжатия, ролики уже сжаты (<id>_<lang>.mp4).
+    # Постер ролика (<id>_<lang>.png, последний кадр) → jpg: 1,7 МБ → ~0,3 МБ, на глаз не отличить.
     [ -e "$f" ] || continue
+    case "$f" in
+      *.png) if [ -e "${f%.png}.mp4" ]; then jpg "$f" "$out/$(basename "${f%.png}").jpg" 1890 90; continue; fi ;;
+    esac
     copy "$f" "$out/$(basename "$f")"
   done
   for f in "$season"/avatars/*_bust.png; do
