@@ -15,6 +15,7 @@ dependencies:
   archive: ^3.6.1
   crypto: ^3.0.5
   path: ^1.9.0
+  video_player: ^2.14.1
 
 # path_provider_foundation 2.6+ тянет objective_c, а тот собирает нативные ассеты
 # и требует полного Xcode — без него ломается даже `flutter test` на macOS.
@@ -30,6 +31,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   # assets/ — только интерфейс. Контент приходит бандлами (см. app/CLAUDE.md).
+  # awards/ — ролики раскрытия наград (marketing/awards-motion, 720×1280, 60 fps): это анимация интерфейса.
+  assets:
+    - assets/awards/
   fonts:
     - family: Golos
       fonts:
