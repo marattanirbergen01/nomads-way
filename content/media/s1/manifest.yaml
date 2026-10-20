@@ -49,6 +49,16 @@
   file: backgrounds/cover_s1e01.jpg
   generated: '2026-09-07'
   note: квадрат 1024×1024, в приложении кадрируется по центру
+- id: cover_s1e02
+  kind: cover
+  status: approved
+  brief: "Обложка серии 2: кадр art_s1e02_050 — вечер на стене Сыгнака, Бурундук и Касым смотрят на Сырдарью."
+  seed: 2109901126
+  prompt_ref: prompts/scenes/art_s1e02_050.md
+  approved_by: Марат
+  file: backgrounds/cover_s1e02.png
+  generated: '2026-10-20'
+  note: "Копия art_s1e02_050 (768×1344), выбор Марата 2026-10-21. В списке серий кадрируется в квадрат по центру."
 - id: cover_season1
   kind: banner
   status: draft

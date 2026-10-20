@@ -33,6 +33,14 @@
   author: Marat Tanirbergen
   date: '2026-09-15'
   hist_review: null
+- id: cover_s1e02
+  file: content/media/s1/backgrounds/cover_s1e02.png
+  license: own-generation
+  origin: Копия кадра art_s1e02_050 (ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_050.md; txt2img, seed 2109901126, steps 4, 768×1344).
+  tool: Draw Things · FLUX.2 [klein] 4B 8-bit
+  author: Marat Tanirbergen
+  date: '2026-10-21'
+  hist_review: null
 - id: cover_s1e01
   file: content/media/s1/backgrounds/cover_s1e01.jpg
   license: own-generation
