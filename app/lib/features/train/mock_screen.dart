@@ -14,6 +14,7 @@ import '../../widgets/art.dart';
 import '../../widgets/common.dart';
 import '../path/path_tab.dart' show LoadError;
 import '../readiness/award_screen.dart';
+import '../../widgets/scroll_buttons.dart';
 
 /// Пробник ЕНТ на банке школы. Один экран для «Сынақ ҰБТ» (10 + 5 + 5) и «Жылдам жаттығу» (15 + 5).
 ///
@@ -118,7 +119,9 @@ class _MockScreenState extends State<MockScreen> {
       backgroundColor: C.ground,
       appBar: AppBar(backgroundColor: C.ground, foregroundColor: C.ink, elevation: 0, scrolledUnderElevation: 0,
           leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20), onPressed: () => Navigator.pop(context))),
-      body: SafeArea(child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560), child: body))),
+      // ключ — на каждый экран свой: новая страница начинается сверху
+      body: SafeArea(child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560),
+          child: ScrollButtons(key: ValueKey('${_quiz?.index}-$_intro-${_result != null}-${_error != null}'), child: body)))),
     );
   }
 }
@@ -231,7 +234,7 @@ class _ContextBody extends StatelessWidget {
           decoration: BoxDecoration(color: C.card, borderRadius: BorderRadius.circular(8)),
           child: maxTextHeight == null
               ? text
-              : ConstrainedBox(constraints: BoxConstraints(maxHeight: maxTextHeight!), child: Scrollbar(child: SingleChildScrollView(child: text))),
+              : ConstrainedBox(constraints: BoxConstraints(maxHeight: maxTextHeight!), child: Scrollbar(child: SingleChildScrollView(primary: false, child: text))),
         ),
     ]);
   }

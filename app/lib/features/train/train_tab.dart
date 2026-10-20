@@ -9,6 +9,7 @@ import '../../data/local/progress_repository.dart';
 import '../../engine/mock_composer.dart';
 import 'mock_screen.dart';
 import 'review_screen.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class TrainTab extends StatefulWidget {
   const TrainTab({super.key, required this.services});
@@ -41,7 +42,7 @@ class _TrainTabState extends State<TrainTab> {
           if (snap.hasError) return LoadError(services: _s, message: '${snap.error}', onRetry: () => setState(() => _data = _load()));
           if (!snap.hasData) return const Center(child: CircularProgressIndicator(color: C.gold));
           final (catalog, topics, bankInfo) = snap.data!;
-          return _content(catalog, topics, bankInfo);
+          return ScrollButtons(child: _content(catalog, topics, bankInfo));
         },
       );
 

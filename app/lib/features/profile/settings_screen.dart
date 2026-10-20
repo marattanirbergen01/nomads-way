@@ -3,6 +3,7 @@ import '../../core/services.dart';
 import '../../core/theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.services});
@@ -84,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final s = _s.s; final st_ = _s.store;
     final downBytes = _down.values.fold(0, (a, b) => a + b);
     final mb = (downBytes + st_.cacheBytes()) / 1024 / 1024;
-    return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
+    return Scaffold(body: ScrollButtons(child: ListView(padding: EdgeInsets.zero, children: [
       Container(
         height: 132 + MediaQuery.of(context).padding.top,
         decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFC3D2DD), Color(0xFFE2DCCB)])),
@@ -138,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         InkWell(onTap: null, child: Padding(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4), child: Row(children: [Expanded(child: Text(s('logout'), style: st(15, color: C.ember.withValues(alpha: .5)))), Text(s('soon'), style: st(12, color: C.inkFaint))]))),
         InkWell(onTap: _wipe, child: Padding(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4), child: Text(s('wipe'), style: st(15, color: C.ember)))),
       ])),
-    ]));
+    ])));
   }
 
   Future<void> _cdn() async {

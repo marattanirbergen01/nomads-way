@@ -7,6 +7,7 @@ import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 import '../path/path_tab.dart' show LoadError;
 import 'awards_meta.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class ReadinessTab extends StatefulWidget {
   const ReadinessTab({super.key, required this.services});
@@ -30,7 +31,7 @@ class _ReadinessTabState extends State<ReadinessTab> {
         builder: (context, snap) {
           if (snap.hasError) return LoadError(services: _s, message: '${snap.error}', onRetry: () => setState(() => _data = _s.content.curriculum()));
           if (!snap.hasData) return const Center(child: CircularProgressIndicator(color: C.gold));
-          return _content(snap.data!);
+          return ScrollButtons(child: _content(snap.data!));
         },
       );
 

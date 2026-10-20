@@ -7,6 +7,7 @@ import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 import 'faq_screen.dart';
 import 'settings_screen.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key, required this.services});
@@ -52,7 +53,7 @@ class _ProfileTabState extends State<ProfileTab> {
     final look = _s.store.look;
     final name = _s.store.playerName.isEmpty ? 'Айдар' : _s.store.playerName;
 
-    return ListView(padding: EdgeInsets.zero, children: [
+    return ScrollButtons(child: ListView(padding: EdgeInsets.zero, children: [
       Container(
         decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [C.skyTop, C.skyMid, C.skyWarm], stops: [0, .62, 1])),
         padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 6, 20, 20),
@@ -98,7 +99,7 @@ class _ProfileTabState extends State<ProfileTab> {
             Padding(padding: const EdgeInsets.only(right: 10), child: Container(width: 40, height: 40, decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: C.cardHigh)), child: Icon(ic, size: 19, color: C.inkFaint))),
         ])),
       ])),
-    ]);
+    ]));
   }
 
   void _sources(BuildContext context) => showModalBottomSheet(

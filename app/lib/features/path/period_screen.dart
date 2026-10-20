@@ -4,6 +4,7 @@ import '../../core/theme.dart';
 import '../../data/models/curriculum.dart';
 import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class PeriodScreen extends StatefulWidget {
   const PeriodScreen({super.key, required this.period, required this.topics, required this.catalog, required this.services, required this.openEntry});
@@ -26,7 +27,7 @@ class _PeriodScreenState extends State<PeriodScreen> {
     final s = _s.s; final l = _s.l;
     final eps = widget.catalog.where((e) => e.inPeriod(widget.period.id)).toList()..sort((a, b) => a.number.compareTo(b.number));
     final done = eps.where((e) => !e.planned && _s.store.result(e.id) != null).length;
-    return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
+    return Scaffold(body: ScrollButtons(child: ListView(padding: EdgeInsets.zero, children: [
       SizedBox(height: 200, child: Stack(fit: StackFit.expand, children: [
         NetArt(url: _s.content.mediaUrl('s1e01', 'cover_season1'), fallback: Container(color: C.skyTop)),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
@@ -52,7 +53,7 @@ class _PeriodScreenState extends State<PeriodScreen> {
           ])),
         ])),
       ])),
-    ]));
+    ])));
   }
 }
 

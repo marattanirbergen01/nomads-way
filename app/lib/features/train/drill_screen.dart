@@ -8,6 +8,7 @@ import '../../engine/quiz_runner.dart';
 import '../../engine/scheduler.dart';
 import '../quiz/quiz_widgets.dart';
 import '../readiness/award_screen.dart';
+import '../../widgets/scroll_buttons.dart';
 
 /// Набор вопросов без сюжета: пробный ЕНТ и работа над ошибками используют один экран.
 class DrillScreen extends StatefulWidget {
@@ -64,7 +65,8 @@ class _DrillScreenState extends State<DrillScreen> {
     return Scaffold(
       appBar: AppBar(backgroundColor: C.ground, foregroundColor: C.ink, elevation: 0, scrolledUnderElevation: 0,
           leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20), onPressed: () => Navigator.pop(context))),
-      body: SafeArea(child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560), child: body))),
+      body: SafeArea(child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560),
+          child: ScrollButtons(key: ValueKey('${_quiz.index}-${_result != null}'), child: body)))),
     );
   }
 }

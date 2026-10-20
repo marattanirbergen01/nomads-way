@@ -17,6 +17,7 @@ import '../../widgets/ornament.dart';
 import '../quiz/quiz_widgets.dart';
 import '../readiness/award_screen.dart';
 import 'scene_menu.dart';
+import '../../widgets/scroll_buttons.dart';
 
 /// Плеер серии: сцена → выбор → «выбор сделан» → вопросы → разбор → … → итоговый тест.
 /// «Назад» листает сюжет по одной реплике; перемотка заблокирована, пока не дочитан текст.
@@ -334,7 +335,8 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
     return const Center(child: CircularProgressIndicator(color: C.gold));
   }
 
-  Widget _center(Widget w) => Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560), child: w));
+  Widget _center(Widget w) => Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 560),
+      child: ScrollButtons(key: ValueKey('${_quiz?.index}-${_result != null}'), child: w)));
 
   double get _progress {
     final i = widget.episode.indexOf(_story.scene.id);

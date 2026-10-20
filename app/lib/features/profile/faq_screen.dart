@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/services.dart';
 import '../../core/theme.dart';
 import '../../widgets/ornament.dart';
+import '../../widgets/scroll_buttons.dart';
 
 class FaqScreen extends StatelessWidget {
   const FaqScreen({super.key, required this.services});
@@ -25,7 +26,7 @@ class FaqScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = services.s; final items = services.l == 'kk' ? _kk : _ru;
-    return Scaffold(body: ListView(padding: EdgeInsets.zero, children: [
+    return Scaffold(body: ScrollButtons(child: ListView(padding: EdgeInsets.zero, children: [
       Container(
         height: 132 + MediaQuery.of(context).padding.top,
         decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFC3D2DD), Color(0xFFE2DCCB)])),
@@ -42,6 +43,6 @@ class FaqScreen extends StatelessWidget {
           children: [Padding(padding: const EdgeInsets.fromLTRB(4, 0, 4, 14), child: Text(a, style: st(14.5, color: const Color(0xFFE8D9BD), height: 1.5)))],
         )),
       ])),
-    ]));
+    ])));
   }
 }

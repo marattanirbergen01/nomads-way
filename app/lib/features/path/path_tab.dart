@@ -7,6 +7,7 @@ import '../../widgets/common.dart';
 import '../../widgets/ornament.dart';
 import 'episode_intro_screen.dart';
 import 'period_screen.dart';
+import '../../widgets/scroll_buttons.dart';
 
 /// Жол: баннер сезона, «Жалғастыру», периоды программы.
 class PathTab extends StatefulWidget {
@@ -44,7 +45,7 @@ class _PathTabState extends State<PathTab> {
           if (snap.hasError) return LoadError(services: _s, message: '${snap.error}', onRetry: _refresh);
           if (!snap.hasData) return const Center(child: CircularProgressIndicator(color: C.gold));
           final (catalog, topics) = snap.data!;
-          return _content(catalog, topics);
+          return ScrollButtons(child: _content(catalog, topics));
         },
       );
 
