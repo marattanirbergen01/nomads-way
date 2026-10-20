@@ -273,3 +273,11 @@
   author: 'неизвестен (исходник); правка — Marat Tanirbergen'
   date: '2026-09-15'
   hist_review: 'Marat, 2026-09-15 — сверено с историком (устно)'
+- id: char_burundyq
+  file: content/media/s1/characters/char_burundyq.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_burundyq.md; txt2img, seed 2287733095, steps 4. Достоверных портретов не существует, канон назначен; иконография — по живописному портрету из интернета (шапка, кафтан), конкретное произведение не копируется.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
