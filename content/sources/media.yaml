@@ -473,3 +473,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: art_s1e02_025_outside
+  file: content/media/s1/scenes/art_s1e02_025_outside.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_025_outside.md; txt2img, seed 3233626397, steps 4, 768×1344.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null

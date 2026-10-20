@@ -608,13 +608,15 @@
   note: 'Личный слой. Аватар не рисуется — бюст кладёт плеер.'
 - id: art_s1e02_025_outside
   kind: scene
-  status: missing
+  status: approved
   brief: 'Ветка seiit_deal: аватар держит коней снаружи, ворота открываются изнутри.'
-  seed: null
+  seed: 3233626397
   prompt_ref: prompts/scenes/art_s1e02_025_outside.md
-  approved_by: null
-  file: null
-  note: 'Личный слой. Ночь у ворот снаружи, ветка seiit_deal.'
+  approved_by: Marat
+  file: scenes/art_s1e02_025_outside.png
+  generated: '2026-10-20'
+  note: 'Личный слой, ветка seiit_deal. ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 3233626397, третья проба (в первых людей срасталось с конями, а слова про воинов в блоке стиля тянули седоков — для кадра блок урезан). Кони у верёвки с пустыми сёдлами; на двух крайних маленькие фигуры — принято. Аватар не рисуется.'
+
 - id: art_s1e02_026a
   kind: scene
   status: missing
