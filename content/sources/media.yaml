@@ -385,3 +385,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: art_s1e02_040
+  file: content/media/s1/scenes/art_s1e02_040.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/scenes/art_s1e02_040.md; txt2img, seed 908502268, steps 4, 768×1344.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
