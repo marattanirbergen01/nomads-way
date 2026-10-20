@@ -490,12 +490,14 @@
   note: 'Канон Бурундука, портрет для кружка. txt2img 896×1152, steps 4. Пробы 1–3 отклонены (не та одежда; узкое лицо, морщины). Лицо уже, чем на образце (лопасти шапки прижаты к щекам) — Марат принял вариант B. Без визы историка в сборку не идёт.'
 - id: char_qasym
   kind: character
-  status: missing
+  status: approved
   brief: 'Касым-султан молодой (1470-е, sc030, sc050). Образ — kk.wikipedia: остроконечный шлем, длинные волосы, борода, волчий мех.'
-  seed: null
+  seed: 2819017190
   prompt_ref: prompts/characters/char_qasym.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_qasym.png
+  generated: '2026-10-20'
+  note: 'Канон молодого Касыма, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Без визы историка в сборку не идёт.'
 - id: char_qasym_khan
   kind: character
   status: missing
