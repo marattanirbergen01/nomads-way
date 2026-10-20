@@ -540,12 +540,14 @@
   note: 'Канон Рузбихана, портрет для кружка. txt2img 896×1152, steps 4. Вариант B из двух. За кушаком кисть вместо калама — в кружке не видно; в кадре sc080 калам задавать отдельно. Без визы историка в сборку не идёт.'
 - id: char_ubaidulla
   kind: character
-  status: missing
+  status: approved
   brief: 'Убайдулла около 23, шайбанидский принц-книжник. Достоверного портрета нет.'
-  seed: null
+  seed: 1625787702
   prompt_ref: prompts/characters/char_ubaidulla.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_ubaidulla.png
+  generated: '2026-10-20'
+  note: 'Канон Убайдуллы, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Черты ближе к ближневосточным, чем к тюрко-монгольским — оставлено. Без визы историка в сборку не идёт.'
 - id: char_seiit
   kind: character
   status: approved

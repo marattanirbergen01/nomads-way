@@ -337,3 +337,11 @@
   author: Marat Tanirbergen
   date: '2026-10-20'
   hist_review: null
+- id: char_ubaidulla
+  file: content/media/s1/characters/char_ubaidulla.png
+  license: own-generation
+  origin: 'ИИ-генерация по промпту content/media/s1/prompts/characters/char_ubaidulla.md; txt2img, seed 1625787702, steps 4. Достоверного портрета Убайдуллы не существует, образ назначен.'
+  tool: 'Draw Things · FLUX.2 [klein] 4B 8-bit'
+  author: Marat Tanirbergen
+  date: '2026-10-20'
+  hist_review: null
