@@ -268,7 +268,12 @@ Map<String, Object?> _validateEpisode(Map ep, List<Map> questions, Map<String, M
     final opts = (q['options'] as List).cast<Map>();
     if (opts.length != 4) err('$qid: вариантов ${opts.length}, нужно 4');
     if (opts.where((o) => o['correct'] == true).length != 1) err('$qid: должен быть ровно один correct');
-    if (!sources.contains((q['source'] as String).split('#').first)) err('$qid: неизвестный источник ${q['source']}');
+    // Источников может быть несколько через «;»: «bank:school_tests_2026; tb06_ru#§30,с.126» —
+    // вопрос из банка школы, подтверждён учебником. «bank:» — пометка, что ссылка на сборник тестов.
+    for (final ref in (q['source'] as String).split(';')) {
+      final id = ref.trim().replaceFirst(RegExp(r'^bank:'), '').split('#').first;
+      if (!sources.contains(id)) err('$qid: неизвестный источник ${ref.trim()}');
+    }
     if ((q['distractor_note'] as String?)?.isEmpty ?? true) err('$qid: нет distractor_note');
     _needLangs(q['stem'] as Map, '$qid stem');
     _needLangs(q['explain'] as Map, '$qid explain');
