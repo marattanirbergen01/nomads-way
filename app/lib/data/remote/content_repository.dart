@@ -117,7 +117,8 @@ class ContentRepository {
         if (episodes.supported) rethrow;
       }
     }
-    text ??= await _fetchText('bank/bank.json');
+    // отпечаток в адресе: тот же банк берётся из кэша браузера, новый — скачивается
+    text ??= await _fetchText('bank/bank.json${hash == null ? '' : '?v=$hash'}');
     _bank = Bank.fromJson((jsonDecode(text) as Map).cast<String, dynamic>());
     _bankHash = hash;
     return _bank!;
@@ -135,7 +136,10 @@ class ContentRepository {
 
   Future<dynamic> _get(String path) async {
     try {
-      final r = await _client.get(Uri.parse('$baseUrl/$path')).timeout(const Duration(seconds: 8));
+      // Служебные json маленькие и меняются при каждой сборке, а хостинг (GitHub Pages) разрешает браузеру
+      // держать их 10 минут: без метки времени игрок видел старый каталог без новой серии.
+      final r = await _client.get(Uri.parse('$baseUrl/$path?t=${DateTime.now().millisecondsSinceEpoch ~/ 60000}'))
+          .timeout(const Duration(seconds: 8));
       if (r.statusCode != 200) throw Exception('GET $path → ${r.statusCode}');
       final text = utf8.decode(r.bodyBytes);
       await store.cache(path, text);
