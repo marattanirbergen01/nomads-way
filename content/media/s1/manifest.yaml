@@ -544,12 +544,14 @@
   file: null
 - id: char_seiit
   kind: character
-  status: missing
-  brief: 'Сейит, сарт-купец (вымысел).'
-  seed: null
+  status: approved
+  brief: 'Сейит, сарт-купец из Сыгнака (вымысел).'
+  seed: 1909604760
   prompt_ref: prompts/characters/char_seiit.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: characters/char_seiit.png
+  generated: '2026-10-20'
+  note: 'Вымышленный персонаж, портрет для кружка. txt2img 896×1152, steps 4. Вариант A из двух. Историку не нужен (fiction).'
 - id: char_dana
   kind: character
   status: missing
