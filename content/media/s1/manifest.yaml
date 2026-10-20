@@ -431,12 +431,14 @@
   note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 2447852137. Воины смотрят в разные стороны (а не все на Касыма), ворота целые — принято.'
 - id: art_s1e02_080
   kind: scene
-  status: missing
+  status: approved
   brief: 'Богатый шатёр, вечер, огонь. Пожилой персидский историк с каламом и тетрадью. Напротив молодой султан смотрит в огонь.'
-  seed: null
+  seed: 857812810
   prompt_ref: prompts/scenes/art_s1e02_080.md
-  approved_by: null
-  file: null
+  approved_by: Marat
+  file: scenes/art_s1e02_080.png
+  generated: '2026-10-20'
+  note: 'ВЕРТИКАЛЬНЫЙ 768×1344. txt2img, steps 4, seed 857812810, третья проба. Стража и кони в первых двух шли из общего блока стиля (слова про воинов, шлемы, коней) — для этой сцены блок урезан. Лампы — медные чаши с фитилём.'
 - id: art_s1e02_090
   kind: scene
   status: missing
