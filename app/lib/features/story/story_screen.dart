@@ -15,6 +15,7 @@ import '../../engine/season_vars.dart';
 import '../../engine/story_runner.dart';
 import '../../widgets/art.dart';
 import '../../widgets/avatar.dart';
+import '../../widgets/choice_toasts.dart';
 import '../../widgets/ornament.dart';
 import '../../widgets/scene_fx/particles.dart';
 import '../../widgets/scene_fx/scene_camera.dart';
@@ -269,6 +270,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   void _choose(Option o) {
     if (_locked) return;
     _story.choose(o);
+    if (o.toasts.isNotEmpty) setState(() { _toasts = o.toasts; _toastKey++; });
     if (o.reply == null) { _advance(); return; }
     // ответ на выбор — обычная реплика аватара: без крупного повтора варианта
     _transcript.add(_Line(scene: _story.scene, beat: -1, who: _avatarId, text: o.reply!, emo: o.replyEmo ?? 'calm', optionId: o.id, art: o.art));
@@ -391,8 +393,39 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _s.locale,
-        builder: (context, _) => Scaffold(backgroundColor: C.ground, body: _body()),
+        builder: (context, _) => Scaffold(backgroundColor: C.ground, body: Stack(children: [
+          Positioned.fill(child: _body()),
+          // плашки после выбора поверх всего, тапы не перехватывают
+          if (_toasts != null)
+            Positioned.fill(child: ChoiceToasts(
+              key: ValueKey(_toastKey), toasts: _toasts!, locale: _l,
+              onAccent: _toastSound,
+              onDone: () { if (mounted) setState(() => _toasts = null); },
+            )),
+        ])),
       );
+
+  // ---------------------------------------------------------------- плашки после выбора
+  List<ChoiceToast>? _toasts;
+  int _toastKey = 0;
+
+  /// Звук в начале акцента: черта — тёплый звон, последствие и предмет — далёкий дабыл. По настройке «Дыбыс».
+  Future<void> _toastSound(ChoiceToast t) async {
+    if (!_s.store.sound) return;
+    final v = VideoPlayerController.asset(
+        t.kind == ToastKind.trait ? 'assets/toasts/toast_trait.wav' : 'assets/toasts/toast_consequence.wav',
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
+    try {
+      await v.initialize();
+      await v.setVolume(.8);
+      await v.play();
+      await Future<void>.delayed(const Duration(milliseconds: 900));
+    } catch (_) {
+      // браузер без жеста или без звука — тихо
+    } finally {
+      await v.dispose();
+    }
+  }
 
   Widget _body() {
     final s = _s.s;

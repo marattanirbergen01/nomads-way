@@ -158,11 +158,13 @@ class Choice implements Beat {
 }
 
 class Option {
-  Option({required this.id, required this.text, required this.set, required this.goto, this.art, this.reply, this.replyEmo});
+  Option({required this.id, required this.text, required this.set, required this.goto, this.art, this.reply, this.replyEmo, this.toasts = const []});
   final String id;
   final L10n text;
   final Map<String, int> set;
   final String goto;
+  /// Плашки после выбора: черты «+N», потом последствия / предметы (до трёх).
+  final List<ChoiceToast> toasts;
   /// Свой кадр у опции — развилка показывается двумя картинками.
   final String? art;
   /// Что произошло после выбора — текст экрана «выбор сделан».
@@ -173,6 +175,7 @@ class Option {
         id: j['id'],
         text: L10n.fromJson(j['text']),
         set: {for (final e in (j['set'] as Map? ?? {}).entries) e.key as String: (e.value as num).toInt()},
+        toasts: [for (final t in (j['toasts'] as List? ?? const [])) ChoiceToast.fromJson((t as Map).cast<String, dynamic>())],
         goto: j['goto'],
         art: j['art'],
         reply: j['reply'] == null ? null : L10n.fromJson(j['reply']),
@@ -184,4 +187,21 @@ class FinalTestSpec {
   const FinalTestSpec({required this.single, required this.context});
   final int single;
   final int context;
+}
+
+enum ToastKind { trait, memory, item }
+
+/// Плашка после выбора («+2 Батылдық», «Бекет мұны ұмытпайды»).
+class ChoiceToast {
+  const ChoiceToast({required this.kind, required this.text, this.n = 0, this.icon});
+  final ToastKind kind;
+  final L10n text;
+  final int n;
+  final String? icon;
+  factory ChoiceToast.fromJson(Map<String, dynamic> j) => ChoiceToast(
+        kind: switch (j['kind']) { 'trait' => ToastKind.trait, 'item' => ToastKind.item, _ => ToastKind.memory },
+        text: L10n.fromJson((j['text'] as Map).cast<String, dynamic>()),
+        n: (j['n'] as num?)?.toInt() ?? 0,
+        icon: j['icon'],
+      );
 }

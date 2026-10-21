@@ -56,6 +56,8 @@ void main(List<String> args) {
   // банк школы грузится до серий: его вопросы встают в quiz сцен по раскладке (см. _bankQuiz)
   final bank = _loadBank(content, sources, const {});
   final bankMaps = <String, Map>{};
+  // подписи переменных сюжета для плашек после выбора: content/vars/<season>.yaml
+  final varsBySeason = <String, Map>{};
 
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
@@ -79,6 +81,7 @@ void main(List<String> args) {
     });
     if (seasonFx.containsKey(id)) fxUsed.add(id);
     final fx = _sceneFx(id, ep, seasonFx[id]);
+    final seasonVarsLabels = varsBySeason.putIfAbsent(season, () => _loadVarLabels(content, season));
     final seasonBankMap = bankMaps.putIfAbsent(season, () {
       final f = File(p.join(content, _bankMapPath(season)));
       return f.existsSync() ? (_yaml(f.path) as Map? ?? {}) : {};
@@ -92,7 +95,7 @@ void main(List<String> args) {
     if (errors.isEmpty) {
       final outMedia = p.join(content, 'media', season, 'out');
       _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(outMedia),
-          motion: _motion(outMedia, _artsOf(ep)), fx: fx, bankQuiz: bankQuiz);
+          motion: _motion(outMedia, _artsOf(ep)), fx: fx, bankQuiz: bankQuiz, varLabels: seasonVarsLabels);
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -341,7 +344,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}, Map<String, List<Map<String, Object?>>> bankQuiz = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}, Map<String, List<Map<String, Object?>>> bankQuiz = const {}, Map varLabels = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -405,6 +408,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                       {
                         'id': o['id'], 'text': t(o), 'set': o['set'] ?? {}, 'goto': o['goto'],
                         if (o['art'] != null) 'art': o['art'],
+                        if (_toasts(o['set'] as Map? ?? const {}, varLabels) case final ts when ts.isNotEmpty) 'toasts': ts,
                         if (o['reply'] is Map) 'reply': t(o['reply'] as Map),
                         if (o['reply'] is Map && (o['reply'] as Map)['emotion'] != null) 'replyEmo': (o['reply'] as Map)['emotion'],
                       },
@@ -766,6 +770,48 @@ List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
   }
   for (final r in roots) walk(r, null);
   return out;
+}
+
+// ---------------------------------------------------------------- плашки после выбора
+/// content/vars/<season>.yaml: `traits` (черта, «+N название») и `flags` (с `toast` — «это запомнят» / предмет).
+Map _loadVarLabels(String content, String season) {
+  final f = File(p.join(content, 'vars', '$season.yaml'));
+  if (!f.existsSync()) return const {};
+  final y = _yaml(f.path) as Map? ?? {};
+  void need(String where, Object? m) {
+    if (m is! Map || (m['kk'] as String?)?.trim().isEmpty != false || (m['ru'] as String?)?.trim().isEmpty != false) {
+      err('vars/$season.yaml $where: нужны kk и ru');
+    }
+  }
+  for (final e in ((y['traits'] as Map?) ?? {}).entries) { need('traits.${e.key}', e.value); }
+  for (final e in ((y['flags'] as Map?) ?? {}).entries) {
+    final toast = (e.value as Map?)?['toast'];
+    if (toast != null) need('flags.${e.key}.toast', toast);
+  }
+  return y;
+}
+
+/// Плашки варианта: сначала черты (в порядке set, «+N»), потом флаги с подписью; не больше трёх.
+/// Переменная без подписи — молча без плашки.
+List<Map<String, Object?>> _toasts(Map set, Map labels) {
+  final traits = (labels['traits'] as Map?) ?? const {};
+  final flags = (labels['flags'] as Map?) ?? const {};
+  final res = <Map<String, Object?>>[];
+  for (final e in set.entries) {
+    final t = traits[e.key];
+    if (t is Map && e.value is int && (e.value as int) > 0) {
+      res.add({'kind': 'trait', 'n': e.value, 'text': {'kk': t['kk'], 'ru': t['ru']}, if (t['icon'] != null) 'icon': t['icon']});
+    }
+  }
+  for (final e in set.entries) {
+    final f = flags[e.key];
+    final toast = f is Map ? f['toast'] : null;
+    if (toast is Map) {
+      res.add({'kind': f['icon'] == 'icon_flag_item' ? 'item' : 'memory', 'text': {'kk': toast['kk'], 'ru': toast['ru']},
+          if (f['icon'] != null) 'icon': f['icon']});
+    }
+  }
+  return res.take(3).toList();
 }
 
 // ---------------------------------------------------------------- вопросы банка в сериях

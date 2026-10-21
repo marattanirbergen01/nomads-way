@@ -34,6 +34,8 @@ flutter:
   # awards/ — ролики раскрытия наград (marketing/awards-motion, 720×1280, 60 fps): это анимация интерфейса.
   assets:
     - assets/awards/
+    # toasts/ — дымка и звуки плашек после выбора (эталон «Анимации»: content/media/s1/app/toasts)
+    - assets/toasts/
   fonts:
     - family: Golos
       fonts:
