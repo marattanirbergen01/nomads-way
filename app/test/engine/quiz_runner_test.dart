@@ -34,3 +34,4 @@ void main() {
     expect(t.where((q) => q.format == QFormat.single).length, 2);
   });
 }
+

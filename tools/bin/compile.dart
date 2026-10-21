@@ -411,8 +411,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                   ],
                 },
           ],
-          // свои вопросы сцены, затем вопросы банка школы по раскладке
-          'quiz': [...(s['quiz'] as List? ?? []), for (final q in bankQuiz[s['id']] ?? const <Map>[]) q['id']],
+          // вопросы банка школы сюжет не прерывают (решение Марата 2026-10-21): только итоговый тест
+          'quiz': s['quiz'] ?? [],
         },
     ],
     'finalTest': {'single': ep['final_test']?['single'] ?? 10, 'context': ep['final_test']?['context'] ?? 10},
@@ -559,7 +559,7 @@ Map<String, _Fx> _sceneFx(String id, Map ep, Object? raw) {
 
 void _print(String id, Map report) {
   stdout.writeln('$id  сцен ${report['scenes']}  битов ${report['beats']}  выборов ${report['choices']}  '
-      'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context${(report['bank'] ?? 0) > 0 ? ', из банка школы ${report['bank']}' : ''})  '
+      'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context${(report['bank'] ?? 0) > 0 ? ', из них банка школы ${report['bank']} — в итоговый тест' : ''})  '
       'фактов ${report['facts_covered']}  виза: ${report['approved_by'] ?? '—'}');
 }
 
@@ -773,7 +773,8 @@ List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
 /// «Сборка» студии перезаписывает content/episodes/, а студия про вопросы банка не знает.
 String _bankMapPath(String season) => p.join('scripts', season, 'yaml', 'bank_map.yaml');
 
-/// Сцена → вопросы банка в формате questions.json. Правила серий (fact ↔ covers, explain) к ним
+/// Сцена → вопросы банка в формате questions.json. В quiz сцены они не встают — только в набор
+/// итогового теста серии (и оттуда в повторение); сцена в раскладке — где прозвучал ответ (проверяется). Правила серий (fact ↔ covers, explain) к ним
 /// не применяются; check / image_missing и контекстные (без текста контекста не решаются) — пропуск.
 Map<String, List<Map<String, Object?>>> _bankQuiz(String id, Map ep, Object? raw, _Bank? bank, Set<String> ownIds) {
   if (raw == null) return const {};

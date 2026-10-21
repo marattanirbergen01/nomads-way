@@ -48,11 +48,25 @@ class QuizRunner {
 
   /// Итоговый тест серии в формате ЕНТ: n одиночных + m контекстных из банка.
   /// Если банк меньше — берём всё, что есть.
+  /// Один факт (у вопросов банка школы — одна тема ЕНТ) — один вопрос за тест: одинаковые по смыслу
+  /// формулировки не встречаются в одном тесте. Не хватает разных фактов — добираем без ограничения.
   static List<Question> composeFinal(List<Question> bank, {required int single, required int context, Random? random}) {
     final r = random ?? Random();
-    final s = bank.where((q) => q.format == QFormat.single).toList()..shuffle(r);
-    final c = bank.where((q) => q.format == QFormat.context).toList()..shuffle(r);
-    return [...s.take(single), ...c.take(context)];
+    List<Question> pick(QFormat f, int n) {
+      final pool = bank.where((q) => q.format == f).toList()..shuffle(r);
+      final out = <Question>[]; final facts = <String>{};
+      for (final q in pool) {
+        if (out.length == n) break;
+        if (q.fact.isNotEmpty && !facts.add(q.fact)) continue;
+        out.add(q);
+      }
+      for (final q in pool) {
+        if (out.length == n) break;
+        if (!out.contains(q)) out.add(q);
+      }
+      return out;
+    }
+    return [...pick(QFormat.single, single), ...pick(QFormat.context, context)];
   }
 }
 
