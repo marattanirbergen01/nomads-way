@@ -88,13 +88,16 @@ class ExplainView extends StatelessWidget {
           Text(q.correct.text.of(locale), style: st(17, w: 600, color: C.right)),
           const SizedBox(height: 14),
         ],
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: C.card, borderRadius: BorderRadius.circular(8)),
-          child: Text(q.explain.of(locale), style: st(16, height: 1.5)),
-        ),
-        const SizedBox(height: 10),
-        Text(q.source, style: st(11.5, color: C.inkFaint)),
+        // у вопросов банка школы объяснения нет — пустой блок не показываем
+        if (q.explain.of(locale).isNotEmpty) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: C.card, borderRadius: BorderRadius.circular(8)),
+            child: Text(q.explain.of(locale), style: st(16, height: 1.5)),
+          ),
+          const SizedBox(height: 10),
+        ],
+        Text(q.fromBank ? s('bank.source') : q.source, style: st(11.5, color: C.inkFaint)),
         const SizedBox(height: 24),
         GoldButton(label: s('next'), onTap: onNext),
       ],

@@ -42,6 +42,7 @@ class Question {
         options: [for (final o in j['options']) AnswerOption.fromJson(o)],
         explain: L10n.fromJson(j['explain']),
         source: j['source'],
+        shuffle: j['shuffle'] != false,
       );
 }
 

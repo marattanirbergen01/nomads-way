@@ -76,7 +76,7 @@ class Str {
     'your.answer': 'Сіздің жауабыңыз:',
     'no.mistakes': 'Қате жоқ — керемет!',
     'bank.loading': 'Сұрақтар базасы жүктелуде',
-    'task': 'Тапсырма', 'tag.right': 'Дұрыс жауап', 'tag.yours': 'Сіздің жауабыңыз',
+    'task': 'Тапсырма', 'tag.right': 'Дұрыс жауап', 'bank.source': 'Мектептің тест жинағынан', 'tag.yours': 'Сіздің жауабыңыз',
   };
 
   static const _r = <String, String>{
@@ -146,6 +146,6 @@ class Str {
     'your.answer': 'Ваш ответ:',
     'no.mistakes': 'Ошибок нет — отлично!',
     'bank.loading': 'Загружается база вопросов',
-    'task': 'Задание', 'tag.right': 'Правильный ответ', 'tag.yours': 'Ваш ответ',
+    'task': 'Задание', 'tag.right': 'Правильный ответ', 'bank.source': 'Из сборника тестов школы', 'tag.yours': 'Ваш ответ',
   };
 }

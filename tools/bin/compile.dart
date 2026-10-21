@@ -53,6 +53,10 @@ void main(List<String> args) {
   // живой кадр: content/fx/<season>.yaml — камера, частицы, ударные реплики (отдельно от серий, их пишет студия)
   final fxBySeason = <String, Map>{};
   final fxUsed = <String>{};
+  // банк школы грузится до серий: его вопросы встают в quiz сцен по раскладке (см. _bankQuiz)
+  final bank = _loadBank(content, sources, const {});
+  final bankMaps = <String, Map>{};
+
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
     final id = ep['episode'] as String;
@@ -75,11 +79,20 @@ void main(List<String> args) {
     });
     if (seasonFx.containsKey(id)) fxUsed.add(id);
     final fx = _sceneFx(id, ep, seasonFx[id]);
+    final seasonBankMap = bankMaps.putIfAbsent(season, () {
+      final f = File(p.join(content, _bankMapPath(season)));
+      return f.existsSync() ? (_yaml(f.path) as Map? ?? {}) : {};
+    });
+    final bankQuiz = _bankQuiz(id, ep, seasonBankMap[id], bank, {for (final q in questions) q['id'] as String});
+    final bankN = bankQuiz.values.fold<int>(0, (n, l) => n + l.length);
+    report['questions'] = (report['questions'] as int) + bankN;
+    report['single'] = (report['single'] as int) + bankN;
+    report['bank'] = bankN;
     if (check) { _print(id, report); continue; }
     if (errors.isEmpty) {
       final outMedia = p.join(content, 'media', season, 'out');
       _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(outMedia),
-          motion: _motion(outMedia, _artsOf(ep)), fx: fx);
+          motion: _motion(outMedia, _artsOf(ep)), fx: fx, bankQuiz: bankQuiz);
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -98,8 +111,15 @@ void main(List<String> args) {
   }
 
   // ---- банк пробника ЕНТ: вне сюжета, правила серий к нему не применяются
-  final bank = _loadBank(content, sources, seriesQids);
-  if (bank != null) _printBank(bank);
+  if (bank != null) {
+    for (final q in bank.questions) {
+      if (seriesQids.contains(q['id'])) err('bank ${q['id']}: id совпадает с вопросом серии');
+    }
+    for (final c in bank.contexts) {
+      if (seriesQids.contains(c['id'])) err('bank ${c['id']}: id совпадает с вопросом серии');
+    }
+    _printBank(bank);
+  }
 
   stdout.writeln('');
   for (final w in warnings) stdout.writeln('  △ $w');
@@ -321,7 +341,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}, Map<String, List<Map<String, Object?>>> bankQuiz = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -391,7 +411,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                   ],
                 },
           ],
-          'quiz': s['quiz'] ?? [],
+          // свои вопросы сцены, затем вопросы банка школы по раскладке
+          'quiz': [...(s['quiz'] as List? ?? []), for (final q in bankQuiz[s['id']] ?? const <Map>[]) q['id']],
         },
     ],
     'finalTest': {'single': ep['final_test']?['single'] ?? 10, 'context': ep['final_test']?['context'] ?? 10},
@@ -414,6 +435,7 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
         'explain': t(q['explain']),
         'source': q['source'],
       },
+    for (final l in bankQuiz.values) ...l,
   ];
 
   final manifest = {
@@ -537,7 +559,7 @@ Map<String, _Fx> _sceneFx(String id, Map ep, Object? raw) {
 
 void _print(String id, Map report) {
   stdout.writeln('$id  сцен ${report['scenes']}  битов ${report['beats']}  выборов ${report['choices']}  '
-      'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context)  '
+      'вопросов ${report['questions']} (${report['single']} single / ${report['context']} context${(report['bank'] ?? 0) > 0 ? ', из банка школы ${report['bank']}' : ''})  '
       'фактов ${report['facts_covered']}  виза: ${report['approved_by'] ?? '—'}');
 }
 
@@ -744,6 +766,54 @@ List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
   }
   for (final r in roots) walk(r, null);
   return out;
+}
+
+// ---------------------------------------------------------------- вопросы банка в сериях
+/// Раскладка вопросов банка школы по сценам — от окна «Контент». Лежит отдельно от серий:
+/// «Сборка» студии перезаписывает content/episodes/, а студия про вопросы банка не знает.
+String _bankMapPath(String season) => p.join('scripts', season, 'yaml', 'bank_map.yaml');
+
+/// Сцена → вопросы банка в формате questions.json. Правила серий (fact ↔ covers, explain) к ним
+/// не применяются; check / image_missing и контекстные (без текста контекста не решаются) — пропуск.
+Map<String, List<Map<String, Object?>>> _bankQuiz(String id, Map ep, Object? raw, _Bank? bank, Set<String> ownIds) {
+  if (raw == null) return const {};
+  final where = 'bank_map/$id';
+  if (raw is! Map) { err('$where: ожидался словарь сцен'); return const {}; }
+  if (bank == null) { err('$where: банк не собран, вопросы банка ставить некуда'); return const {}; }
+  final byId = {for (final q in bank.questions) q['id']: q};
+  final scenes = {for (final s in (ep['scenes'] as List).cast<Map>()) s['id'] as String: s};
+  final seen = <String>{};
+  final res = <String, List<Map<String, Object?>>>{};
+  for (final e in raw.entries) {
+    final sid = e.key as String;
+    final scene = scenes[sid];
+    if (scene == null) { err('$where: сцены $sid нет в серии'); continue; }
+    if (scene['layer'] == 'personal') { err('$where/$sid: personal-сцена не несёт quiz'); continue; }
+    for (final qid in (e.value as List? ?? const []).cast<String>()) {
+      final q = byId[qid];
+      if (q == null) { err('$where/$sid: вопроса $qid нет в банке'); continue; }
+      if (ownIds.contains(qid) || !seen.add(qid)) { warn('$where/$sid: $qid уже стоит в серии — пропущен'); continue; }
+      if (q['check'] == true || q['image_missing'] == true) { warn('$where/$sid: $qid помечен check/image_missing — пропущен'); continue; }
+      if (q['format'] != 'single') { warn('$where/$sid: $qid контекстный (без текста не решается) — пропущен'); continue; }
+      final opts = (q['options'] as List).cast<Map>();
+      (res[sid] ??= []).add({
+        'id': qid,
+        'fact': q['topic'] == null ? '' : 'ent.${q['topic']}',
+        'topic': q['topic'] == null ? null : 'ent.${q['topic']}',
+        'format': 'single',
+        'context': null,
+        'difficulty': 2,
+        'stem': q['stem'],
+        'options': [
+          for (var i = 0; i < opts.length; i++) {'id': '$qid.$i', 'text': opts[i], 'correct': i == q['answer']},
+        ],
+        'explain': <String, String>{},
+        'source': 'school_tests_2026',
+        if (q['shuffle'] == false) 'shuffle': false,
+      });
+    }
+  }
+  return res;
 }
 
 // ---------------------------------------------------------------- банк пробника ЕНТ

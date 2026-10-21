@@ -142,3 +142,10 @@ characters/<id>.png        портреты исторических лиц    �
 
 ## content/media/<season>/manifest.yaml
 `{id, file, kind: scene|card|cover, license, origin, author, seed, prompt_ref, approved_by}`.
+
+## content/scripts/<season>/yaml/bank_map.yaml — вопросы банка школы в сценах
+`<серия>: {<сцена>: [id вопросов банка]}`. Компилятор добавляет их в `quiz` сцены после своих вопросов сцены.
+Правила серий (`fact` ↔ `covers`, `explain`, `distractor_note`) к ним не применяются; `ru` — из перевода банка.
+Пропускаются с предупреждением: `check`, `image_missing`, контекстные (без текста не решаются), повторы.
+Ошибка: сцены нет, вопроса нет в банке, сцена `personal`. Файл отдельно от серий: «Сборка» студии перезаписывает
+`content/episodes/`. Ключи `skipped`, `duplicates` — пометки редактора, компилятор их не читает.
