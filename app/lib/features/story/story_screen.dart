@@ -16,6 +16,9 @@ import '../../engine/story_runner.dart';
 import '../../widgets/art.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/ornament.dart';
+import '../../widgets/scene_fx/particles.dart';
+import '../../widgets/scene_fx/scene_camera.dart';
+import '../../widgets/scene_fx/typewriter.dart';
 import '../quiz/quiz_widgets.dart';
 import '../readiness/award_screen.dart';
 import 'scene_menu.dart';
@@ -50,6 +53,14 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   AnswerResult? _result;
   bool _finalTest = false;
   late final AnimationController _lock = AnimationController(vsync: this);
+  /// Печать текущей реплики: тап по недопечатанной строке допечатывает её, а не листает дальше.
+  final _typer = TypewriterController();
+  /// Реплики, которые уже допечатаны: после «Артқа» и возврата они показываются сразу целиком.
+  final _typed = <int>{};
+  /// Когда игрок вошёл в сцену: от этого момента считается фаза камеры, чтобы она не прыгала
+  /// при смене экрана реплики на экран выбора.
+  final _sceneSince = <String, DateTime>{};
+  DateTime _since(Scene s) => _sceneSince.putIfAbsent(s.id, DateTime.now);
 
   Services get _s => widget.services;
   String get _l => _s.l;
@@ -71,7 +82,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   }
 
   @override
-  void dispose() { _lock.dispose(); _motion?.dispose(); super.dispose(); }
+  void dispose() { _lock.dispose(); _typer.dispose(); _motion?.dispose(); super.dispose(); }
 
   // ---------------------------------------------------------------- анимированные карты
   // Ролик кадра играет один раз за заход в серию и замирает на последнем кадре (постер — тот же кадр PNG).
@@ -81,9 +92,9 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   String? _motionArt;
   bool _motionPlaying = false;
 
-  Widget _sceneArt(String art, int pan, {bool browsing = false}) {
+  Widget _sceneArt(Scene scene, String art, {bool browsing = false}) {
     final lang = widget.episode.motionLang(art, _l);
-    if (lang == null) return _Art(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), pan: pan);
+    if (lang == null) return _liveArt(scene, art);
     if (!browsing && _motionPlayed.add(art)) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startMotion(art, lang));
     }
@@ -122,6 +133,27 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       if (mounted && _motion == v) setState(() => _motionPlaying = false);
     }
   }
+
+  /// Кадр сцены с живой камерой и частицами (content/fx). Огонь едет вместе с картинкой,
+  /// погода висит над кадром.
+  Widget _liveArt(Scene scene, String art) {
+    final url = _s.content.mediaUrl(_id, art), file = _s.content.mediaFile(_id, art);
+    final lw = _artWidth(scene);
+    final anchored = scene.fx.where((f) => f.anchored).toList();
+    final ambient = scene.fx.where((f) => !f.anchored).toList();
+    return Stack(fit: StackFit.expand, children: [
+      SceneCamera(
+        since: _since(scene), pan: scene.pan, spec: scene.camera,
+        provider: Art.provider(url: url, file: file, logicalWidth: lw, dpr: MediaQuery.devicePixelRatioOf(context)),
+        image: Art(url: url, file: file, fit: BoxFit.fill, logicalWidth: lw),
+        anchored: anchored.isEmpty ? null : ParticleLayer(key: ValueKey('${scene.id}/$art'), fx: anchored, seed: scene.id.hashCode),
+      ),
+      if (ambient.isNotEmpty) ParticleLayer(key: ValueKey('${scene.id}/air'), fx: ambient, seed: scene.id.hashCode + 1),
+    ]);
+  }
+
+  /// Под какую ширину декодировать кадр: камера приближает его, без запаса он мылится.
+  double _artWidth(Scene scene) => MediaQuery.sizeOf(context).width * scene.camera.maxZoom;
 
   // ---------------------------------------------------------------- сюжет
   void _advance() {
@@ -172,7 +204,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
         final poster = widget.episode.motionPoster(art, lang);
         return Art.provider(url: _s.content.mediaNamedUrl(_id, poster), file: _s.content.mediaNamedFile(_id, poster), logicalWidth: w, dpr: dpr);
       }
-      return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: w, dpr: dpr);
+      return Art.provider(url: _s.content.mediaUrl(_id, art), file: _s.content.mediaFile(_id, art), logicalWidth: _artWidth(scenes[k]), dpr: dpr);
     }
     final next = provider(i + 1);
     if (next != null) precacheImage(next, context, onError: (_, __) {});
@@ -220,6 +252,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       setState(() { _browse = _browse! + 1 >= _transcript.length - 1 ? null : _browse! + 1; });
       return;
     }
+    if (!_typer.isDone) { _typer.complete(); return; }
     if (_locked || _story.awaitingChoice) return;
     _advance();
   }
@@ -229,6 +262,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
   /// Назад — только перечитать. Сюжет не откатывается, выбор не отменяется.
   void _back() {
     if (!_canBack) return;
+    _typer.complete(); // недопечатанная реплика считается прочитанной — назад и обратно без повторной печати
     setState(() { _browse = _browse == null ? _transcript.length - 2 : _browse! - 1; });
   }
 
@@ -528,7 +562,6 @@ class _SayView extends StatelessWidget {
   final String? artOverride;
   @override
   Widget build(BuildContext context) {
-    final l = st_._l;
     final avatar = st_._isAvatar(say.who);
     final isNarrator = say.who == 'narrator';
     final name = st_._speakerName(say.who);
@@ -539,9 +572,9 @@ class _SayView extends StatelessWidget {
       onTap: st_._tapForward,
       child: Stack(fit: StackFit.expand, children: [
         if (artOverride != null)
-          _Art(url: st_._s.content.mediaUrl(st_._id, artOverride!), file: st_._s.content.mediaFile(st_._id, artOverride!), pan: scene.pan)
+          st_._liveArt(scene, artOverride!)
         else
-          st_._sceneArt(scene.artFor(st_._story.vars), scene.pan, browsing: browsing),
+          st_._sceneArt(scene, scene.artFor(st_._story.vars), browsing: browsing),
         const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
             colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x40221A14)], stops: [0, .24, .5, .75]))),
         if (avatar)
@@ -572,10 +605,7 @@ class _SayView extends StatelessWidget {
               ),
             Padding(
               padding: EdgeInsets.fromLTRB(22, isNarrator ? 0 : (avatar ? 14 : 0), 22, 0),
-              child: Align(alignment: Alignment.centerLeft, child: Text(
-                say.text.ofPlayer(l, st_._player),
-                style: st(19, w: 500, height: 1.45).copyWith(fontStyle: isNarrator ? FontStyle.italic : FontStyle.normal, shadows: _sh),
-              )),
+              child: Align(alignment: Alignment.centerLeft, child: _line(context)),
             ),
             _Controls(st_, browsing: browsing),
           ]),
@@ -591,6 +621,27 @@ class _SayView extends StatelessWidget {
             )),
           ),
       ]),
+    );
+  }
+}
+
+extension on _SayView {
+  /// Живая реплика печатается по буквам; перечитываемая (Артқа) — сразу целиком.
+  Widget _line(BuildContext context) {
+    final text = say.text.ofPlayer(st_._l, st_._player);
+    final style = st(19, w: 500, height: 1.45)
+        .copyWith(fontStyle: say.who == 'narrator' ? FontStyle.italic : FontStyle.normal, shadows: _sh);
+    final id = Object.hash(scene.id, text, st_._transcript.length);
+    if (browsing || st_._typed.contains(id)) return Text(text, style: style);
+    final cps = const [28.0, 40.0, 60.0][st_._s.store.textSpeed.clamp(0, 2)];
+    return TypewriterText(
+      text,
+      key: ValueKey(id),
+      style: style,
+      controller: st_._typer,
+      charsPerSecond: cps * (say.impact ? .7 : 1),
+      delay: Duration(milliseconds: say.impact ? 450 : 0),
+      onDone: () => st_._typed.add(id),
     );
   }
 }
@@ -636,7 +687,7 @@ class _ChoiceView extends StatelessWidget {
       ]);
     }
     return Stack(fit: StackFit.expand, children: [
-      st_._sceneArt(scene.artFor(st_._story.vars), scene.pan),
+      st_._sceneArt(scene, scene.artFor(st_._story.vars)),
       const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
           colors: [Color(0x99141010), Color(0x00141010), Color(0x00141010), Color(0x66221A14)], stops: [0, .24, .5, .8]))),
       Positioned(left: 0, right: 0, bottom: 0, child: Container(

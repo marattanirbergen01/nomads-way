@@ -50,6 +50,9 @@ void main(List<String> args) {
   final seriesQids = <String>{};
   // переменные сюжета, которые ставят уже прочитанные серии сезона: игрок приносит их с собой
   final seasonVars = <String, Set<String>>{};
+  // живой кадр: content/fx/<season>.yaml — камера, частицы, ударные реплики (отдельно от серий, их пишет студия)
+  final fxBySeason = <String, Map>{};
+  final fxUsed = <String>{};
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
     final id = ep['episode'] as String;
@@ -66,11 +69,17 @@ void main(List<String> args) {
     final report = _validateEpisode(ep, questions, facts, sources, media, strict, inherited: inherited);
     inherited.addAll((report['sets'] as Set<String>?) ?? const {});
     report.remove('sets');
+    final seasonFx = fxBySeason.putIfAbsent(season, () {
+      final f = File(p.join(content, 'fx', '$season.yaml'));
+      return f.existsSync() ? (_yaml(f.path) as Map? ?? {}) : {};
+    });
+    if (seasonFx.containsKey(id)) fxUsed.add(id);
+    final fx = _sceneFx(id, ep, seasonFx[id]);
     if (check) { _print(id, report); continue; }
     if (errors.isEmpty) {
       final outMedia = p.join(content, 'media', season, 'out');
       _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(outMedia),
-          motion: _motion(outMedia, _artsOf(ep)));
+          motion: _motion(outMedia, _artsOf(ep)), fx: fx);
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -80,6 +89,12 @@ void main(List<String> args) {
       });
     }
     _print(id, report);
+  }
+
+  for (final e in fxBySeason.entries) {
+    for (final id in e.value.keys) {
+      if (!fxUsed.contains(id)) warn('fx/${e.key}.yaml: серии $id нет — запись не используется');
+    }
   }
 
   // ---- банк пробника ЕНТ: вне сюжета, правила серий к нему не применяются
@@ -306,7 +321,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -344,6 +359,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
           if (s['layer'] != null) 'layer': s['layer'],
           if (s['pan'] != null) 'pan': s['pan'],
           if (s['avatar'] != null) 'avatarSide': s['avatar'],
+          if (fx[s['id']]?.camera != null) 'camera': fx[s['id']]!.camera,
+          if (fx[s['id']]?.layers.isNotEmpty ?? false) 'fx': fx[s['id']]!.layers,
           if (s['art_when'] != null)
             'artWhen': [
               for (final r in (s['art_when'] as List).cast<Map>())
@@ -351,12 +368,13 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
             ],
           'covers': s['covers'] ?? [],
           'beats': [
-            for (final b in (s['beats'] as List).cast<Map>())
+            for (final (i, b) in (s['beats'] as List).cast<Map>().indexed)
               if (b.containsKey('say'))
                 {
                   'type': 'say', 'who': b['say']['who'], 'text': t(b['say']),
                   if ((b['say']['emotion'] ?? b['say']['emo']) != null) 'emo': b['say']['emotion'] ?? b['say']['emo'],
                   if (b['say']['when'] != null) 'when': _parseCond(b['say']['when'].toString()),
+                  if (fx[s['id']]?.impact.contains(i) ?? false) 'impact': true,
                 }
               else
                 {
@@ -424,6 +442,97 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
   File(p.join(dir.path, 'episode.json')).writeAsStringSync(enc.convert(episode));
   File(p.join(dir.path, 'questions.json')).writeAsStringSync(enc.convert(qs));
   File(p.join(dir.path, 'manifest.json')).writeAsStringSync(enc.convert(manifest));
+}
+
+// ---------------------------------------------------------------- живой кадр
+/// Эффекты одной сцены в том виде, в каком их читает клиент.
+class _Fx {
+  Map<String, Object>? camera;
+  final layers = <Map<String, Object>>[];
+  final impact = <int>{};
+}
+
+const _moves = ['still', 'breathe', 'push', 'pull', 'pan'];
+const _layerTypes = ['dust', 'sand', 'fog', 'snow', 'embers', 'firelight'];
+
+/// Проверяет запись серии из content/fx/<season>.yaml и приводит её к виду для episode.json.
+/// Ударная реплика задаётся куском её текста (kk или ru) — так запись не съезжает, когда реплики добавляют.
+Map<String, _Fx> _sceneFx(String id, Map ep, Object? raw) {
+  if (raw == null) return const {};
+  if (raw is! Map) { err('fx/$id: ожидался словарь сцен'); return const {}; }
+  final scenes = {for (final s in (ep['scenes'] as List).cast<Map>()) s['id'] as String: s};
+  final res = <String, _Fx>{};
+  for (final e in raw.entries) {
+    final sid = e.key as String;
+    final where = 'fx/$id/$sid';
+    final scene = scenes[sid];
+    if (scene == null) { err('$where: такой сцены в серии нет'); continue; }
+    final spec = e.value;
+    if (spec is! Map) { err('$where: ожидались camera / fx / impact'); continue; }
+    for (final k in spec.keys) {
+      if (!const ['camera', 'fx', 'impact'].contains(k)) err('$where: неизвестное поле $k');
+    }
+    final fx = res[sid] = _Fx();
+
+    final cam = spec['camera'];
+    if (cam != null) {
+      final m = cam is String ? {'move': cam} : cam;
+      if (m is! Map) {
+        err('$where camera: строка или {move, …}');
+      } else {
+        final move = m['move'];
+        if (!_moves.contains(move)) err('$where camera: move — одно из ${_moves.join('|')}');
+        for (final k in m.keys) {
+          if (!const ['move', 'zoom', 'from', 'to', 'dur', 'pan_y'].contains(k)) err('$where camera: неизвестное поле $k');
+        }
+        num? n(String k, num lo, num hi) {
+          final v = m[k];
+          if (v == null) return null;
+          if (v is! num || v < lo || v > hi) { err('$where camera: $k — число $lo..$hi'); return null; }
+          return v;
+        }
+        final zoom = n('zoom', 1, 1.5), from = n('from', 0, 100), to = n('to', 0, 100), dur = n('dur', 3, 60), panY = n('pan_y', 0, 100);
+        fx.camera = {
+          'move': '$move',
+          if (zoom != null) 'zoom': zoom, if (from != null) 'from': from, if (to != null) 'to': to,
+          if (dur != null) 'dur': dur, if (panY != null) 'panY': panY,
+        };
+      }
+    }
+
+    for (final l in (spec['fx'] as List? ?? const [])) {
+      final m = l is String ? {'type': l} : l;
+      if (m is! Map || !_layerTypes.contains(m['type'])) { err('$where fx: тип — одно из ${_layerTypes.join('|')}'); continue; }
+      final out = <String, Object>{'type': m['type'] as String};
+      const ranges = {'x': [0, 1], 'y': [0, 1], 'r': [0.05, 1.5], 'density': [0, 3], 'wind': [-3, 3]};
+      for (final k in m.keys) {
+        if (k == 'type') continue;
+        final r = ranges[k];
+        final v = m[k];
+        if (r == null) { err('$where fx ${m['type']}: неизвестное поле $k'); continue; }
+        if (v is! num || v < r[0] || v > r[1]) { err('$where fx ${m['type']}: $k — число ${r[0]}..${r[1]}'); continue; }
+        out[k as String] = v;
+      }
+      if ((m['type'] == 'embers' || m['type'] == 'firelight') && (m['x'] == null || m['y'] == null)) {
+        warn('$where fx ${m['type']}: без x, y огонь встанет в центр кадра');
+      }
+      fx.layers.add(out);
+    }
+
+    final beats = (scene['beats'] as List).cast<Map>();
+    for (final q in (spec['impact'] as List? ?? const [])) {
+      final hits = [
+        for (final (i, b) in beats.indexed)
+          if (b['say'] is Map && ['kk', 'ru'].any((l) => '${(b['say'] as Map)[l] ?? ''}'.contains('$q'))) i,
+      ];
+      if (hits.length != 1) {
+        err('$where impact «$q»: ${hits.isEmpty ? 'нет реплики с таким текстом' : 'подходит ${hits.length} реплики — уточните'}');
+      } else {
+        fx.impact.add(hits.single);
+      }
+    }
+  }
+  return res;
 }
 
 void _print(String id, Map report) {

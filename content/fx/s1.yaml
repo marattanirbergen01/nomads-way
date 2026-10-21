@@ -1,0 +1,49 @@
+# Живой кадр сезона 1: камера, частицы, ударные реплики. Формат — docs/CONTENT_FORMAT.md, «content/fx».
+# Файл отдельный от серий: «Сборка» студии перезаписывает content/episodes/, а этот файл не трогает.
+# Сцены без записи «дышат» (лёгкое приближение туда-обратно); `camera: still` — неподвижный кадр.
+
+s1e01:
+  sc010:   # разорённый аул после набега
+    camera: {move: pan, from: 35, to: 60, dur: 20}
+    fx: [dust]
+    impact: ["кто это угоняет табун"]
+  sc020:   # совет в юрте у очага
+    fx:
+      - {type: firelight, x: 0.52, y: 0.76, r: 0.75}
+      - {type: embers, x: 0.52, y: 0.72}
+  sc025:   # откочёвка по снегу
+    camera: {move: push, zoom: 1.12, dur: 16}
+    fx: [{type: snow, wind: -0.6}]
+  sc038:   # войско в пыли
+    camera: {move: push, zoom: 1.1, dur: 14}
+    fx: [{type: dust, density: 1.4}]
+
+s1e02:
+  sc020:   # ворота открываются ночью
+    camera: {move: push, zoom: 1.08, dur: 14}
+    fx: [{type: firelight, x: 0.53, y: 0.4, r: 0.35}]
+    impact: ["открываются изнутри"]
+  sc025:
+    impact: ["Темир открывает ворота"]
+  sc026b:  # набат
+    impact: ["в мечеть"]
+  sc030:   # султан перевязывает рану у костра
+    fx:
+      - {type: firelight, x: 0.52, y: 0.8, r: 0.7}
+      - {type: embers, x: 0.52, y: 0.78}
+  sc040:
+    impact: ["К восточным воротам"]
+  sc080:   # шатёр историка, жаровня
+    fx:
+      - {type: firelight, x: 0.47, y: 0.6, r: 0.65}
+      - {type: embers, x: 0.47, y: 0.58, density: 0.6}
+  sc100:   # битва под Сыгнаком, зима
+    camera: {move: push, zoom: 1.18, pan_y: 55, dur: 16}
+    fx: [fog, {type: snow, wind: 1.2, density: 0.8}]
+    impact: ["Вперёд!"]
+  sc110:   # Мерв, пески
+    camera: {move: pull, zoom: 1.15, dur: 18}
+    fx: [{type: sand, wind: -1}, {type: dust, wind: -1}]
+  sc120:   # дорога на Самарканд
+    camera: {move: pan, from: 30, to: 70, dur: 20}
+    fx: [{type: dust, density: 0.8}]

@@ -1,4 +1,7 @@
 import '../../core/l10n.dart';
+import 'scene_fx.dart';
+
+export 'scene_fx.dart';
 
 class Episode {
   Episode({required this.id, required this.title, required this.scenes, required this.characters, required this.finalTest, this.era, this.mediaExt = const {}, this.motion = const {}});
@@ -61,6 +64,7 @@ class Scene {
   Scene({
     required this.id, required this.art, required this.covers, required this.beats, required this.quiz,
     this.title, this.layer, this.pan = 50, this.avatarRight = false, this.artWhen = const [],
+    this.camera = CameraSpec.breathe, this.fx = const [],
   });
   final String id;
   final String art;
@@ -73,6 +77,10 @@ class Scene {
   final bool avatarRight;
   /// Кадр по условию на переменные сюжета: первое совпавшее правило; иначе [art].
   final List<ArtRule> artWhen;
+  /// Движение камеры по кадру; без записи — лёгкое «дыхание».
+  final CameraSpec camera;
+  /// Слои частиц поверх кадра: пыль, песок, туман, снег, искры, отсвет огня.
+  final List<FxLayer> fx;
 
   /// Какой кадр показать при текущих переменных — так вечерняя сцена помнит, где поставили юрту.
   String artFor(Map<String, int> vars) {
@@ -93,6 +101,8 @@ class Scene {
         pan: (j['pan'] as num?)?.toInt() ?? 50,
         avatarRight: j['avatarSide'] == 'right',
         artWhen: [for (final r in (j['artWhen'] as List? ?? [])) ArtRule.fromJson(r)],
+        camera: j['camera'] == null ? CameraSpec.breathe : CameraSpec.fromJson(j['camera']),
+        fx: [for (final f in (j['fx'] as List? ?? [])) FxLayer.fromJson(f)].whereType<FxLayer>().toList(),
       );
 }
 
@@ -120,7 +130,7 @@ class Cond {
 sealed class Beat {
   factory Beat.fromJson(Map<String, dynamic> j) => switch (j['type']) {
         'say' => Say(
-            who: j['who'], text: L10n.fromJson(j['text']), emo: j['emo'],
+            who: j['who'], text: L10n.fromJson(j['text']), emo: j['emo'], impact: j['impact'] == true,
             when: [for (final c in (j['when'] as List? ?? [])) Cond(c['var'], c['op'], (c['value'] as num).toInt())],
           ),
         'choice' => Choice(prompt: L10n.fromJson(j['prompt']), options: [for (final o in j['options']) Option.fromJson(o)]),
@@ -129,13 +139,15 @@ sealed class Beat {
 }
 
 class Say implements Beat {
-  Say({required this.who, required this.text, this.emo, this.when = const []});
+  Say({required this.who, required this.text, this.emo, this.when = const [], this.impact = false});
   final String who;
   final L10n text;
   /// calm | joy | alarm | sorrow — состояние аватара в этой реплике; null = calm.
   final String? emo;
   /// Условие показа на переменные сюжета; пустое — реплика звучит всегда.
   final List<Cond> when;
+  /// Ударная реплика: перед ней пауза длиннее, печатается медленнее.
+  final bool impact;
   bool visible(Map<String, int> vars) => when.every((c) => c.test(vars[c.name] ?? 0));
 }
 
