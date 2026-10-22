@@ -1,0 +1,39 @@
+# Переменные сюжета сезона 1 — подписи для всплывающих уведомлений после выбора
+# («+1 Батылдық» вверху экрана, как «+1 Кровавая Луна» в референсе Марата).
+# Предложение — docs/DECISIONS.md, 2026-10-21. Пока «Код» не сделал показ, файл ничего не меняет.
+#
+# trait  — черта аватара, копится за сезон: тост «+N <название>».
+# flag   — факт выбора: тост показывается, только если задан `toast` (последствие «это запомнят»).
+#          Флаги без `toast` — скрытые, игроку не показываются.
+# icon   — id из media/manifest.yaml (kind icon), кадры делает окно «Медиа».
+
+traits:
+  courage:    { kk: Батылдық,     ru: Смелость,        icon: icon_trait_courage }
+  loyalty:    { kk: Адалдық,      ru: Верность,        icon: icon_trait_loyalty }
+  justice:    { kk: Әділдік,      ru: Справедливость,  icon: icon_trait_justice }
+  caution:    { kk: Сақтық,       ru: Осторожность,    icon: icon_trait_caution }
+  practical:  { kk: Пысықтық,     ru: Смекалка,        icon: icon_trait_practical }
+  vigilant:   { kk: Байқағыш,     ru: Наблюдательность, icon: icon_trait_vigilant }
+  memory:     { kk: Даналық,      ru: Мудрость,        icon: icon_trait_memory }
+
+flags:
+  # e02
+  saved_beket:    { toast: { kk: "Бекет мұны ұмытпайды",       ru: "Бекет это запомнит" },          icon: icon_flag_memory }
+  scar:           { toast: { kk: "Бетте — тыртық",             ru: "На щеке — шрам" },              icon: icon_flag_memory }
+  seiit_book:     { toast: { kk: "Сейіттің есеп кітабы",       ru: "Счётная книга Сейита" },        icon: icon_flag_item }
+  seiit_enemy:    { toast: { kk: "Сейіт мұны ұмытпайды",       ru: "Сейит этого не забудет" },      icon: icon_flag_memory }
+  # e03
+  kasym_token:    { toast: { kk: "Қасым ханның белгісі",       ru: "Знак Касым-хана" },             icon: icon_flag_item }
+  bai_enemy:      { toast: { kk: "Құдайберген мұны ұмытпайды", ru: "Кудайберген этого не забудет" }, icon: icon_flag_memory }
+  wrote_laws:     { toast: { kk: "Заң жазылды",                ru: "Закон записан" },               icon: icon_flag_memory }
+  path_bii:       { toast: { kk: "Би жолы",                    ru: "Путь бия" },                    icon: icon_flag_memory }
+  path_warrior:   { toast: { kk: "Жауынгер жолы",              ru: "Путь воина" },                  icon: icon_flag_memory }
+  # e04
+  zhaqyp_friend:  { toast: { kk: "Жақып мұны ұмытпайды",       ru: "Жакып это запомнит" },          icon: icon_flag_memory }
+  aqtanker_brother: { toast: { kk: "Ақтаңкер мұны ұмытпайды",  ru: "Актанкер это запомнит" },       icon: icon_flag_memory }
+  dagger:         { toast: { kk: "Тыртықты адамның қанжары",   ru: "Кинжал человека со шрамом" },   icon: icon_flag_item }
+  # e05
+  letter_saved:   { toast: { kk: "Хан хаты сақталды",          ru: "Письмо хана спасено" },       icon: icon_flag_memory }
+  # остальные флаги (yurt_*, seiit_deal, named_*, role_*, raised_alarm, followed_seiit, zhaqyp_won/lost,
+  # foal_test, bai_word, blocked_road, stayed_tahir, haqnazar_oath, nogai_friend, aqtanker_wedding,
+  # saw_agent, key_given, caught_clerk, seiit_trace, lied_to_esaul) — скрытые: их смысл и так виден в reply.
