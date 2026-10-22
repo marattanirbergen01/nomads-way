@@ -1,4 +1,5 @@
 import '../../core/l10n.dart';
+import '../../engine/games/game_spec.dart';
 import 'scene_fx.dart';
 
 export 'scene_fx.dart';
@@ -64,9 +65,11 @@ class Scene {
   Scene({
     required this.id, required this.art, required this.covers, required this.beats, required this.quiz,
     this.title, this.layer, this.pan = 50, this.avatarRight = false, this.artWhen = const [],
-    this.camera = CameraSpec.breathe, this.fx = const [],
+    this.camera = CameraSpec.breathe, this.fx = const [], this.games = const [],
   });
   final String id;
+  /// Мини-игры сцены (эксперимент): идут после реплик, до вопросов.
+  final List<GameSpec> games;
   final String art;
   final List<String> covers;
   final List<Beat> beats;
@@ -92,6 +95,7 @@ class Scene {
 
   factory Scene.fromJson(Map<String, dynamic> j) => Scene(
         id: j['id'],
+        games: [for (final g in (j['games'] as List? ?? const [])) GameSpec.fromJson((g as Map).cast<String, dynamic>())],
         art: j['art'],
         covers: (j['covers'] as List).cast<String>(),
         beats: [for (final b in j['beats']) Beat.fromJson(b)],

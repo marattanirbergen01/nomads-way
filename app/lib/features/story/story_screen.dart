@@ -16,6 +16,7 @@ import '../../engine/story_runner.dart';
 import '../../widgets/art.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/choice_toasts.dart';
+import '../games/game_screen.dart';
 import '../../widgets/ornament.dart';
 import '../../widgets/scene_fx/particles.dart';
 import '../../widgets/scene_fx/scene_camera.dart';
@@ -166,6 +167,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       _s.store.saveContinueMeta(_id, widget.episode.indexOf(_story.scene.id), widget.episode.scenes.length);
     }
     final e = _story.next();
+    if (e is GameBreak) { _playGame(e); return; }
     if (e is BeatEvent) {
       final b = e.beat;
       if (b is Say) _transcript.add(_Line(scene: e.scene, beat: e.scene.beats.indexOf(b), who: b.who, text: b.text, emo: b.emo ?? 'calm'));
@@ -404,6 +406,31 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
             )),
         ])),
       );
+
+  // ---------------------------------------------------------------- мини-игры (эксперимент)
+  /// Игра на весь экран; исход ставит переменные (как вариант выбора), даёт плашки и реплику аватара.
+  void _playGame(GameBreak e) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final art = e.game.art ?? e.scene.artFor(_story.vars);
+      final lang = widget.episode.motionLang(art, _l);
+      final name = lang == null ? null : widget.episode.motionPoster(art, lang);
+      final outcome = await GameScreen.play(context, e.game, _l,
+          artUrl: name == null ? _s.content.mediaUrl(_id, art) : _s.content.mediaNamedUrl(_id, name),
+          artFile: name == null ? _s.content.mediaFile(_id, art) : _s.content.mediaNamedFile(_id, name));
+      if (!mounted) return;
+      _story.finishGame(outcome);
+      final out = e.game.outcome(outcome);
+      if (out.toasts.isNotEmpty) setState(() { _toasts = out.toasts; _toastKey++; });
+      final reply = out.reply;
+      if (reply == null || _event is! BeatEvent) { _advance(); return; }
+      // ответ аватара — как после выбора: обычная реплика, следующий тап ведёт дальше
+      final o = Option(id: 'game:${e.game.id}', text: e.game.title, set: const {}, goto: '', reply: reply);
+      _transcript.add(_Line(scene: e.scene, beat: -1, who: _avatarId, text: reply, emo: 'calm', optionId: o.id));
+      _startLock(reply.of(_l));
+      setState(() => _chosen = o);
+    });
+  }
 
   // ---------------------------------------------------------------- плашки после выбора
   List<ChoiceToast>? _toasts;

@@ -36,7 +36,7 @@ void main(List<String> args) {
       files[name] = File(p.join(epDir.path, name));
     }
     final manifest = jsonDecode(File(p.join(epDir.path, 'manifest.json')).readAsStringSync()) as Map<String, dynamic>;
-    final media = <String>{...(manifest['media'] as List).cast<String>(), 'cover_$id'};
+    final media = <String>{...(manifest['media'] as List).cast<String>(), ...((manifest['gameMedia'] as List?) ?? const []).cast<String>(), 'cover_$id'};
     var missing = 0;
     // кадр может быть png (карта): расширение из episode.json → mediaExt, по умолчанию jpg
     final epJson = jsonDecode(files['episode.json']!.readAsStringSync()) as Map;

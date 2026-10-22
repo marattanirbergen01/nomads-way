@@ -1,4 +1,5 @@
 import '../data/models/episode.dart';
+import 'games/game_spec.dart';
 
 /// Исполняет граф сцен серии. Чистая машина состояний, без Flutter.
 ///
@@ -18,20 +19,39 @@ class StoryRunner {
   String? _pendingGoto;
   bool _awaitingChoice = false;
   bool _ended = false;
+  int _gameIdx = 0;
+  GameSpec? _awaitingGame;
 
   Scene get scene => episode.scenes[_sceneIdx];
   bool get awaitingChoice => _awaitingChoice;
   bool get ended => _ended;
+  GameSpec? get awaitingGame => _awaitingGame;
+
+  /// Игра сыграна (или пропущена — тогда partial): исход ставит переменные, как set варианта.
+  void finishGame(GameOutcome o) {
+    final g = _awaitingGame;
+    if (g == null) throw StateError('Сейчас нет игры');
+    for (final e in g.outcome(o).set.entries) { vars[e.key] = (vars[e.key] ?? 0) + e.value; }
+    _awaitingGame = null;
+  }
 
   StoryEvent next() {
     if (_ended) return const EpisodeEnd();
     if (_awaitingChoice) throw StateError('Сначала choose()');
+    if (_awaitingGame != null) throw StateError('Сначала finishGame()');
 
     while (_beatIdx < scene.beats.length) {
       final b = scene.beats[_beatIdx++];
       if (b is Say && !b.visible(vars)) continue;   // реплика не для этой ветки
       if (b is Choice) _awaitingChoice = true;
       return BeatEvent(b, scene);
+    }
+    // мини-игры сцены — после реплик, до вопросов; условие when как у реплик
+    while (_gameIdx < scene.games.length) {
+      final g = scene.games[_gameIdx++];
+      if (!g.visible(vars)) continue;
+      _awaitingGame = g;
+      return GameBreak(g, scene);
     }
     if (!_quizEmitted) {
       _quizEmitted = true;
@@ -60,6 +80,7 @@ class StoryRunner {
     if (_sceneIdx < 0) throw StateError('goto $goto: сцена не найдена');
     _beatIdx = 0;
     _quizEmitted = false;
+    _gameIdx = 0;
     return next();
   }
 
@@ -67,6 +88,7 @@ class StoryRunner {
   Map<String, dynamic> snapshot() => {
         'scene': scene.id, 'beat': _beatIdx, 'quiz': _quizEmitted,
         'goto': _pendingGoto, 'awaiting': _awaitingChoice, 'ended': _ended, 'vars': vars,
+        'game': _gameIdx, if (_awaitingGame != null) 'awaitingGame': _awaitingGame!.id,
       };
 
   /// Восстановление терпимо к изменившемуся сценарию: если сцены больше нет
@@ -83,6 +105,14 @@ class StoryRunner {
     r._pendingGoto = (goto == null || goto == 'end' || ep.indexOf(goto) >= 0) ? goto : null;
     r._awaitingChoice = s['awaiting'] == true;
     r._ended = s['ended'] == true;
+    final games = ep.scenes[idx].games;
+    r._gameIdx = (s['game'] as int? ?? 0).clamp(0, games.length);
+    // ушли посреди игры — она начнётся заново с того же места
+    final ag = s['awaitingGame'] as String?;
+    if (ag != null) {
+      final gi = games.indexWhere((g) => g.id == ag);
+      if (gi >= 0) r._gameIdx = gi;
+    }
     return r;
   }
 }
@@ -91,3 +121,4 @@ sealed class StoryEvent { const StoryEvent(); }
 class BeatEvent extends StoryEvent { const BeatEvent(this.beat, this.scene); final Beat beat; final Scene scene; }
 class QuizBreak extends StoryEvent { const QuizBreak(this.questionIds, this.scene); final List<String> questionIds; final Scene scene; }
 class EpisodeEnd extends StoryEvent { const EpisodeEnd(); }
+class GameBreak extends StoryEvent { const GameBreak(this.game, this.scene); final GameSpec game; final Scene scene; }

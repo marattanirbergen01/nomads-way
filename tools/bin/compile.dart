@@ -58,6 +58,8 @@ void main(List<String> args) {
   final bankMaps = <String, Map>{};
   // подписи переменных сюжета для плашек после выбора: content/vars/<season>.yaml
   final varsBySeason = <String, Map>{};
+  // мини-игры (эксперимент): content/games/<season>.yaml
+  final gamesBySeason = <String, Map>{};
 
   for (final file in episodeFiles) {
     final ep = _yaml(file.path) as Map;
@@ -82,6 +84,11 @@ void main(List<String> args) {
     if (seasonFx.containsKey(id)) fxUsed.add(id);
     final fx = _sceneFx(id, ep, seasonFx[id]);
     final seasonVarsLabels = varsBySeason.putIfAbsent(season, () => _loadVarLabels(content, season));
+    final seasonGames = gamesBySeason.putIfAbsent(season, () {
+      final f = File(p.join(content, 'games', '$season.yaml'));
+      return f.existsSync() ? (_yaml(f.path) as Map? ?? {}) : {};
+    });
+    final games = _games(id, ep, seasonGames[id], sources, seasonVarsLabels);
     final seasonBankMap = bankMaps.putIfAbsent(season, () {
       final f = File(p.join(content, _bankMapPath(season)));
       return f.existsSync() ? (_yaml(f.path) as Map? ?? {}) : {};
@@ -95,7 +102,7 @@ void main(List<String> args) {
     if (errors.isEmpty) {
       final outMedia = p.join(content, 'media', season, 'out');
       _write(out, id, ep, questions, factTopic, report, portraitMedia: portraits, mediaExt: _mediaExt(outMedia),
-          motion: _motion(outMedia, _artsOf(ep)), fx: fx, bankQuiz: bankQuiz, varLabels: seasonVarsLabels);
+          motion: _motion(outMedia, _artsOf(ep)), fx: fx, bankQuiz: bankQuiz, varLabels: seasonVarsLabels, games: games);
       compiled++;
       catalog.add({
         'id': id, 'number': _numberOf(id), 'season': season,
@@ -344,7 +351,7 @@ void _needLangs(Map m, String where) {
 }
 
 // ---------------------------------------------------------------- вывод
-void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}, Map<String, List<Map<String, Object?>>> bankQuiz = const {}, Map varLabels = const {}}) {
+void _write(String out, String id, Map ep, List<Map> questions, Map<String, String> factTopic, Map report, {Set<String> portraitMedia = const {}, Map<String, String> mediaExt = const {}, Map<String, Map<String, String>> motion = const {}, Map<String, _Fx> fx = const {}, Map<String, List<Map<String, Object?>>> bankQuiz = const {}, Map varLabels = const {}, Map<String, List<Map>> games = const {}}) {
   final dir = Directory(p.join(out, id))..createSync(recursive: true);
   final enc = const JsonEncoder.withIndent('  ');
 
@@ -415,6 +422,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
                   ],
                 },
           ],
+          // мини-игры (эксперимент): после реплик сцены, до её вопросов
+          if (games[s['id']] case final g? when g.isNotEmpty) 'games': g,
           // вопросы банка школы сюжет не прерывают (решение Марата 2026-10-21): только итоговый тест
           'quiz': s['quiz'] ?? [],
         },
@@ -457,6 +466,8 @@ void _write(String out, String id, Map ep, List<Map> questions, Map<String, Stri
               if (o['art'] != null) o['art'],
       ],
     ],
+    // свои картинки мини-игр (art у игры, например «чистая» карта без маршрута) — в бандл серии
+    'gameMedia': [for (final l in games.values) for (final g in l) if (g['art'] != null) g['art']],
     // файлы роликов и постеров: pack.dart кладёт их в бандл как есть
     if (motion.isNotEmpty) 'motionFiles': [
       for (final e in motion.entries)
@@ -770,6 +781,95 @@ List<Map<String, Object?>> _flatCurriculum(List<Map> roots) {
   }
   for (final r in roots) walk(r, null);
   return out;
+}
+
+// ---------------------------------------------------------------- мини-игры (эксперимент)
+/// content/games/<season>.yaml: серия → сцена → [игры]. Формат — docs/TZ_minigames.md.
+/// Проверяет, что сцена есть, тексты kk/ru, источник в реестре и что победа достижима.
+Map<String, List<Map>> _games(String id, Map ep, Object? raw, Set<String> sources, Map labels) {
+  if (raw == null) return const {};
+  if (raw is! Map) { err('games/$id: ожидался словарь сцен'); return const {}; }
+  final scenes = {for (final s in (ep['scenes'] as List).cast<Map>()) s['id'] as String};
+  final res = <String, List<Map>>{};
+  final ids = <String>{};
+  bool l10n(String where, Object? m) {
+    // запятая без кавычек внутри { } рвёт строку на лишние ключи — ловим это здесь
+    final ok = m is Map && ((m['kk'] as String?)?.trim().isNotEmpty ?? false) && ((m['ru'] as String?)?.trim().isNotEmpty ?? false)
+        && m.keys.every((k) => k == 'kk' || k == 'ru') && m.values.every((v) => v is String);
+    if (m is Map && !m.keys.every((k) => k == 'kk' || k == 'ru')) err('$where: лишние ключи ${m.keys} — запятая без кавычек?');
+    if (!ok) err('$where: нужны kk и ru');
+    return ok;
+  }
+  for (final e in raw.entries) {
+    final sid = e.key as String;
+    if (!scenes.contains(sid)) { err('games/$id: сцены $sid нет'); continue; }
+    for (final g in (e.value as List? ?? const []).cast<Map>()) {
+      final gid = g['id'] as String? ?? '?';
+      final w = 'games/$id/$sid/$gid';
+      if (!ids.add(gid)) err('$w: повтор id');
+      final src = (g['source'] as String? ?? '').split('#').first;
+      if (!sources.contains(src)) err('$w: неизвестный источник ${g['source']}');
+      l10n('$w title', g['title']); l10n('$w prompt', g['prompt']);
+      for (final o in ['win', 'partial', 'lose']) {
+        final out = (g['outcomes'] as Map?)?[o];
+        if (out == null) { err('$w: нет исхода $o'); continue; }
+        if (out['reply'] != null) l10n('$w $o.reply', out['reply']);
+      }
+      for (final c in (g['when'] as List? ?? const []).cast<Map>()) {
+        if (!const ['>=', '>', '<=', '<', '==', '!='].contains(c['op']) || c['var'] is! String || c['value'] is! int) err('$w when: {var, op, value}');
+      }
+      switch (g['kind']) {
+        case 'route':
+          final nodes = {for (final n in (g['nodes'] as List).cast<Map>()) n['id'] as String: n};
+          for (final n in nodes.values) { l10n('$w node ${n['id']}', n['label']); }
+          for (final ed in (g['edges'] as List).cast<List>()) {
+            if (!nodes.containsKey(ed[0]) || !nodes.containsKey(ed[1])) err('$w: ребро $ed к несуществующей точке');
+          }
+          if (!nodes.containsKey(g['start']) || !nodes.containsKey(g['goal'])) { err('$w: start/goal не среди точек'); break; }
+          // победа достижима: есть путь без набегов не длиннее лимита (Дейкстра по дням)
+          final best = <String, int>{g['start']: 0};
+          final queue = [g['start'] as String];
+          while (queue.isNotEmpty) {
+            queue.sort((a, b) => best[a]!.compareTo(best[b]!));
+            final u = queue.removeAt(0);
+            for (final ed in (g['edges'] as List).cast<List>()) {
+              final v = ed[0] == u ? ed[1] : (ed[1] == u ? ed[0] : null);
+              if (v == null || nodes[v]!['kind'] == 'enemy') continue;
+              final d = best[u]! + (ed[2] as int);
+              if (d < (best[v] ?? 1 << 30)) { best[v] = d; queue.add(v as String); }
+            }
+          }
+          if ((best[g['goal']] ?? 1 << 30) > (g['days_limit'] as int)) err('$w: победа недостижима — нет пути без набегов в ${g['days_limit']} дней');
+        case 'trade':
+          final goods = {for (final x in (g['goods'] as List).cast<Map>()) x['id'] as String: x};
+          for (final x in goods.values) { l10n('$w good ${x['id']}', x['label']); }
+          var cost = 0;
+          for (final n in (g['needs'] as Map).entries) {
+            final good = goods[n.key];
+            if (good == null) { err('$w: нужда ${n.key} не среди товаров'); continue; }
+            cost += (good['price'] as int) * (n.value as int);
+          }
+          if (cost > (g['budget'] as int)) err('$w: на все нужды не хватит бюджета ($cost > ${g['budget']})');
+        case 'tactics':
+          final moves = (g['moves'] as List).cast<Map>();
+          for (final m in moves) { l10n('$w move ${m['id']}', m['label']); }
+          if (!moves.any((m) => m['outcome'] == 'win')) err('$w: нет верного манёвра (outcome: win)');
+        case 'volley':
+          final win = (g['window'] as List).map((v) => (v as num).toDouble()).toList();
+          if (win.length != 2 || win[0] < 0 || win[1] > 1 || win[0] >= win[1]) err('$w: window — [a, b], 0 ≤ a < b ≤ 1');
+          if (((g['need'] ?? 2) as int) > ((g['rounds'] ?? 3) as int)) err('$w: need больше rounds');
+        default:
+          err('$w: kind — route | trade | tactics | volley');
+      }
+      // исход ставит переменные — те же плашки, что у варианта выбора
+      final outs = {
+        for (final o in ((g['outcomes'] as Map?) ?? {}).entries)
+          o.key: {...(o.value as Map), 'toasts': _toasts(((o.value as Map)['set'] as Map?) ?? const {}, labels)},
+      };
+      (res[sid] ??= []).add({...g, 'outcomes': outs});
+    }
+  }
+  return res;
 }
 
 // ---------------------------------------------------------------- плашки после выбора

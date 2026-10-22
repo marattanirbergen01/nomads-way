@@ -76,7 +76,7 @@ class Str {
     'your.answer': 'Сіздің жауабыңыз:',
     'no.mistakes': 'Қате жоқ — керемет!',
     'bank.loading': 'Сұрақтар базасы жүктелуде',
-    'task': 'Тапсырма', 'tag.right': 'Дұрыс жауап', 'bank.source': 'Мектептің тест жинағынан', 'tag.yours': 'Сіздің жауабыңыз',
+    'task': 'Тапсырма', 'game.skip': 'Өткізу', 'game.win': 'Жеңіс', 'game.partial': 'Жартылай', 'game.lose': 'Сәтсіз', 'game.next': 'Жалғастыру', 'game.days': 'күн', 'game.undo': 'Бір қадам артқа', 'game.left': 'Қалды', 'game.deal': 'Келістік', 'game.need': 'Ауылға керек', 'game.shoot': 'Ат!', 'game.round': 'Жебе', 'game.choose': 'Таңда', 'tag.right': 'Дұрыс жауап', 'bank.source': 'Мектептің тест жинағынан', 'tag.yours': 'Сіздің жауабыңыз',
   };
 
   static const _r = <String, String>{
@@ -146,6 +146,6 @@ class Str {
     'your.answer': 'Ваш ответ:',
     'no.mistakes': 'Ошибок нет — отлично!',
     'bank.loading': 'Загружается база вопросов',
-    'task': 'Задание', 'tag.right': 'Правильный ответ', 'bank.source': 'Из сборника тестов школы', 'tag.yours': 'Ваш ответ',
+    'task': 'Задание', 'game.skip': 'Пропустить', 'game.win': 'Победа', 'game.partial': 'Наполовину', 'game.lose': 'Неудача', 'game.next': 'Дальше', 'game.days': 'дн.', 'game.undo': 'Шаг назад', 'game.left': 'Осталось', 'game.deal': 'По рукам', 'game.need': 'Нужно аулу', 'game.shoot': 'Пли!', 'game.round': 'Стрела', 'game.choose': 'Выбери', 'tag.right': 'Правильный ответ', 'bank.source': 'Из сборника тестов школы', 'tag.yours': 'Ваш ответ',
   };
 }
