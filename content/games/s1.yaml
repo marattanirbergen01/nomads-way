@@ -10,26 +10,28 @@ s1e01:
       prompt:
         kk: Көшті Сығанақтан Шу бойына апар. Жол — 12 күннен аспасын. Әбілқайырдың барлауынан аулақ бол.
         ru: Проведи кочевье от Сыгнака к Шу. Дорога — не дольше 12 дней. Держись подальше от разведки Абулхаира.
+      art: map_s1e01_route_game   # «чистая» карта без маршрута (сдача «Анимации» 2026-10-23)
+      view: [0.18, 0.22, 0.86, 0.60]   # увеличенный участок карты с маршрутом
       start: syganaq
       goal: shu
       days_limit: 12
-      nodes:
-        - { id: syganaq, x: 0.32, y: 0.39, label: { kk: "Сығанақ", ru: "Сыгнак" } }
-        - { id: steppe,  x: 0.47, y: 0.31, kind: enemy, label: { kk: "Әбілқайыр барлауы", ru: "Разведка Абулхаира" } }
-        - { id: karatau, x: 0.45, y: 0.47, kind: hill,  label: { kk: "Қаратау асуы", ru: "Перевал Каратау" } }
-        - { id: sands,   x: 0.40, y: 0.56, label: { kk: "Құмды жол", ru: "Песчаная дорога" } }
-        - { id: talas,   x: 0.58, y: 0.45, kind: river, label: { kk: "Талас өткелі", ru: "Брод через Талас" } }
-        - { id: shu,     x: 0.735, y: 0.418, label: { kk: "Шу · Қозыбасы", ru: "Шу · Козыбасы" } }
+      nodes:   # label_at — где подпись: below (по умолчанию) | above | left | right; разведены, чтобы не накладывались
+        - { id: syganaq, x: 0.32,  y: 0.39,  label: { kk: Сығанақ, ru: Сыгнак } }
+        - { id: steppe,  x: 0.47,  y: 0.31,  kind: enemy, label_at: above, label: { kk: Әбілқайыр барлауы, ru: Разведка Абулхаира } }
+        - { id: karatau, x: 0.45,  y: 0.47,  kind: hill,  label_at: left,  label: { kk: Қаратау, ru: Каратау } }
+        - { id: sands,   x: 0.60,  y: 0.37,  label_at: left, label: { kk: Мойынқұм, ru: Мойынкум } }
+        - { id: talas,   x: 0.58,  y: 0.45,  kind: river, label: { kk: Талас, ru: Талас } }
+        - { id: shu,     x: 0.735, y: 0.418, label: { kk: Шу · Қозыбасы, ru: Шу · Козыбасы } }
       edges:
         - [syganaq, steppe, 3]
         - [steppe, shu, 4]
         - [syganaq, karatau, 4]
         - [karatau, talas, 3]
         - [talas, shu, 3]
-        - [syganaq, sands, 3]
-        - [sands, talas, 6]
+        - [syganaq, sands, 7]   # в обход Каратау с севера, через пески Мойынкум — дольше
+        - [sands, shu, 6]
       outcomes:
-        win:     { set: { vigilant: 1 }, reply: { kk: "Он екі күнде жеттік. Мал аман, ел аман.", ru: "Дошли за двенадцать дней. Скот цел, люди целы." } }
+        win:     { set: { vigilant: 1 }, reply: { kk: "Уақытында жеттік. Мал аман, ел аман.", ru: "Дошли вовремя. Скот цел, люди целы." } }
         partial: { set: { caution: 1 },  reply: { kk: "Жол ұзақ болды, бірақ жеттік.", ru: "Дорога вышла долгой, но мы дошли." } }
         lose:    { set: { lost_herd: 1 }, reply: { kk: "Барлаушылар жылқының бір бөлігін айдап кетті...", ru: "Разведчики угнали часть табуна..." } }
 s1e02:
@@ -44,9 +46,9 @@ s1e02:
       budget: 10
       currency: { kk: "қой", ru: "овец" }
       goods:
-        - { id: wheat, price: 3, label: { kk: "Бидай қабы", ru: "Мешок пшеницы" } }
-        - { id: cloth, price: 2, label: { kk: "Мата", ru: "Ткань" } }
-        - { id: arrow, price: 2, label: { kk: "Жебе ұштары", ru: "Наконечники стрел" } }
+        - { id: wheat, price: 3, icon: good_wheat, label: { kk: "Бидай қабы", ru: "Мешок пшеницы" } }
+        - { id: cloth, price: 2, icon: good_cloth, label: { kk: "Мата", ru: "Ткань" } }
+        - { id: arrow, price: 2, icon: good_arrow, label: { kk: "Жебе ұштары", ru: "Наконечники стрел" } }
         - { id: salt,  price: 1, label: { kk: "Тұз", ru: "Соль" } }
         - { id: silk,  price: 4, label: { kk: "Жібек", ru: "Шёлк" } }
         - { id: pot,   price: 3, label: { kk: "Мыс қазан", ru: "Медный котёл" } }
@@ -60,6 +62,7 @@ s1e02:
       kind: tactics
       source: tb06_ru#§Касым-хан, разгром Шайбани под Сыгнаком 1510
       title: { kk: "Сығанақ түбі, 1510", ru: "Под Сыгнаком, 1510" }
+      art: game_battle_syganaq_1510   # схема поля боя без войск (сдача «Анимации» 2026-10-23)
       prompt:
         kk: Шайбани орталыққа соғып келеді. Қасым ханға кеңес бер.
         ru: Шайбани бьёт в центр. Подскажи Касым-хану.

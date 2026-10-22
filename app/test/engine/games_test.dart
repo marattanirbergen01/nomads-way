@@ -27,12 +27,13 @@ void main() {
       final g = RouteGame(spec)..go('steppe')..go('shu');
       expect(g.outcome, GameOutcome.lose);
     });
-    test('пески — дольше лимита, наполовину', () {
-      final g = RouteGame(spec)..go('sands')..go('talas')..go('shu');
-      expect(g.daysUsed, 12);
-      expect(g.outcome, GameOutcome.win, reason: '12 = лимит');
-      final g2 = RouteGame(spec)..go('sands')..go('talas')..go('karatau');
-      expect(g2.canGo('shu'), isFalse, reason: 'из Каратау к Шу дороги нет');
+    test('через пески Мойынкум — 13 дней, дольше лимита: наполовину', () {
+      final g = RouteGame(spec)..go('sands')..go('shu');
+      expect(g.daysUsed, 13);
+      expect(g.outcome, GameOutcome.partial);
+      final g2 = RouteGame(spec)..go('karatau');
+      expect(g2.canGo('shu'), isFalse, reason: 'из Каратау к Шу напрямую дороги нет');
+      expect(spec.node('sands').labelAt, 'left');
     });
     test('ход только в соседнюю точку; отмена', () {
       final g = RouteGame(spec);
@@ -58,14 +59,15 @@ void main() {
   });
 
   group('залп', () {
-    test('шкала 0→1→0; попадание в окне', () {
+    test('шкала заполняется линейно и сбрасывается; попадание в окне', () {
       final spec = _game<VolleySpec>('s1e02', 'volley_syganaq');
       final g = VolleyGame(spec);
       expect(g.meter(0), closeTo(0, 1e-9));
-      expect(g.meter(spec.periodMs ~/ 2), closeTo(1, 1e-9));
-      expect(g.shoot(spec.periodMs ~/ 2 - 60), isTrue, reason: 'около вершины — в золотой полосе');
-      expect(g.shoot(0), isFalse, reason: 'рано');
-      expect(g.shoot(spec.periodMs ~/ 2), isTrue);
+      expect(g.meter(spec.periodMs ~/ 2), closeTo(.5, 1e-9));
+      expect(g.meter(spec.periodMs), closeTo(0, 1e-9), reason: 'сброс');
+      expect(g.shoot(spec.periodMs - 60), isTrue, reason: 'у вершины — в золотой полосе');
+      expect(g.shoot(spec.periodMs ~/ 2), isFalse, reason: 'рано — стрела не долетит');
+      expect(g.shoot(2 * spec.periodMs - 30), isTrue);
       expect(g.finished, isTrue);
       expect(g.outcome, GameOutcome.win);
     });

@@ -17,7 +17,9 @@ Future<void> main() async {
     for (final s in e.scenes) {
       for (final g in s.games) {
         final lang = e.motionLang(s.art, 'kk');
-        items.add((g, lang == null ? '$_cdn/media/s1/${s.art}.${e.mediaExt[s.art] ?? 'jpg'}' : '$_cdn/media/s1/${e.motionPoster(s.art, lang)}'));
+        final art = g.art ?? s.art;   // своя картинка игры («чистая» карта, схема поля) или кадр сцены
+        final l = g.art == null ? lang : null;
+        items.add((g, l == null ? '$_cdn/media/s1/$art.${e.mediaExt[art] ?? 'jpg'}' : '$_cdn/media/s1/${e.motionPoster(art, l)}'));
       }
     }
   }

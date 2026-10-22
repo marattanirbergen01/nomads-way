@@ -36,6 +36,8 @@ flutter:
     - assets/awards/
     # toasts/ — дымка и звуки плашек после выбора (эталон «Анимации»: content/media/s1/app/toasts)
     - assets/toasts/
+    # games/ — значки и звуки мини-игр (эксперимент; эталон «Анимации»: content/media/s1/app/games)
+    - assets/games/
   fonts:
     - family: Golos
       fonts:

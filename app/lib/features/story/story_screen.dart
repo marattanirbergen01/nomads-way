@@ -415,7 +415,7 @@ class _StoryScreenState extends State<StoryScreen> with SingleTickerProviderStat
       final art = e.game.art ?? e.scene.artFor(_story.vars);
       final lang = widget.episode.motionLang(art, _l);
       final name = lang == null ? null : widget.episode.motionPoster(art, lang);
-      final outcome = await GameScreen.play(context, e.game, _l,
+      final outcome = await GameScreen.play(context, e.game, _l, sound: _s.store.sound,
           artUrl: name == null ? _s.content.mediaUrl(_id, art) : _s.content.mediaNamedUrl(_id, name),
           artFile: name == null ? _s.content.mediaFile(_id, art) : _s.content.mediaNamedFile(_id, name));
       if (!mounted) return;

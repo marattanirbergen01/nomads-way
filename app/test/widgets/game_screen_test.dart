@@ -16,7 +16,7 @@ Future<GameOutcome?> _run(WidgetTester t, GameSpec spec, Future<void> Function()
   addTearDown(t.view.reset);
   GameOutcome? got;
   await t.pumpWidget(MaterialApp(home: Builder(builder: (ctx) => Scaffold(body: Center(child: ElevatedButton(
-    onPressed: () async => got = await GameScreen.play(ctx, spec, 'kk'), child: const Text('go')))))));
+    onPressed: () async => got = await GameScreen.play(ctx, spec, 'kk', sound: false), child: const Text('go')))))));
   await t.tap(find.text('go'));
   // у залпа шкала крутится постоянно — «успокоения» экрана не будет, шагаем явно
   for (var i = 0; i < 6; i++) { await t.pump(const Duration(milliseconds: 200)); }
@@ -62,7 +62,7 @@ void main() {
 
   testWidgets('залп: три выстрела → итог', (t) async {
     final got = await _run(t, _g('s1e02', 'volley_syganaq'), () async {
-      for (var i = 0; i < 3; i++) { await t.tap(find.text('Ат!')); await t.pump(const Duration(milliseconds: 300)); }
+      for (var i = 0; i < 3; i++) { await t.tap(find.text('Ат!')); for (var k = 0; k < 4; k++) { await t.pump(const Duration(milliseconds: 200)); } }
     });
     expect(got, isNotNull);
   });

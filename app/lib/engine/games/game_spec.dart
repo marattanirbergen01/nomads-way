@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import '../../core/l10n.dart';
 import '../../data/models/episode.dart' show ChoiceToast;
 
@@ -67,22 +66,28 @@ double _d(Object? v) => (v as num).toDouble();
 
 // ---------------------------------------------------------------- путь кочевья
 class RouteNode {
-  const RouteNode({required this.id, required this.x, required this.y, required this.label, this.kind = 'camp'});
+  const RouteNode({required this.id, required this.x, required this.y, required this.label, this.kind = 'camp', this.labelAt = 'below'});
   final String id; final double x, y; final L10n label;
+  /// Где подпись относительно точки: below | above | left | right — разводит подписи тесных точек.
+  final String labelAt;
   /// camp — стоянка, river — брод, hill — перевал, enemy — набег (пройти через него — поражение).
   final String kind;
 }
 
 class RouteSpec extends GameSpec {
   RouteSpec._(_Base b, Map<String, dynamic> j)
-      : nodes = [for (final n in j['nodes'] as List) RouteNode(id: n['id'], x: _d(n['x']), y: _d(n['y']), label: _l(n['label']), kind: n['kind'] ?? 'camp')],
+      : nodes = [for (final n in j['nodes'] as List) RouteNode(id: n['id'], x: _d(n['x']), y: _d(n['y']), label: _l(n['label']), kind: n['kind'] ?? 'camp', labelAt: n['label_at'] ?? 'below')],
         edges = [for (final e in j['edges'] as List) (a: e[0] as String, b: e[1] as String, days: (e[2] as num).toInt())],
         start = j['start'], goal = j['goal'], daysLimit = (j['days_limit'] as num).toInt(),
+        view = j['view'] == null ? const (0.0, 0.0, 1.0, 1.0)
+            : (_d((j['view'] as List)[0]), _d((j['view'] as List)[1]), _d((j['view'] as List)[2]), _d((j['view'] as List)[3])),
         super(id: b.id, title: b.title, prompt: b.prompt, outcomes: b.outcomes, art: b.art, when: b.when);
   final List<RouteNode> nodes;
   final List<({String a, String b, int days})> edges;
   final String start, goal;
   final int daysLimit;
+  /// Окно карты (x0, y0, x1, y1 в долях кадра 4:7): игра показывает увеличенный участок, где идёт маршрут.
+  final (double, double, double, double) view;
 
   RouteNode node(String id) => nodes.firstWhere((n) => n.id == id);
   int? days(String a, String b) => edges.where((e) => (e.a == a && e.b == b) || (e.a == b && e.b == a)).firstOrNull?.days;
@@ -169,17 +174,15 @@ class VolleySpec extends GameSpec {
   final (double, double) window;
 }
 
-/// Шкала напряжения ходит 0→1→0 с периодом periodMs; выстрел в окне — попадание.
+/// Шкала напряжения заполняется линейно 0→1 за periodMs и сбрасывается (эталон «Анимации»);
+/// выстрел, пока она в окне, — попадание. Рано — стрела не долетит.
 class VolleyGame {
   VolleyGame(this.spec);
   final VolleySpec spec;
   final shots = <bool>[];
   bool get finished => shots.length >= spec.rounds;
   int get hits => shots.where((x) => x).length;
-  double meter(int ms) {
-    final p = (ms % spec.periodMs) / spec.periodMs;
-    return 0.5 - 0.5 * math.cos(2 * math.pi * p);
-  }
+  double meter(int ms) => (ms % spec.periodMs) / spec.periodMs;
   bool shoot(int ms) {
     if (finished) return false;
     final m = meter(ms);

@@ -821,11 +821,25 @@ Map<String, List<Map>> _games(String id, Map ep, Object? raw, Set<String> source
       switch (g['kind']) {
         case 'route':
           final nodes = {for (final n in (g['nodes'] as List).cast<Map>()) n['id'] as String: n};
-          for (final n in nodes.values) { l10n('$w node ${n['id']}', n['label']); }
+          for (final n in nodes.values) {
+            l10n('$w node ${n['id']}', n['label']);
+            if (n['label_at'] != null && !const ['below', 'above', 'left', 'right'].contains(n['label_at'])) err('$w node ${n['id']}: label_at — below|above|left|right');
+          }
           for (final ed in (g['edges'] as List).cast<List>()) {
             if (!nodes.containsKey(ed[0]) || !nodes.containsKey(ed[1])) err('$w: ребро $ed к несуществующей точке');
           }
           if (!nodes.containsKey(g['start']) || !nodes.containsKey(g['goal'])) { err('$w: start/goal не среди точек'); break; }
+          if (g['view'] != null) {
+            final v = (g['view'] as List).map((x) => (x as num).toDouble()).toList();
+            if (v.length != 4 || v[0] < 0 || v[1] < 0 || v[2] > 1 || v[3] > 1 || v[0] >= v[2] || v[1] >= v[3]) {
+              err('$w: view — [x0, y0, x1, y1] в долях кадра');
+            } else {
+              for (final n in nodes.values) {
+                final x = (n['x'] as num).toDouble(), y = (n['y'] as num).toDouble();
+                if (x < v[0] || x > v[2] || y < v[1] || y > v[3]) err('$w: точка ${n['id']} вне окна view');
+              }
+            }
+          }
           // победа достижима: есть путь без набегов не длиннее лимита (Дейкстра по дням)
           final best = <String, int>{g['start']: 0};
           final queue = [g['start'] as String];
