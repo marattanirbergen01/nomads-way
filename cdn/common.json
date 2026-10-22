@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "avatars": [
+    {
+      "look": 1,
+      "id": "avatar_01_zhylqyshy",
+      "season": "s1",
+      "emotions": [
+        "calm",
+        "joy",
+        "alarm",
+        "sorrow"
+      ],
+      "aspect": 0.7770833333333333,
+      "faceY": 0.30124999999999996
+    },
+    {
+      "look": 2,
+      "id": "avatar_02_aqyn",
+      "season": "s1",
+      "emotions": [
+        "calm",
+        "joy",
+        "alarm",
+        "sorrow"
+      ],
+      "aspect": 0.7770833333333333,
+      "faceY": 0.35666666666666663
+    },
+    {
+      "look": 3,
+      "id": "avatar_03_ustaqyz",
+      "season": "s1",
+      "emotions": [
+        "calm",
+        "joy",
+        "alarm",
+        "sorrow"
+      ],
+      "aspect": 0.7770833333333333,
+      "faceY": 0.34479166666666666
+    }
+  ],
+  "characters": [
+    {
+      "id": "char_aksakal",
+      "season": "s1"
+    },
+    {
+      "id": "char_kerei",
+      "season": "s1"
+    },
+    {
+      "id": "char_zhanibek",
+      "season": "s1"
+    },
+    {
+      "id": "char_abilqaiyr",
+      "season": "s1"
+    },
+    {
+      "id": "char_burundyq",
+      "season": "s1"
+    },
+    {
+      "id": "char_qasym",
+      "season": "s1"
+    },
+    {
+      "id": "char_qasym_khan",
+      "season": "s1"
+    },
+    {
+      "id": "char_shaibani",
+      "season": "s1"
+    },
+    {
+      "id": "char_mahmud",
+      "season": "s1"
+    },
+    {
+      "id": "char_ruzbihan",
+      "season": "s1"
+    },
+    {
+      "id": "char_ubaidulla",
+      "season": "s1"
+    },
+    {
+      "id": "char_seiit",
+      "season": "s1"
+    },
+    {
+      "id": "char_dana",
+      "season": "s1"
+    },
+    {
+      "id": "char_temir",
+      "season": "s1"
+    },
+    {
+      "id": "char_beket",
+      "season": "s1"
+    },
+    {
+      "id": "char_esaul",
+      "season": "s1"
+    },
+    {
+      "id": "char_rider",
+      "season": "s1"
+    }
+  ],
+  "bank": {
+    "langs": [
+      "kk",
+      "ru"
+    ],
+    "questions": 2714,
+    "single": 2350,
+    "context": 364,
+    "contexts": 72,
+    "singleOk": 2281,
+    "contextsOk": 72,
+    "media": 23,
+    "bundle": {
+      "url": "bundles/bank.zip",
+      "bytes": 1578509,
+      "sha256": "1e0d5728187ef667e29218ecd39ac99b1a235c7ea29f63be098c5476266d486c",
+      "contentHash": "98cce9de2cadbc8e",
+      "files": 24
+    }
+  },
+  "bundle": {
+    "url": "bundles/common.zip",
+    "bytes": 10382883,
+    "sha256": "68e52b73de01912061f84b2eb579369041116f44c9a91bff027e713b509b60bf",
+    "contentHash": "fb92e74542c9c64d",
+    "files": 42
+  }
+}

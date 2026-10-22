@@ -1,0 +1,1726 @@
+[
+  {
+    "id": "s5e01",
+    "number": 1,
+    "season": "s5",
+    "title": {
+      "kk": "«Айқап» пен «Қазақ»",
+      "ru": "«Айқап» и «Қазақ»"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1911–1918",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e01",
+    "number": 1,
+    "season": "s7",
+    "title": {
+      "kk": "Майдан",
+      "ru": "Фронт"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1941–1945",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e01",
+    "number": 1,
+    "season": "s2",
+    "title": {
+      "kk": "Есім хан",
+      "ru": "Есим-хан"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1598–1628",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e01",
+    "number": 1,
+    "season": "s9",
+    "title": {
+      "kk": "Тас дәуірі",
+      "ru": "Каменный век"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "палеолит — неолит",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e01",
+    "number": 1,
+    "season": "s12",
+    "title": {
+      "kk": "Шыңғысхан және Отырар",
+      "ru": "Чингисхан и оборона Отрара"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1218–1221",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e01",
+    "number": 1,
+    "season": "s11",
+    "title": {
+      "kk": "Қарахан мемлекеті",
+      "ru": "Государство Караханидов"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "942–1212",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e01",
+    "number": 1,
+    "season": "s3",
+    "title": {
+      "kk": "Сырым батыр",
+      "ru": "Сырым Датов"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1783–1797",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e01",
+    "number": 1,
+    "season": "s10",
+    "title": {
+      "kk": "Бумын",
+      "ru": "Бумын и рождение каганата"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "545–552",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e01",
+    "number": 1,
+    "season": "s4",
+    "title": {
+      "kk": "Жәңгір хан",
+      "ru": "Жангир-хан Букеевской Орды"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1823–1845",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s1e01",
+    "number": 1,
+    "season": "s1",
+    "title": {
+      "kk": "Керей мен Жәнібек хандар",
+      "ru": "Ханы Керей и Жанибек"
+    },
+    "topics": [
+      "kz.4.1"
+    ],
+    "era": "1457–1468",
+    "version": 1,
+    "scenes": 13,
+    "questions": 29,
+    "approved": false,
+    "planned": false,
+    "bundle": {
+      "url": "bundles/s1e01.zip",
+      "bytes": 6444927,
+      "sha256": "76d62b487a17ed1d210173adc15eab23c5948160b5b22808277aa2890e4f2978",
+      "contentHash": "8e01e1e595f0fe61",
+      "files": 22
+    }
+  },
+  {
+    "id": "s8e01",
+    "number": 1,
+    "season": "s8",
+    "title": {
+      "kk": "Желтоқсан",
+      "ru": "Декабрь 1986"
+    },
+    "topics": [
+      "kz.s8"
+    ],
+    "era": "1986",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s6e01",
+    "number": 1,
+    "season": "s6",
+    "title": {
+      "kk": "Жұт пен аштық",
+      "ru": "Джут и голод 1921"
+    },
+    "topics": [
+      "kz.s6"
+    ],
+    "era": "1918–1928",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e02",
+    "number": 2,
+    "season": "s3",
+    "title": {
+      "kk": "Хан билігінің соңы",
+      "ru": "Конец ханской власти"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1822–1824",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e02",
+    "number": 2,
+    "season": "s11",
+    "title": {
+      "kk": "Қарахан ғұламалары",
+      "ru": "Учёные Караханидов: Кашгари, Баласагуни, Югнеки"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "XI–XII ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e02",
+    "number": 2,
+    "season": "s2",
+    "title": {
+      "kk": "Орбұлақ",
+      "ru": "Орбулак"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1628–1652",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s1e02",
+    "number": 2,
+    "season": "s1",
+    "title": {
+      "kk": "Бұрындық хан",
+      "ru": "Бурундук-хан"
+    },
+    "topics": [
+      "kz.4.2"
+    ],
+    "era": "1470–1511",
+    "version": 1,
+    "scenes": 21,
+    "questions": 12,
+    "approved": true,
+    "planned": false,
+    "bundle": {
+      "url": "bundles/s1e02.zip",
+      "bytes": 6899527,
+      "sha256": "71d0f8053d8065a47bdaffb0b32d86923f5746be9a2a16d8eda7335e9dacc752",
+      "contentHash": "d167da71a8b84df6",
+      "files": 27
+    }
+  },
+  {
+    "id": "s10e02",
+    "number": 2,
+    "season": "s10",
+    "title": {
+      "kk": "Мұқан мен Істемі",
+      "ru": "Мукан и Истеми: от Маньчжурии до Босфора"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "553–576",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e02",
+    "number": 2,
+    "season": "s4",
+    "title": {
+      "kk": "Жәрмеңке",
+      "ru": "Ярмарки"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1840–1900",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e02",
+    "number": 2,
+    "season": "s9",
+    "title": {
+      "kk": "Ботай",
+      "ru": "Ботай"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "энеолит",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e02",
+    "number": 2,
+    "season": "s7",
+    "title": {
+      "kk": "Тыл",
+      "ru": "Тыл"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1941–1945",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e02",
+    "number": 2,
+    "season": "s5",
+    "title": {
+      "kk": "1916 жыл",
+      "ru": "1916 год"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1916",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s8e02",
+    "number": 2,
+    "season": "s8",
+    "title": {
+      "kk": "Невада — Семей",
+      "ru": "«Невада — Семей»"
+    },
+    "topics": [
+      "kz.s8"
+    ],
+    "era": "1989–1991",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e02",
+    "number": 2,
+    "season": "s12",
+    "title": {
+      "kk": "Шыңғыс ұлыстары",
+      "ru": "Улусы Чингизидов"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "XIII ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s6e02",
+    "number": 2,
+    "season": "s6",
+    "title": {
+      "kk": "Ұлт ұстазы",
+      "ru": "Учитель нации"
+    },
+    "topics": [
+      "kz.s6"
+    ],
+    "era": "1920–1940",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s1e03",
+    "number": 3,
+    "season": "s1",
+    "title": {
+      "kk": "Қасым хан",
+      "ru": "Касым-хан"
+    },
+    "topics": [
+      "kz.4"
+    ],
+    "era": "1511–1518",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e03",
+    "number": 3,
+    "season": "s3",
+    "title": {
+      "kk": "Жоламан мен Саржан",
+      "ru": "Жоламан и Саржан"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1822–1836",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e03",
+    "number": 3,
+    "season": "s10",
+    "title": {
+      "kk": "Батыс Түрік қағанаты",
+      "ru": "Западный Тюркский каганат"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "603–704",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e03",
+    "number": 3,
+    "season": "s2",
+    "title": {
+      "kk": "Жеті жарғы",
+      "ru": "«Жеты жаргы»"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1680–1715",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e03",
+    "number": 3,
+    "season": "s4",
+    "title": {
+      "kk": "Шоқан мен Ыбырай",
+      "ru": "Шокан Уалиханов и Ибрай Алтынсарин"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1835–1865",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e03",
+    "number": 3,
+    "season": "s9",
+    "title": {
+      "kk": "Андрон әлемі",
+      "ru": "Андроново: Синташта, Петровка"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. II мыңжылдық",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e03",
+    "number": 3,
+    "season": "s12",
+    "title": {
+      "kk": "Алтын Орда",
+      "ru": "Золотая Орда: Бату, Берке, Узбек"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1243–1359",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e03",
+    "number": 3,
+    "season": "s5",
+    "title": {
+      "kk": "Ақпан және Уақытша үкімет",
+      "ru": "Февраль 1917 и Временное правительство"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1917",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s8e03",
+    "number": 3,
+    "season": "s8",
+    "title": {
+      "kk": "Тәуелсіздік және теңге",
+      "ru": "16 декабря 1991, тенге и рынок"
+    },
+    "topics": [
+      "kz.s8"
+    ],
+    "era": "1991–1995",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s6e03",
+    "number": 3,
+    "season": "s6",
+    "title": {
+      "kk": "Индустрия",
+      "ru": "Индустриализация"
+    },
+    "topics": [
+      "kz.s6"
+    ],
+    "era": "1928–1940",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e03",
+    "number": 3,
+    "season": "s7",
+    "title": {
+      "kk": "Соғыстан кейін",
+      "ru": "После войны"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1946–1953",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e03",
+    "number": 3,
+    "season": "s11",
+    "title": {
+      "kk": "Қарақытай",
+      "ru": "Каракитаи и Кучлук на Жетысу"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "1128–1218",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e04",
+    "number": 4,
+    "season": "s3",
+    "title": {
+      "kk": "Исатай мен Махамбет",
+      "ru": "Исатай и Махамбет"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1836–1838",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e04",
+    "number": 4,
+    "season": "s10",
+    "title": {
+      "kk": "Шығыс Түрік қағанаты",
+      "ru": "Восточный Тюркский каганат"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "682–744",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e04",
+    "number": 4,
+    "season": "s2",
+    "title": {
+      "kk": "Ханның ордасы",
+      "ru": "Как устроено ханство"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "XVII–XVIII ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s1e04",
+    "number": 4,
+    "season": "s1",
+    "title": {
+      "kk": "Хақназар хан",
+      "ru": "Хакназар-хан"
+    },
+    "topics": [
+      "kz.4"
+    ],
+    "era": "1538–1580",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e04",
+    "number": 4,
+    "season": "s4",
+    "title": {
+      "kk": "Зар заман",
+      "ru": "Зар заман"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1850–1900",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s8e04",
+    "number": 4,
+    "season": "s8",
+    "title": {
+      "kk": "Астана",
+      "ru": "Астана"
+    },
+    "topics": [
+      "kz.s8"
+    ],
+    "era": "1997 жылдан",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e04",
+    "number": 4,
+    "season": "s5",
+    "title": {
+      "kk": "«Алаш» партиясы",
+      "ru": "Партия «Алаш»: лидеры и программа"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1917",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e04",
+    "number": 4,
+    "season": "s7",
+    "title": {
+      "kk": "Тың және Байқоңыр",
+      "ru": "Целина, Байконур и оттепель"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1954–1965",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e04",
+    "number": 4,
+    "season": "s12",
+    "title": {
+      "kk": "Ұлы дүрбелең",
+      "ru": "Великая замятня: Мамай, Тохтамыш, Едиге"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1359–1419",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s6e04",
+    "number": 4,
+    "season": "s6",
+    "title": {
+      "kk": "Кіші Қазан және ашаршылық",
+      "ru": "«Малый Октябрь», коллективизация и голод 1931–1933"
+    },
+    "topics": [
+      "kz.s6"
+    ],
+    "era": "1925–1928",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e04",
+    "number": 4,
+    "season": "s9",
+    "title": {
+      "kk": "Кейінгі қола",
+      "ru": "Поздняя бронза: Федорово, Бегазы, Саргары"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. XII–VIII ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e04",
+    "number": 4,
+    "season": "s11",
+    "title": {
+      "kk": "Найман, керейіт, жалайыр",
+      "ru": "Найманы, кереиты, жалаиры"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "XI — XIII ғ. басы",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e05",
+    "number": 5,
+    "season": "s3",
+    "title": {
+      "kk": "Кенесары",
+      "ru": "Кенесары"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1837–1847",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e05",
+    "number": 5,
+    "season": "s10",
+    "title": {
+      "kk": "Түргеш қағанаты",
+      "ru": "Тюргешский каганат"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "704–756",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e05",
+    "number": 5,
+    "season": "s5",
+    "title": {
+      "kk": "Алашорда",
+      "ru": "Алаш-Орда: автономия и судьба"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1917–1920",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e05",
+    "number": 5,
+    "season": "s9",
+    "title": {
+      "kk": "Сақтар мен парсылар",
+      "ru": "Саки и персы: Томирис, Шырак"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. VI–IV ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s8e05",
+    "number": 5,
+    "season": "s8",
+    "title": {
+      "kk": "Әлем алдында",
+      "ru": "Казахстан в мире"
+    },
+    "topics": [
+      "kz.s8"
+    ],
+    "era": "1992 жылдан",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e05",
+    "number": 5,
+    "season": "s4",
+    "title": {
+      "kk": "Абай",
+      "ru": "Абай"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1845–1904",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e05",
+    "number": 5,
+    "season": "s7",
+    "title": {
+      "kk": "Қонаев дәуірі",
+      "ru": "Эпоха Кунаева"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1965–1985",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e05",
+    "number": 5,
+    "season": "s11",
+    "title": {
+      "kk": "Қыпшақ хандығы",
+      "ru": "Кыпчакское ханство"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "XI — XIII ғ. басы",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s1e05",
+    "number": 5,
+    "season": "s1",
+    "title": {
+      "kk": "Тәуекел хан",
+      "ru": "Тауекел-хан"
+    },
+    "topics": [
+      "kz.4"
+    ],
+    "era": "1582–1598",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e05",
+    "number": 5,
+    "season": "s2",
+    "title": {
+      "kk": "Ақтабан шұбырынды",
+      "ru": "Годы великого бедствия"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1710–1726",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s6e05",
+    "number": 5,
+    "season": "s6",
+    "title": {
+      "kk": "Қуғын-сүргін",
+      "ru": "Репрессии"
+    },
+    "topics": [
+      "kz.s6"
+    ],
+    "era": "1928–1938",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e05",
+    "number": 5,
+    "season": "s12",
+    "title": {
+      "kk": "Ақ Орда",
+      "ru": "Ак Орда: Урус-хан, Барак"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "XIII — XV ғ. басы",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e06",
+    "number": 6,
+    "season": "s12",
+    "title": {
+      "kk": "Моғолстан",
+      "ru": "Могулистан: Туглук-Тимур и дулаты"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1348–1365",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e06",
+    "number": 6,
+    "season": "s9",
+    "title": {
+      "kk": "Сақтар мен гректер",
+      "ru": "Саки, Александр и Спитамен"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. IV ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e06",
+    "number": 6,
+    "season": "s5",
+    "title": {
+      "kk": "Азамат соғысы",
+      "ru": "Гражданская война"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1918–1920",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e06",
+    "number": 6,
+    "season": "s3",
+    "title": {
+      "kk": "Жанқожа мен Есет",
+      "ru": "Жанкожа и Есет"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1847–1865",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e06",
+    "number": 6,
+    "season": "s4",
+    "title": {
+      "kk": "Күй мен ән",
+      "ru": "Музыка степи"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "XIX ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s7e06",
+    "number": 6,
+    "season": "s7",
+    "title": {
+      "kk": "Кеңестік мәдениет",
+      "ru": "Советская культура"
+    },
+    "topics": [
+      "kz.s7"
+    ],
+    "era": "1946–1985",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e06",
+    "number": 6,
+    "season": "s11",
+    "title": {
+      "kk": "Жібек жолы мен қалалар",
+      "ru": "Шёлковый путь и города"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "VI–XIII ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e06",
+    "number": 6,
+    "season": "s10",
+    "title": {
+      "kk": "Атлах және қарлұқтар",
+      "ru": "Атлах и карлуки"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "751–940",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e06",
+    "number": 6,
+    "season": "s2",
+    "title": {
+      "kk": "Аңырақай",
+      "ru": "Анракай"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1726–1730",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e07",
+    "number": 7,
+    "season": "s12",
+    "title": {
+      "kk": "Моғолстан мен Темір",
+      "ru": "Могулистан против Тимура, Есен-Буга"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1365–1462",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e07",
+    "number": 7,
+    "season": "s9",
+    "title": {
+      "kk": "Сақ қорғандары",
+      "ru": "Курганы саков: Есик, Бесшатыр, Берел, Шиликты, Тасмола"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. VIII–III ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e07",
+    "number": 7,
+    "season": "s4",
+    "title": {
+      "kk": "Жаңа ғасыр экономикасы",
+      "ru": "Экономика начала XX века"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1900–1914",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e07",
+    "number": 7,
+    "season": "s3",
+    "title": {
+      "kk": "1867 реформасы",
+      "ru": "Реформы 1867–1868"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1867–1868",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s11e07",
+    "number": 7,
+    "season": "s11",
+    "title": {
+      "kk": "Ғұламалар мен жазу",
+      "ru": "Фараби, Бируни, руника и религии"
+    },
+    "topics": [
+      "kz.s11"
+    ],
+    "era": "VIII–XI ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e07",
+    "number": 7,
+    "season": "s5",
+    "title": {
+      "kk": "Екі автономия",
+      "ru": "Две автономии"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1917–1920",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e07",
+    "number": 7,
+    "season": "s10",
+    "title": {
+      "kk": "Оғыздар",
+      "ru": "Огузы"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "IX–XI ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e07",
+    "number": 7,
+    "season": "s2",
+    "title": {
+      "kk": "Ресей мен қазақ даласы",
+      "ru": "Россия и степь до 1731"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1714–1731",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s4e08",
+    "number": 8,
+    "season": "s4",
+    "title": {
+      "kk": "Дала және Дума",
+      "ru": "Петиция и Думы"
+    },
+    "topics": [
+      "kz.s4"
+    ],
+    "era": "1905–1914",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e08",
+    "number": 8,
+    "season": "s3",
+    "title": {
+      "kk": "Көтерілістер",
+      "ru": "Восстания 1860–1870-х"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1868–1870",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s5e08",
+    "number": 8,
+    "season": "s5",
+    "title": {
+      "kk": "Қазақ АКСР",
+      "ru": "Казахская АССР"
+    },
+    "topics": [
+      "kz.s5"
+    ],
+    "era": "1920–1925",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e08",
+    "number": 8,
+    "season": "s9",
+    "title": {
+      "kk": "Үйсіндер",
+      "ru": "Усуни"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. III ғ. — б.з. V ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e08",
+    "number": 8,
+    "season": "s12",
+    "title": {
+      "kk": "Әмір Темір",
+      "ru": "Походы Тимура"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1370–1405",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s10e08",
+    "number": 8,
+    "season": "s10",
+    "title": {
+      "kk": "Қимақ қағанаты",
+      "ru": "Кимаки"
+    },
+    "topics": [
+      "kz.s10"
+    ],
+    "era": "IX — XI ғ. басы",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e08",
+    "number": 8,
+    "season": "s2",
+    "title": {
+      "kk": "Әбілқайыр және Ресей",
+      "ru": "Абулхаир и Россия"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1731–1748",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e09",
+    "number": 9,
+    "season": "s9",
+    "title": {
+      "kk": "Қаңлы",
+      "ru": "Кангюи"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. III ғ. — б.з. V ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s3e09",
+    "number": 9,
+    "season": "s3",
+    "title": {
+      "kk": "1886 және 1891 ережелер",
+      "ru": "Положения 1886 и 1891 гг., переселение"
+    },
+    "topics": [
+      "kz.s3"
+    ],
+    "era": "1886–1891",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e09",
+    "number": 9,
+    "season": "s12",
+    "title": {
+      "kk": "XIII–XV ғ. мәдениеті",
+      "ru": "Культура XIII–XV вв.: Яссауи, Кодекс Куманикус"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "XIII–XV ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e09",
+    "number": 9,
+    "season": "s2",
+    "title": {
+      "kk": "Абылай: тұтқыннан ханға дейін",
+      "ru": "Аблай: от плена до ханства"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1740–1771",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s2e10",
+    "number": 10,
+    "season": "s2",
+    "title": {
+      "kk": "Абылай хан",
+      "ru": "Аблай-хан"
+    },
+    "topics": [
+      "kz.s2"
+    ],
+    "era": "1771–1781",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e10",
+    "number": 10,
+    "season": "s9",
+    "title": {
+      "kk": "Сарматтар мен дахтар",
+      "ru": "Сарматы и дахи"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. VII ғ. — б.з. IV ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e10",
+    "number": 10,
+    "season": "s12",
+    "title": {
+      "kk": "Әбілқайыр хандығы",
+      "ru": "Ханство Абулхаира"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "1428–1468",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e11",
+    "number": 11,
+    "season": "s9",
+    "title": {
+      "kk": "Ғұн империясы",
+      "ru": "Империя хунну: Моде"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "б.з.б. III ғ. — б.з. I ғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e11",
+    "number": 11,
+    "season": "s12",
+    "title": {
+      "kk": "Ноғай Ордасы мен Сібір",
+      "ru": "Ногайская Орда и Сибирское ханство"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "XV–XVI ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s9e12",
+    "number": 12,
+    "season": "s9",
+    "title": {
+      "kk": "Ғұндар батысқа",
+      "ru": "Гунны на западе: Юебань, Аттила"
+    },
+    "topics": [
+      "kz.s9"
+    ],
+    "era": "II–V ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  },
+  {
+    "id": "s12e12",
+    "number": 12,
+    "season": "s12",
+    "title": {
+      "kk": "Халық болып",
+      "ru": "Рождение народа"
+    },
+    "topics": [
+      "kz.s12"
+    ],
+    "era": "XIII–XV ғғ.",
+    "version": 0,
+    "scenes": 0,
+    "questions": 0,
+    "approved": false,
+    "planned": true
+  }
+]

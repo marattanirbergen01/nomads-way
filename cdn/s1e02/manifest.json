@@ -1,0 +1,50 @@
+{
+  "episode": "s1e02",
+  "version": 1,
+  "builtAt": "2026-10-22T17:56:27.896231Z",
+  "files": [
+    "episode.json",
+    "questions.json"
+  ],
+  "media": [
+    "art_s1e02_010",
+    "art_s1e02_015",
+    "art_s1e02_020",
+    "art_s1e02_025",
+    "art_s1e02_025_outside",
+    "art_s1e02_026a",
+    "art_s1e02_026b",
+    "art_s1e02_026c",
+    "art_s1e02_030",
+    "art_s1e02_040",
+    "art_s1e02_045",
+    "art_s1e02_045",
+    "art_s1e02_050",
+    "map_s1e02_south",
+    "art_s1e02_070",
+    "art_s1e02_080",
+    "art_s1e02_090",
+    "art_s1e02_095",
+    "art_s1e02_100",
+    "art_s1e02_110",
+    "art_s1e02_120",
+    "art_s1e02_130"
+  ],
+  "motionFiles": [
+    "map_s1e02_south_kk.mp4",
+    "map_s1e02_south_kk.jpg",
+    "map_s1e02_south_ru.mp4",
+    "map_s1e02_south_ru.jpg"
+  ],
+  "stats": {
+    "scenes": 21,
+    "beats": 145,
+    "choices": 8,
+    "questions": 12,
+    "single": 12,
+    "context": 0,
+    "facts_covered": 5,
+    "approved_by": "Marat",
+    "bank": 0
+  }
+}

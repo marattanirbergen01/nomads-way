@@ -1,0 +1,44 @@
+{
+  "episode": "s1e01",
+  "version": 1,
+  "builtAt": "2026-10-22T17:56:27.852651Z",
+  "files": [
+    "episode.json",
+    "questions.json"
+  ],
+  "media": [
+    "art_s1e01_010",
+    "art_s1e01_012",
+    "art_s1e01_020",
+    "art_s1e01_022",
+    "art_s1e01_023",
+    "art_s1e01_025",
+    "art_s1e01_030",
+    "map_s1e01_route",
+    "art_s1e01_032",
+    "art_s1e01_032_river",
+    "art_s1e01_032_hill",
+    "art_s1e01_038",
+    "art_s1e01_040",
+    "art_s1e01_042",
+    "art_s1e01_045",
+    "art_s1e01_045_river"
+  ],
+  "motionFiles": [
+    "map_s1e01_route_kk.mp4",
+    "map_s1e01_route_kk.jpg",
+    "map_s1e01_route_ru.mp4",
+    "map_s1e01_route_ru.jpg"
+  ],
+  "stats": {
+    "scenes": 13,
+    "beats": 61,
+    "choices": 3,
+    "questions": 29,
+    "single": 16,
+    "context": 13,
+    "facts_covered": 10,
+    "approved_by": null,
+    "bank": 0
+  }
+}
