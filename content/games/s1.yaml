@@ -21,7 +21,7 @@ s1e01:
         - { id: karatau, x: 0.45,  y: 0.47,  kind: hill,  label_at: left,  label: { kk: Қаратау, ru: Каратау } }
         - { id: sands,   x: 0.60,  y: 0.37,  label_at: left, label: { kk: Мойынқұм, ru: Мойынкум } }
         - { id: talas,   x: 0.58,  y: 0.45,  kind: river, label: { kk: Талас, ru: Талас } }
-        - { id: shu,     x: 0.735, y: 0.418, label: { kk: Шу · Қозыбасы, ru: Шу · Козыбасы } }
+        - { id: shu,     x: 0.735, y: 0.418, label_at: above, label: { kk: Шу · Қозыбасы, ru: Шу · Козыбасы } }
       edges:
         - [syganaq, steppe, 3]
         - [steppe, shu, 4]

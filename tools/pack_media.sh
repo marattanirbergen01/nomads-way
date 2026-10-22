@@ -55,7 +55,9 @@ for season in content/media/s*/; do
     # Постер ролика (<id>_<lang>.png, последний кадр) → jpg: 1,7 МБ → ~0,3 МБ, на глаз не отличить.
     [ -e "$f" ] || continue
     case "$f" in
-      *.png) if [ -e "${f%.png}.mp4" ]; then jpg "$f" "$out/$(basename "${f%.png}").jpg" 1890 90; continue; fi ;;
+      *.png) if [ -e "${f%.png}.mp4" ]; then jpg "$f" "$out/$(basename "${f%.png}").jpg" 1890 90; continue; fi
+             # карты мини-игр (*_game.png, game_*.png) — тоже jpg: 1,7–1,9 МБ → ~0,3 МБ
+             case "$(basename "$f")" in *_game.png|game_*.png) jpg "$f" "$out/$(basename "${f%.png}").jpg" 1890 90; continue ;; esac ;;
     esac
     copy "$f" "$out/$(basename "$f")"
   done
